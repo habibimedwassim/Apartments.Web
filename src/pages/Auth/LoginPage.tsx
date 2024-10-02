@@ -11,53 +11,68 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CircleUser, Eye, EyeOff, SunMoon } from "lucide-react"; // Importing icons from lucide-react
+import { Eye, EyeOff, SunMoon } from "lucide-react"; // Importing icons from lucide-react
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-//import authService from "@/api/authService";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/http/api";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Validation regular expressions
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (response: any) => {
+      console.log(response.data);
+
+      if (response.data.role === "Admin") {
+        navigate("/admin/home");
+      } else if (response.data.role === "Owner") {
+        navigate("/owner/home");
+      } else {
+        setError(
+          "Access denied: This web application is not for tenants, use the mobile app instead."
+        );
+      }
+    },
+    onError: (error: any) => {
+      let apiErrorMessage = "Login failed";
+
+      apiErrorMessage = error.response?.data?.message || apiErrorMessage;
+
+      console.log(apiErrorMessage);
+      setError(apiErrorMessage);
+    },
+  });
 
   const handleLogin = async () => {
+    setError(null);
     // Perform email and password validation
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address.");
       return;
     }
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+    if (!password) {
+      setError("Password is required");
+      return;
+    }
 
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    // try {
-    //   const result = await authService.login(email, password);
-    //   localStorage.setItem("token", result.token); // Save token for future API requests
-
-    //   if (result.role === "admin") {
-    //     navigate("/admin");
-    //   } else if (result.role === "owner") {
-    //     navigate("/owner");
-    //   } else {
-    //     setError("Access denied: This application is only for admins and owners.");
-    //   }
-    // } catch (e) {
-    //   setError(e || "Login failed");
-    // }
+    mutation.mutate({ email, password });
   };
 
   return (
