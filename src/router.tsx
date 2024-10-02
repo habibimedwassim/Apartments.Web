@@ -1,15 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "@/pages/LoginPage";
-import OwnerPage from "./pages/OwnerPage";
-import AdminPage from "./pages/AdminPage";
+import LoginPage from "@/pages/Auth/LoginPage";
+import OwnerPage from "./pages/Owner/OwnerPage";
+import AdminPage from "./pages/Admin/AdminPage";
 import AdminLayout from "./layouts/AdminLayout";
 import OwnerLayout from "./layouts/OwnerLayout";
-import ApartmentsPage from "./pages/ApartmentsPage";
+import ApartmentsPage from "./pages/Owner/ApartmentsPage";
+import AuthLayout from "./layouts/AuthLayout";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginPage />,
+    path: "auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
   },
   {
     path: "admin",
