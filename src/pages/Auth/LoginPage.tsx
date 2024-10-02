@@ -22,12 +22,14 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoadingButton } from "@/components/ui/button-loading";
+import { useToast } from "@/hooks/use-toast";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   // Validation regular expressions
@@ -43,9 +45,12 @@ const LoginPage = () => {
       } else if (response.data.role === "Owner") {
         navigate("/owner/home");
       } else {
-        setError(
-          "Access denied: This web application is not for tenants, use the mobile app instead."
-        );
+        toast({
+          variant: "destructive",
+          title: "Access denied",
+          description:
+            "This web application is not for tenants, use the mobile app instead.",
+        });
       }
     },
     onError: (error: any) => {

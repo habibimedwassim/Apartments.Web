@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -11,21 +11,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { resetPassword } from "@/http/api"; // Import the API call
+import { resetPassword } from "@/http/api";
 import { LoadingButton } from "@/components/ui/button-loading";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { EyeOff, Eye } from "lucide-react";
 
 const ResetPasswordPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [verificationCode, setVerificationCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const email = location.state?.email || ""; // Get the email passed from the previous page
+  const email = location.state?.email || "";
+  const { toast } = useToast();
 
   const mutation = useMutation({
     mutationFn: resetPassword,
     onSuccess: () => {
-      navigate("/auth/login"); // Redirect to login page after successful password reset
+      toast({
+        title: "Password Reset Successful",
+        description: "Your password has been reset successfully.",
+      });
+
+      // Redirect to login page after a short delay
+      setTimeout(() => navigate("/auth/login"), 2000);
     },
     onError: (error: any) => {
       let apiErrorMessage = "Something went wrong";
@@ -35,7 +46,10 @@ const ResetPasswordPage = () => {
         error.response?.data?.Message ||
         apiErrorMessage;
 
-      setError(apiErrorMessage);
+      toast({
+        variant: "destructive",
+        description: apiErrorMessage,
+      });
     },
   });
 
@@ -65,13 +79,7 @@ const ResetPasswordPage = () => {
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              disabled // Disable the email input
-              readOnly
-            />
+            <Input id="email" type="email" value={email} disabled readOnly />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="verificationCode">Verification Code</Label>
@@ -83,15 +91,26 @@ const ResetPasswordPage = () => {
               required
             />
           </div>
-          <div className="grid gap-2">
+
+          <div className="grid gap-2 relative">
             <Label htmlFor="newPassword">New Password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <Input
+                id="newPassword"
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="pr-10"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
           {error && <span className="text-red-500 text-sm">{error}</span>}
         </CardContent>
@@ -103,6 +122,14 @@ const ResetPasswordPage = () => {
           >
             Reset Password
           </LoadingButton>
+          <Button variant="link">
+            <Link
+              to="/auth/login"
+              className="text-sm text-blue-500 hover:underline"
+            >
+              Back to Login
+            </Link>
+          </Button>
         </CardFooter>
       </Card>
     </section>
