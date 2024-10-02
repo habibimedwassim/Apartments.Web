@@ -2,19 +2,38 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import OwnerPage from "./pages/OwnerPage";
 import AdminPage from "./pages/AdminPage";
+import AdminLayout from "./layouts/AdminLayout";
+import OwnerLayout from "./layouts/OwnerLayout";
+import ApartmentsPage from "./pages/ApartmentsPage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <LoginPage />, // Assuming this will be the main entry point initially
+    path: "/login",
+    element: <LoginPage />,
   },
   {
-    path: "/admin",
-    element: <AdminPage />,
+    path: "admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "home",
+        element: <AdminPage />,
+      },
+    ],
   },
   {
-    path: "/owner",
-    element: <OwnerPage />,
+    path: "owner",
+    element: <OwnerLayout />,
+    children: [
+      {
+        path: "home",
+        element: <OwnerPage />,
+      },
+      {
+        path: "apartments",
+        element: <ApartmentsPage />,
+      },
+    ],
   },
 ]);
 
