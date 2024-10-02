@@ -12,3 +12,12 @@ export const login = async (data: { email: string; password: string }) => {
   var response = await api.post("/api/auth/login", data);
   return response;
 };
+
+export const forgotPassword = async (data: { email: string }) =>
+  await api.post("/api/auth/forgot-password", data);
+
+export const resetPassword = async (data: {
+  email: string;
+  verificationCode: string;
+  newPassword: string;
+}) => await api.post("/api/auth/reset-password", data);

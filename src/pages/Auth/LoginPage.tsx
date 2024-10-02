@@ -51,9 +51,12 @@ const LoginPage = () => {
     onError: (error: any) => {
       let apiErrorMessage = "Login failed";
 
-      apiErrorMessage = error.response?.data?.message || apiErrorMessage;
+      apiErrorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.Message ||
+        apiErrorMessage;
 
-      console.log(apiErrorMessage);
+      console.log(error);
       setError(apiErrorMessage);
     },
   });

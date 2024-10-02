@@ -6,6 +6,8 @@ import AdminLayout from "./layouts/AdminLayout";
 import OwnerLayout from "./layouts/OwnerLayout";
 import ApartmentsPage from "./pages/Owner/ApartmentsPage";
 import AuthLayout from "./layouts/AuthLayout";
+import ForgotPasswordPage from "./pages/Auth/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Auth/ResetPasswordPage";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPasswordPage />,
       },
     ],
   },
