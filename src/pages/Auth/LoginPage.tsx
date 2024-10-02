@@ -135,7 +135,7 @@ const LoginPage = () => {
               </button>
             </div>
           </div>
-          {error && <p className="text-red-500">{error}</p>}
+          {error && <span className="text-red-500 text-sm">{error}</span>}
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
           <LoadingButton
