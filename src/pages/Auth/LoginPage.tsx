@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
+import { LoadingButton } from "@/components/ui/button-loading";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -136,9 +138,13 @@ const LoginPage = () => {
           {error && <p className="text-red-500">{error}</p>}
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
-          <Button className="w-full" onClick={handleLogin}>
+          <LoadingButton
+            onClick={handleLogin}
+            className="w-full"
+            isLoading={mutation.isPending}
+          >
             Sign in
-          </Button>
+          </LoadingButton>
           <Button variant="link">
             <Link
               to="/auth/forgot-password"
