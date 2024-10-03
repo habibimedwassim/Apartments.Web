@@ -6,9 +6,9 @@ export interface LoginModel {
 
 export interface LoginResponseModel {
   email: string;
-  userName: string;
   firstName: string;
   lastName: string;
+  fullName: string;
   dateOfBirth?: string;
   gender?: string;
   role?: string;
