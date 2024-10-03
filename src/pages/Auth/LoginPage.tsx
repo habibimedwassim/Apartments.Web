@@ -24,6 +24,7 @@ import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { isValidEmail, getErrorMessage } from "@/utils/utils";
 import { loginService } from "@/services/auth.services";
+import { useAuthStore } from "@/store";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -35,19 +36,13 @@ const LoginPage = () => {
 
   const mutation = useMutation({
     mutationFn: (data: LoginModel) => loginService(data),
-    onSuccess: (response) => {
-      if (response.role === "Admin") {
-        navigate("/admin/home");
-      } else if (response.role === "Owner") {
-        navigate("/owner/home");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Access denied",
-          description:
-            "This web application is not for tenants, use the mobile app instead.",
-        });
-      }
+    onSuccess: () => {
+      const role = useAuthStore.getState().role;
+      handleRoleRedirection(role);
+
+      setError(null);
+      setEmail("");
+      setPassword("");
     },
     onError: (error) => {
       const apiErrorMessage = getErrorMessage(error);
@@ -58,6 +53,21 @@ const LoginPage = () => {
       });
     },
   });
+
+  const handleRoleRedirection = (role: string | null) => {
+    if (role === "Admin") {
+      navigate("/admin");
+    } else if (role === "Owner") {
+      navigate("/");
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Access denied",
+        description:
+          "This web application is not for tenants, use the mobile app instead.",
+      });
+    }
+  };
 
   const handleLogin = () => {
     setError(null);

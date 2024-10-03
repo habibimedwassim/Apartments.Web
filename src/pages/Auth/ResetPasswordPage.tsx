@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -28,6 +28,12 @@ const ResetPasswordPage = () => {
   const [error, setError] = useState<string | null>(null);
   const email = location.state?.email || "";
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!email) {
+      navigate("/auth/forgot-password");
+    }
+  }, [email, navigate]);
 
   const resetPasswordMutation = useMutation({
     mutationFn: (data: ResetPasswordModel) => resetPassword(data),

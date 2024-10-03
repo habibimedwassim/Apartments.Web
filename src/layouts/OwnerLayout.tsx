@@ -48,14 +48,14 @@ const OwnerLayout = () => {
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <Link
-                to="/owner/home"
+                to="/"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </Link>
               <Link
-                to="/owner/apartments"
+                to="/apartments"
                 className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
               >
                 <HousePlusIcon className="h-4 w-4" />
@@ -84,14 +84,14 @@ const OwnerLayout = () => {
                   <span className="">Hi, {user?.firstName || "Owner"}</span>
                 </div>
                 <Link
-                  to="#"
+                  to="/"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <LayoutDashboard className="h-5 w-5" />
                   Dashboard
                 </Link>
                 <Link
-                  to="#"
+                  to="/apartments"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <HousePlusIcon className="h-5 w-5" />

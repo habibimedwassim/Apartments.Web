@@ -34,7 +34,7 @@ export const loginService = async (
 
     return response;
   } catch (error: any) {
-    throw getErrorMessage(error);
+    throw error;
   }
 };
 
