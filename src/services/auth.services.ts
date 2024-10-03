@@ -20,13 +20,18 @@ import {
   ChangePasswordModel,
 } from "@/models/auth.models";
 import { getErrorMessage } from "@/utils/utils";
+import { useAuthStore } from "@/store";
 
-/**
- * Helper function to handle API service calls with error handling and message retrieval.
- */
-const handleApiCall = async <T>(apiCall: () => Promise<T>): Promise<T> => {
+// Handle login service
+export const loginService = async (
+  data: LoginModel
+): Promise<LoginResponseModel> => {
   try {
-    const response = await apiCall();
+    const response = await login(data);
+
+    // Use zustand store to handle login
+    useAuthStore.getState().login(response);
+
     return response;
   } catch (error: any) {
     throw getErrorMessage(error);
@@ -36,9 +41,7 @@ const handleApiCall = async <T>(apiCall: () => Promise<T>): Promise<T> => {
 /**
  * Helper function to handle API service calls that return `void` and capture messages.
  */
-const handleApiCallWithMessage = async (
-  apiCall: () => Promise<any>
-): Promise<string> => {
+const handleApiCall = async (apiCall: () => Promise<any>): Promise<string> => {
   try {
     const response = await apiCall();
     return response.data?.message || "Operation successful";
@@ -47,36 +50,33 @@ const handleApiCallWithMessage = async (
   }
 };
 
-export const loginService = (data: LoginModel): Promise<LoginResponseModel> =>
-  handleApiCall(() => login(data));
-
+// Other service methods using handleApiCall
 export const registerService = (data: RegisterModel): Promise<string> =>
-  handleApiCallWithMessage(() => register(data));
+  handleApiCall(() => register(data));
 
 export const registerOwnerService = (data: RegisterModel): Promise<string> =>
-  handleApiCallWithMessage(() => registerOwner(data));
+  handleApiCall(() => registerOwner(data));
 
 export const registerAdminService = (data: RegisterModel): Promise<string> =>
-  handleApiCallWithMessage(() => registerAdmin(data));
+  handleApiCall(() => registerAdmin(data));
 
 export const verifyEmailService = (data: VerifyEmailModel): Promise<string> =>
-  handleApiCallWithMessage(() => verifyEmail(data));
+  handleApiCall(() => verifyEmail(data));
 
 export const resendVerificationCodeService = (
   data: EmailModel
-): Promise<string> =>
-  handleApiCallWithMessage(() => resendVerificationCode(data));
+): Promise<string> => handleApiCall(() => resendVerificationCode(data));
 
 export const forgotPasswordService = (data: EmailModel): Promise<string> =>
-  handleApiCallWithMessage(() => forgotPassword(data));
+  handleApiCall(() => forgotPassword(data));
 
 export const resetPasswordService = (
   data: ResetPasswordModel
-): Promise<string> => handleApiCallWithMessage(() => resetPassword(data));
+): Promise<string> => handleApiCall(() => resetPassword(data));
 
 export const changePasswordService = (
   data: ChangePasswordModel
-): Promise<string> => handleApiCallWithMessage(() => changePassword(data));
+): Promise<string> => handleApiCall(() => changePassword(data));
 
 export const changeEmailService = (data: EmailModel): Promise<string> =>
-  handleApiCallWithMessage(() => changeEmail(data));
+  handleApiCall(() => changeEmail(data));

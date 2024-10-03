@@ -19,11 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "@/http/auth.api";
 import { LoginModel } from "@/models/auth.models";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { isValidEmail, getErrorMessage } from "@/utils/utils";
+import { loginService } from "@/services/auth.services";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: LoginModel) => login(data),
+    mutationFn: (data: LoginModel) => loginService(data),
     onSuccess: (response) => {
       if (response.role === "Admin") {
         navigate("/admin/home");
