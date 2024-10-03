@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
 import {
   Card,
   CardContent,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, SunMoon } from "lucide-react"; // Importing icons from lucide-react
+import { Eye, EyeOff, SunMoon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   DropdownMenu,
@@ -20,9 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "@/http/authentication";
+import { login } from "@/http/auth.api";
+import { LoginModel } from "@/models/auth.models";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
+import { isValidEmail, getErrorMessage } from "@/utils/utils";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -32,17 +33,12 @@ const LoginPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Validation regular expressions
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   const mutation = useMutation({
-    mutationFn: login,
-    onSuccess: (response: any) => {
-      console.log(response.data);
-
-      if (response.data.role === "Admin") {
+    mutationFn: (data: LoginModel) => login(data),
+    onSuccess: (response) => {
+      if (response.role === "Admin") {
         navigate("/admin/home");
-      } else if (response.data.role === "Owner") {
+      } else if (response.role === "Owner") {
         navigate("/owner/home");
       } else {
         toast({
@@ -53,32 +49,25 @@ const LoginPage = () => {
         });
       }
     },
-    onError: (error: any) => {
-      let apiErrorMessage = "Login failed";
-
-      apiErrorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.Message ||
-        apiErrorMessage;
-
-      console.log(error);
-      setError(apiErrorMessage);
+    onError: (error) => {
+      const apiErrorMessage = getErrorMessage(error);
+      toast({
+        variant: "destructive",
+        title: "Login Error",
+        description: apiErrorMessage,
+      });
     },
   });
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setError(null);
-    // Perform email and password validation
-    if (!emailRegex.test(email)) {
+
+    if (!isValidEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
-    if (!password) {
-      setError("Password is required");
+    if (!email || !password) {
+      setError("Both email and password are required.");
       return;
     }
 

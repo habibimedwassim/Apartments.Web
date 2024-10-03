@@ -11,11 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { resetPassword } from "@/http/authentication";
+import { resetPassword, resendVerificationCode } from "@/http/auth.api";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { EyeOff, Eye } from "lucide-react";
+import { getErrorMessage } from "@/utils/utils";
+import { EmailModel, ResetPasswordModel } from "@/models/auth.models";
 
 const ResetPasswordPage = () => {
   const location = useLocation();
@@ -27,8 +29,8 @@ const ResetPasswordPage = () => {
   const email = location.state?.email || "";
   const { toast } = useToast();
 
-  const mutation = useMutation({
-    mutationFn: resetPassword,
+  const resetPasswordMutation = useMutation({
+    mutationFn: (data: ResetPasswordModel) => resetPassword(data),
     onSuccess: () => {
       toast({
         title: "Password Reset Successful",
@@ -38,14 +40,25 @@ const ResetPasswordPage = () => {
       // Redirect to login page after a short delay
       setTimeout(() => navigate("/auth/login"), 2000);
     },
-    onError: (error: any) => {
-      let apiErrorMessage = "Something went wrong";
+    onError: (error) => {
+      const apiErrorMessage = getErrorMessage(error);
+      toast({
+        variant: "destructive",
+        description: apiErrorMessage,
+      });
+    },
+  });
 
-      apiErrorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.Message ||
-        apiErrorMessage;
-
+  const resendCodeMutation = useMutation({
+    mutationFn: (data: EmailModel) => resendVerificationCode(data),
+    onSuccess: () => {
+      toast({
+        title: "Verification Code Sent",
+        description: "A new verification code has been sent to your email.",
+      });
+    },
+    onError: (error) => {
+      const apiErrorMessage = getErrorMessage(error);
       toast({
         variant: "destructive",
         description: apiErrorMessage,
@@ -64,7 +77,11 @@ const ResetPasswordPage = () => {
       return;
     }
 
-    mutation.mutate({ email, verificationCode, newPassword });
+    resetPasswordMutation.mutate({ email, verificationCode, newPassword });
+  };
+
+  const handleResendCode = () => {
+    resendCodeMutation.mutate({ email });
   };
 
   return (
@@ -118,9 +135,17 @@ const ResetPasswordPage = () => {
           <LoadingButton
             onClick={handleResetPassword}
             className="w-full"
-            isLoading={mutation.isPending}
+            isLoading={resetPasswordMutation.isPending}
           >
             Reset Password
+          </LoadingButton>
+          <LoadingButton
+            onClick={handleResendCode}
+            className="w-full"
+            isLoading={resendCodeMutation.isPending}
+            variant="outline"
+          >
+            Resend
           </LoadingButton>
           <Button variant="link">
             <Link

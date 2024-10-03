@@ -12,37 +12,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { forgotPassword } from "@/http/api"; // Import the API call
+import { forgotPassword } from "@/http/auth.api";
 import { LoadingButton } from "@/components/ui/button-loading";
+import { useToast } from "@/hooks/use-toast";
+import { isValidEmail, getErrorMessage, getInfoMessage } from "@/utils/utils";
+import { EmailModel } from "@/models/auth.models";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  // Validation regular expressions
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const { toast } = useToast();
 
   const mutation = useMutation({
-    mutationFn: forgotPassword,
-    onSuccess: () => {
-      navigate("/auth/reset-password", { state: { email } }); // Pass email to reset password page
+    mutationFn: (data: EmailModel) => forgotPassword(data),
+    onSuccess: (message) => {
+      const infoMessage = getInfoMessage(message);
+      toast({
+        title: "Email Sent",
+        description: infoMessage,
+      });
+      navigate("/auth/reset-password", { state: { email } });
     },
-    onError: (error: any) => {
-      let apiErrorMessage = "Something went wrong";
-
-      apiErrorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.Message ||
-        apiErrorMessage;
-
-      setError(apiErrorMessage);
+    onError: (error) => {
+      const apiErrorMessage = getErrorMessage(error);
+      toast({
+        variant: "destructive",
+        description: apiErrorMessage,
+      });
     },
   });
 
   const handleForgotPassword = () => {
     setError(null);
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
