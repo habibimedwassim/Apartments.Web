@@ -6,7 +6,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/common/ThemeProvider";
 
 interface ModeToggleProps {
   useDropdown?: boolean;

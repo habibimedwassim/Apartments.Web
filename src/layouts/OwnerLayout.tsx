@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import { useAuthStore } from "@/store";
 
 const OwnerLayout = () => {
@@ -121,7 +121,9 @@ const OwnerLayout = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {user?.email || "My Account"}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />

@@ -19,7 +19,7 @@ import {
   VerifyEmailModel,
   ChangePasswordModel,
 } from "@/models/auth.models";
-import { getErrorMessage } from "@/utils/utils";
+import { getErrorMessage, getInfoMessage } from "@/lib/utils";
 import { useAuthStore } from "@/store";
 
 // Handle login service
@@ -44,7 +44,7 @@ export const loginService = async (
 const handleApiCall = async (apiCall: () => Promise<any>): Promise<string> => {
   try {
     const response = await apiCall();
-    return response.data?.message || "Operation successful";
+    return getInfoMessage(response.data?.message);
   } catch (error: any) {
     throw getErrorMessage(error);
   }

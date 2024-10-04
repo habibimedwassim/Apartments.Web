@@ -16,7 +16,7 @@ import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { EyeOff, Eye } from "lucide-react";
-import { getErrorMessage } from "@/utils/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { EmailModel, ResetPasswordModel } from "@/models/auth.models";
 
 const ResetPasswordPage = () => {

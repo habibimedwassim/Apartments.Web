@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/http/auth.api";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
-import { isValidEmail, getErrorMessage, getInfoMessage } from "@/utils/utils";
+import { isValidEmail, getErrorMessage, getInfoMessage } from "@/lib/utils";
 import { EmailModel } from "@/models/auth.models";
 
 const ForgotPasswordPage = () => {

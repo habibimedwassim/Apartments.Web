@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, SunMoon } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginModel } from "@/models/auth.models";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
-import { isValidEmail, getErrorMessage } from "@/utils/utils";
+import { isValidEmail, getErrorMessage } from "@/lib/utils";
 import { loginService } from "@/services/auth.services";
 import { useAuthStore } from "@/store";
 
