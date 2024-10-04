@@ -3,13 +3,14 @@ import OwnerLayout from "@/layouts/OwnerLayout";
 import OwnerPage from "@/pages/owner/OwnerPage";
 import ApartmentsPage from "@/pages/owner/ApartmentsPage";
 import RouteGuard from "@/components/common/RouteGuard";
+import BaseLayout from "@/layouts/BaseLayout";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
   path: "",
   element: (
     <RouteGuard requiredRole="Owner">
-      <OwnerLayout />
+      <BaseLayout />
     </RouteGuard>
   ),
   children: [
