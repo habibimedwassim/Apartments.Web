@@ -8,7 +8,6 @@ import {
   restoreApartment,
 } from "@/http/apartment.api";
 import {
-  ApartmentQueryFilter,
   CreateApartmentModel,
   UpdateApartmentModel,
   ApartmentResponseModel,
@@ -16,10 +15,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 
 // Fetch all apartments with filtering
-export const useApartments = (query: ApartmentQueryFilter) => {
+export const useApartments = () => {
   return useQuery({
-    queryKey: ["apartments", query],
-    queryFn: () => getMyApartments(query),
+    queryKey: ["apartments"],
+    queryFn: () => getMyApartments(),
+    staleTime: 300000,
   });
 };
 

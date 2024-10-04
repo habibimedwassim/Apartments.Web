@@ -4,21 +4,12 @@ import {
   CreateApartmentModel,
   UpdateApartmentModel,
   ApartmentResponseModel,
-  ApartmentQueryFilter,
-  PagedResult,
 } from "@/models/apartment.models";
 
 // Get all apartments with query filter
-export const getMyApartments = async (
-  query: ApartmentQueryFilter
-): Promise<PagedResult<ApartmentResponseModel>> => {
-  const response = await api.get<PagedResult<ApartmentResponseModel>>(
-    "users/me/apartments",
-    {
-      params: query,
-    }
-  );
-  console.log(query);
+export const getMyApartments = async (): Promise<ApartmentResponseModel> => {
+  const response = await api.get<ApartmentResponseModel>("users/me/apartments");
+  console.log("api called");
   return response.data;
 };
 

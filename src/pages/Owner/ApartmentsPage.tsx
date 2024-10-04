@@ -36,7 +36,6 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
-import { ApartmentQueryFilter } from "@/models/apartment.models";
 import { useApartments } from "@/services/apartment.services";
 import { formatToLocalDateTime } from "@/lib/utils";
 
@@ -48,11 +47,9 @@ const ApartmentsPage = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const query: ApartmentQueryFilter = {
-    pageNumber: 1,
-  };
-  const { data } = useApartments(query);
-  const apartmentsData = data?.items || [];
+  const { data } = useApartments();
+
+  const apartmentsData = Array.isArray(data) ? [...data] : [];
 
   const filteredData = apartmentsData.filter((apartment) => {
     const location = `${apartment.city} ${apartment.street} ${apartment.postalCode}`;
