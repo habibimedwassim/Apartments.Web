@@ -1,5 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -29,6 +32,19 @@ export const formatDate = (date: string): string => {
     day: "2-digit",
   };
   return new Date(date).toLocaleDateString(undefined, options);
+};
+
+//transform an utc time to local time with specific format
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+/**
+ * Converts a UTC date string to a local date-time string formatted as "YYYY-MM-DD hh:mm A".
+ *
+ * @param utcDate - The UTC date string to be converted.
+ * @returns The formatted local date-time string.
+ */
+export const formatToLocalDateTime = (utcDate: string): string => {
+  return dayjs.utc(utcDate).local().format("YYYY-MM-DD hh:mm A");
 };
 
 /**
