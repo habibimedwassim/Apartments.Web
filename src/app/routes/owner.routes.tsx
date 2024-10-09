@@ -2,9 +2,7 @@ import { RouteObject } from "react-router-dom";
 import RouteGuard from "@/components/common/route-guard";
 import DashboardLayout from "@/app/layouts/dashboard.layout";
 import PageLayout from "@/app/layouts/page.layout";
-import ApartmentsPage from "@/app/pages/apartment/ApartmentsPage";
-import CreateApartmentPage from "@/app/pages/apartment/CreateApartmentPage";
-import EditApartmentPage from "../pages/apartment/EditApartmentPage";
+import apartmentRoutes from "./apartment.routes";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -24,33 +22,7 @@ const ownerRoutes: RouteObject = {
         </PageLayout>
       ),
     },
-    {
-      id: "apartments",
-      path: "apartments",
-      element: (
-        <PageLayout title="Apartments">
-          <ApartmentsPage />
-        </PageLayout>
-      ),
-    },
-    {
-      id: "apartments-new",
-      path: "apartments/new",
-      element: (
-        <PageLayout title="New Apartment">
-          <CreateApartmentPage />
-        </PageLayout>
-      ),
-    },
-    {
-      id: "apartments-edit",
-      path: "apartments/edit/:apId",
-      element: (
-        <PageLayout title="Edit Apartment">
-          <EditApartmentPage />
-        </PageLayout>
-      ),
-    },
+    ...apartmentRoutes,
   ],
 };
 
