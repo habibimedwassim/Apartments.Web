@@ -26,7 +26,7 @@ const apartmentRoutes: RouteObject[] = [
   },
   {
     id: "apartments-edit",
-    path: "apartments/edit/:apId",
+    path: "apartments/edit/",
     element: (
       <PageLayout title="Edit Apartment">
         <EditApartmentPage />

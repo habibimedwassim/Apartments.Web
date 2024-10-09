@@ -42,7 +42,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useApartmentByIdService } from "@/app/services/apartment.services"; // To fetch the apartment by ID
 import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
 import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();
@@ -52,11 +52,18 @@ const EditApartmentPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openProvincePicker, setOpenProvincePicker] = useState(false);
   const [openCityPicker, setOpenCityPicker] = useState(false);
-  const { apId } = useParams<{ apId: string }>();
   const navigate = useNavigate();
-
+  const location = useLocation();
   // Fetch apartment data by ID
-  const apartmentId = Number(apId);
+  const apartmentId = location.state?.apartmentId;
+
+  // Redirect if no apartment ID is passed
+  useEffect(() => {
+    if (!apartmentId) {
+      navigate("/apartments");
+    }
+  }, [apartmentId, navigate]);
+
   const {
     data: apartment,
     isLoading: isFetchingApartment,

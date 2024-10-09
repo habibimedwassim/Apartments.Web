@@ -17,13 +17,21 @@ export const createApartmentSchema = z.object({
 });
 
 // Define the schema for updating an apartment
-export const updateApartmentSchema = z.object({
-  title: z.string().optional(),
-  city: z.string().optional(),
-  street: z.string().optional(),
-  postalCode: z.string().optional(),
-  description: z.string().optional(),
-  size: z.coerce.number().optional(),
-  rentAmount: z.coerce.number().optional(),
-  availableFrom: z.string().optional().nullable(),
-});
+export const updateApartmentSchema = z
+  .object({
+    title: z.string().optional(),
+    city: z.string().min(1, { message: "City is required" }).optional(),
+    street: z.string().optional(),
+    postalCode: z
+      .string()
+      .min(1, { message: "Postal Code is required" })
+      .optional(),
+    description: z.string().optional(),
+    size: z.coerce.number().optional(),
+    rentAmount: z.coerce.number().optional(),
+    availableFrom: z.string().optional().nullable(),
+  })
+  .refine((data) => data.city !== "" && data.postalCode !== "", {
+    message: "City and Postal Code cannot be empty",
+    path: ["city", "postalCode"],
+  });

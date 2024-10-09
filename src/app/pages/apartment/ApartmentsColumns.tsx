@@ -135,8 +135,8 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
         deleteMutation.mutate();
       };
 
-      const handleEdit = () => {
-        navigate(`/apartments/edit/${apartmentId}`);
+      const handleEdit = (apartmentId: number) => {
+        navigate("/apartments/edit", { state: { apartmentId } });
       };
 
       return (
