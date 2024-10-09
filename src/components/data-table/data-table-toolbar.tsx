@@ -7,13 +7,18 @@ import { DataTableViewOptions } from "@/components/data-table/data-table-view-op
 
 import { statuses } from "@/components/data-table/data";
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
+import { PlusCircle } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  newButtonLabel?: string;
+  onNewButtonClick?: () => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  newButtonLabel,
+  onNewButtonClick,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -49,6 +54,19 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <DataTableViewOptions table={table} />
+      {newButtonLabel && onNewButtonClick && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1 ml-2"
+          onClick={onNewButtonClick}
+        >
+          <PlusCircle className="h-3.5 w-3.5" />
+          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            {newButtonLabel}
+          </span>
+        </Button>
+      )}
     </div>
   );
 }

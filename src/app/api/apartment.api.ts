@@ -30,17 +30,23 @@ export const getApartmentById = async (
 // Create a new apartment
 export const createApartment = async (data: CreateApartmentModel) => {
   const formData = new FormData();
+
   formData.append("title", data.title);
   formData.append("city", data.city);
   formData.append("street", data.street);
   formData.append("postalCode", data.postalCode);
   formData.append("description", data.description);
+
+  // Ensure numbers are converted to strings before appending
   formData.append("size", data.size.toString());
   formData.append("rentAmount", data.rentAmount.toString());
+
   if (data.availableFrom) formData.append("availableFrom", data.availableFrom);
-  data.apartmentPhotos.forEach((photo) =>
-    formData.append("apartmentPhotos", photo)
-  );
+
+  // Append files for apartmentPhotos
+  data.apartmentPhotos.forEach((photo) => {
+    formData.append("apartmentPhotos", photo);
+  });
 
   return await api.post("/apartments", formData, {
     headers: {

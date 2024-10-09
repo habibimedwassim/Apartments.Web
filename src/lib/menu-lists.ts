@@ -114,7 +114,7 @@ export function getOwnerMenuList(pathname: string): Group[] {
             },
             {
               href: "/apartments/new",
-              label: "New Apartments",
+              label: "New Apartment",
             },
           ],
         },

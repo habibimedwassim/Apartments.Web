@@ -36,7 +36,8 @@ export const getApartmentByIdService = async (
 // Create a new apartment
 export const createApartmentService = async (data: CreateApartmentModel) => {
   try {
-    await createApartment(data);
+    const rr = await createApartment(data);
+    console.log(rr);
     return "Apartment created successfully.";
   } catch (error: any) {
     throw new Error(`Failed to create apartment: ${error.message}`);

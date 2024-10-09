@@ -79,7 +79,7 @@ const ResetPasswordPage = () => {
 
   const handleResetPassword = () => {
     setError(null);
-    console.log(otp);
+
     if (otp.length < 4) {
       setError("Verification code is required.");
       return;

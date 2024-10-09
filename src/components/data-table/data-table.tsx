@@ -24,21 +24,20 @@ import {
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  newButtonLabel?: string;
+  onNewButtonClick?: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  newButtonLabel,
+  onNewButtonClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -74,7 +73,11 @@ export function DataTable<TData, TValue>({
     <>
       <Card>
         <CardHeader>
-          <DataTableToolbar table={table} />
+          <DataTableToolbar
+            table={table}
+            newButtonLabel={newButtonLabel}
+            onNewButtonClick={onNewButtonClick}
+          />
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -131,7 +134,6 @@ export function DataTable<TData, TValue>({
             <DataTablePagination table={table} />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col items-center justify-between gap-2 sm:flex-row"></CardFooter>
       </Card>
     </>
   );

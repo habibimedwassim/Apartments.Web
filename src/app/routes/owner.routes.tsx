@@ -3,6 +3,7 @@ import RouteGuard from "@/components/common/route-guard";
 import DashboardLayout from "@/app/layouts/dashboard.layout";
 import PageLayout from "@/app/layouts/page.layout";
 import ApartmentsPage from "@/app/pages/apartment/ApartmentsPage";
+import CreateApartmentPage from "@/app/pages/apartment/CreateApartmentPage";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -36,7 +37,7 @@ const ownerRoutes: RouteObject = {
       path: "apartments/new",
       element: (
         <PageLayout title="New Apartment">
-          <ApartmentsPage />
+          <CreateApartmentPage />
         </PageLayout>
       ),
     },

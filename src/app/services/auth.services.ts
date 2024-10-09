@@ -29,7 +29,7 @@ export const loginService = async (
 ): Promise<LoginResponseModel> => {
   try {
     const response = await login(data);
-    console.log(response);
+
     // Use zustand store to handle login
     if (response.role != USER_ROLE.USER) {
       useAuthStore.getState().login(response);

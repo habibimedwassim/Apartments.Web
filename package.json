@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -30,17 +31,21 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "input-otp": "^1.2.4",
     "localforage": "^1.10.0",
     "lucide-react": "^0.447.0",
     "match-sorter": "^6.3.4",
     "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.26.2",
     "sort-by": "^0.0.2",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
