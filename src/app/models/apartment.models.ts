@@ -32,6 +32,7 @@ export interface ApartmentResponseModel {
   city: string;
   street: string;
   postalCode: string;
+  description: string;
   size: number;
   rentAmount: number;
   isOccupied: boolean;
@@ -47,6 +48,7 @@ export interface ApartmentModel {
   city: string;
   street: string;
   postalCode: string;
+  description: string;
   size: number;
   rentAmount: number;
   status: string;

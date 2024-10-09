@@ -4,6 +4,7 @@ import DashboardLayout from "@/app/layouts/dashboard.layout";
 import PageLayout from "@/app/layouts/page.layout";
 import ApartmentsPage from "@/app/pages/apartment/ApartmentsPage";
 import CreateApartmentPage from "@/app/pages/apartment/CreateApartmentPage";
+import EditApartmentPage from "../pages/apartment/EditApartmentPage";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -38,6 +39,15 @@ const ownerRoutes: RouteObject = {
       element: (
         <PageLayout title="New Apartment">
           <CreateApartmentPage />
+        </PageLayout>
+      ),
+    },
+    {
+      id: "apartments-edit",
+      path: "apartments/edit/:apId",
+      element: (
+        <PageLayout title="Edit Apartment">
+          <EditApartmentPage />
         </PageLayout>
       ),
     },

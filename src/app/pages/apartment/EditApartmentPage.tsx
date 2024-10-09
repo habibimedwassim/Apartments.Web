@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateApartmentModel } from "@/app/models/apartment.models";
+import { UpdateApartmentModel } from "@/app/models/apartment.models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,14 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { createApartmentSchema } from "@/app/schemas/apartment.schemas";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar as CalendarIcon,
   ChevronsUpDown,
   Check,
   PlusCircle,
-  CircleX,
 } from "lucide-react";
 import {
   Popover,
@@ -31,7 +29,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { CITIES } from "@/app/constants/cities";
+import { CITIES, getProvinceAndPostalCode } from "@/app/constants/cities";
 import {
   Command,
   CommandEmpty,
@@ -41,24 +39,46 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { createApartmentService } from "@/app/services/apartment.services";
-import { COLORS } from "@/app/constants/colors";
+import { useApartmentByIdService } from "@/app/services/apartment.services"; // To fetch the apartment by ID
+import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
+import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
+import { useNavigate, useParams } from "react-router-dom";
 
-// The CreateApartmentPage component
-const CreateApartmentPage = () => {
+const EditApartmentPage = () => {
   const { toast } = useToast();
-  const [photoFields, setPhotoFields] = useState<
-    { id: number; file: File | null }[]
-  >([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [_, setPostalCode] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openProvincePicker, setOpenProvincePicker] = useState(false);
   const [openCityPicker, setOpenCityPicker] = useState(false);
+  const { apId } = useParams<{ apId: string }>();
+  const navigate = useNavigate();
 
-  const form = useForm<CreateApartmentModel>({
-    resolver: zodResolver(createApartmentSchema),
+  // Fetch apartment data by ID
+  const apartmentId = Number(apId);
+  const {
+    data: apartment,
+    isLoading: isFetchingApartment,
+    isError,
+    error,
+  } = useApartmentByIdService(apartmentId);
+
+  // Error handling for fetching apartment
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: "destructive",
+        title: "Fetch Error",
+        description: error.message,
+      });
+      navigate("/apartments");
+    }
+  }, [isError, error, navigate, toast]);
+
+  // Initialize form with react-hook-form
+  const form = useForm<UpdateApartmentModel>({
+    resolver: zodResolver(updateApartmentSchema),
     defaultValues: {
       title: "",
       city: "",
@@ -68,52 +88,68 @@ const CreateApartmentPage = () => {
       size: 0,
       rentAmount: 0,
       availableFrom: new Date().toISOString().split("T")[0],
-      apartmentPhotos: [],
     },
   });
 
-  const mutation = createApartmentService();
-
-  const onSubmit = (data: CreateApartmentModel) => {
-    if (!data.size) {
-      data.size = 0;
-    }
-    data.availableFrom = date ? date.toISOString().split("T")[0] : "";
-    data.apartmentPhotos = photoFields.map((field) => field.file!);
-    mutation.mutate(data);
-
-    mutation.isSuccess && form.reset();
-  };
-
-  // Add a new empty photo input field (limit to 4)
-  const addPhotoField = () => {
-    if (photoFields.length >= 4) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You can upload a maximum of 4 photos.",
+  // Update form values and local state when apartment data is fetched
+  useEffect(() => {
+    if (apartment) {
+      form.reset({
+        title: apartment.title,
+        city: apartment.city,
+        street: apartment.street,
+        postalCode: apartment.postalCode,
+        description: apartment.description,
+        size: apartment.size,
+        rentAmount: apartment.rentAmount,
+        availableFrom: apartment.availableFrom,
       });
-      return;
+
+      const [province, postalCode] = getProvinceAndPostalCode(apartment.city);
+      setSelectedProvince(province || "");
+      setSelectedCity(apartment.city);
+      setPostalCode(postalCode || "");
+      setDate(
+        apartment.availableFrom ? new Date(apartment.availableFrom) : undefined
+      );
     }
-    setPhotoFields((prevFields) => [
-      ...prevFields,
-      { id: prevFields.length + 1, file: null }, // Unique id for each field
-    ]);
-  };
+  }, [apartment, form]);
 
-  // Remove photo input field by ID
-  const removePhotoField = (id: number) => {
-    setPhotoFields((prevFields) =>
-      prevFields.filter((field) => field.id !== id)
-    );
-  };
+  // Prevent submitting the form while fetching or during mutation
+  const mutation = updateApartmentService();
 
-  // Handle photo input change
-  const handlePhotoChange = (id: number, file: File) => {
-    setPhotoFields((prevFields) =>
-      prevFields.map((field) =>
-        field.id === id ? { ...field, file: file } : field
-      )
+  const onSubmit = (data: UpdateApartmentModel) => {
+    const isRentAmountChanged =
+      apartment &&
+      data.rentAmount?.toFixed(2) !== apartment.rentAmount.toFixed(2);
+
+    // Round rentAmount only if it has changed
+    if (isRentAmountChanged && data.rentAmount) {
+      data.rentAmount = parseFloat(data.rentAmount.toFixed(2));
+    } else {
+      delete data.rentAmount; // Avoid sending unchanged value
+    }
+
+    data.availableFrom = date ? date.toISOString().split("T")[0] : undefined;
+
+    mutation.mutate(
+      { id: apartmentId, data },
+      {
+        onSuccess: () => {
+          toast({
+            variant: "default",
+            title: "Apartment updated successfully!",
+          });
+          navigate("/apartments");
+        },
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: "Update Error",
+            description: error.message,
+          });
+        },
+      }
     );
   };
 
@@ -121,69 +157,73 @@ const CreateApartmentPage = () => {
     setSelectedProvince(province);
     setSelectedCity("");
     setPostalCode("");
-    form.setValue("city", "");
-    form.setValue("postalCode", "");
+
+    // Set values with `shouldDirty` to mark the form as dirty
+    form.setValue("city", "", { shouldDirty: true });
+    form.setValue("postalCode", "", { shouldDirty: true });
+
     setOpenProvincePicker(false);
   };
 
-  const handleCitySelect = (city: string, postalCode: string) => {
+  const handleCitySelect = (city: string) => {
+    const [_, postalCode] = getProvinceAndPostalCode(city);
     setSelectedCity(city);
-    setPostalCode(postalCode);
-    form.setValue("city", city);
-    form.setValue("postalCode", postalCode);
+    setPostalCode(postalCode || "");
+
+    // Set values with `shouldDirty` to mark the form as dirty
+    form.setValue("city", city, { shouldDirty: true });
+    form.setValue("postalCode", postalCode || "", { shouldDirty: true });
+
     setOpenCityPicker(false);
   };
 
   const resetForm = () => {
-    form.reset();
-    setSelectedProvince("");
-    setSelectedCity("");
-    setPostalCode("");
-    setDate(new Date());
-    setPhotoFields([]);
+    if (!apartment) return;
+
+    form.reset(apartment);
+
+    const [province, postalCode] = getProvinceAndPostalCode(apartment.city);
+
+    // Reset province, city, and postal code based on the apartment data
+    setSelectedProvince(province || "");
+    setSelectedCity(apartment?.city || "");
+    setPostalCode(postalCode || "");
+
+    setDate(new Date(apartment?.availableFrom || ""));
   };
 
-  const showReset = () => {
-    return (
-      form.formState.isDirty ||
-      photoFields.length > 0 ||
-      selectedProvince ||
-      selectedCity ||
-      (date && date.toDateString() !== new Date().toDateString())
-    );
-  };
   return (
     <div>
       <Card>
         <CardHeader>
           <CardTitle>
             <div className="flex justify-between">
-              <h1>New Apartment</h1>
+              <h1>Edit Apartment</h1>
               <div className="flex justify-end">
-                {showReset() && (
-                  <Button
-                    variant="ghost"
-                    onClick={resetForm}
-                    disabled={mutation.isPending}
-                    className="h-8 px-2 lg:px-3"
-                  >
-                    Reset
-                    <Cross2Icon className="ml-2 h-4 w-4" />
-                  </Button>
-                )}
-
-                {/* Add Apartment Button */}
+                <Button
+                  variant="ghost"
+                  onClick={resetForm}
+                  disabled={mutation.isPending || isFetchingApartment}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  Reset
+                  <Cross2Icon className="ml-2 h-4 w-4" />
+                </Button>
                 <Button
                   type="submit"
-                  form="apartment-form" // Make sure it triggers the form submission
+                  form="apartment-edit-form"
                   variant="outline"
                   size="sm"
-                  disabled={mutation.isPending}
+                  disabled={
+                    mutation.isPending ||
+                    isFetchingApartment ||
+                    !form.formState.isDirty // Disable if no changes made
+                  }
                   className="h-8 gap-1 ml-2"
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    {mutation.isPending ? "Adding..." : "Add Apartment"}
+                    {mutation.isPending ? "Updating..." : "Update Apartment"}
                   </span>
                 </Button>
               </div>
@@ -192,7 +232,10 @@ const CreateApartmentPage = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} id="apartment-form">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              id="apartment-edit-form"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -286,12 +329,7 @@ const CreateApartmentPage = () => {
                             {CITIES[selectedProvince]?.map((cityObj) => (
                               <CommandItem
                                 key={cityObj.city}
-                                onSelect={() =>
-                                  handleCitySelect(
-                                    cityObj.city,
-                                    cityObj.postalCode
-                                  )
-                                }
+                                onSelect={() => handleCitySelect(cityObj.city)}
                               >
                                 <Check
                                   className={cn(
@@ -322,6 +360,7 @@ const CreateApartmentPage = () => {
                           id="postalCode"
                           placeholder="Postal code"
                           {...field}
+                          value={postalCode}
                           readOnly
                         />
                       </FormControl>
@@ -437,58 +476,6 @@ const CreateApartmentPage = () => {
                   )}
                 />
               </div>
-
-              <div className="mt-4">
-                <FormItem>
-                  {/* Flex container for the label and the button */}
-                  <div className="flex justify-between items-center">
-                    <FormLabel htmlFor="apartmentPhotos">
-                      Apartment Photos
-                    </FormLabel>
-                    <Button
-                      id="apartmentPhotos"
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addPhotoField}
-                      disabled={photoFields.length >= 4}
-                      className="h-8 gap-1 ml-2"
-                    >
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Add Photo
-                      </span>
-                    </Button>
-                  </div>
-
-                  {photoFields.map((field) => (
-                    <div
-                      key={field.id}
-                      className="flex items-center space-x-4 mt-2"
-                    >
-                      <Input
-                        type="file"
-                        onChange={(e) =>
-                          handlePhotoChange(
-                            field.id,
-                            e.target.files?.[0] as File
-                          )
-                        }
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removePhotoField(field.id)}
-                        disabled={mutation.isPending}
-                        className="h-8 gap-1 ml-2"
-                      >
-                        <CircleX className="h-3.5 w-3.5" color={COLORS.Red} />
-                      </Button>
-                    </div>
-                  ))}
-                </FormItem>
-              </div>
             </form>
           </Form>
         </CardContent>
@@ -497,4 +484,4 @@ const CreateApartmentPage = () => {
   );
 };
 
-export default CreateApartmentPage;
+export default EditApartmentPage;

@@ -21,11 +21,43 @@ export const getApartmentsService = () => {
   });
 };
 
+export const useApartmentByIdService = (id: number) => {
+  return useQuery({
+    queryKey: ["apartments", id],
+    queryFn: () => getApartmentById(id),
+    staleTime: 300000,
+  });
+};
+
 export const createApartmentService = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: createApartment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
+      toast({
+        variant: "default",
+        title: "Apartment created successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create Apartment Error",
+        description: error.message,
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const archiveApartmentService = (id: number) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => deleteApartment(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["apartments"] });
       toast({
@@ -57,7 +89,7 @@ export const getApartmentByIdService = async (
 };
 
 // Update an apartment
-export const updateApartmentService = async (
+export const updatezApartmentService = async (
   id: number,
   data: UpdateApartmentModel
 ) => {
@@ -69,6 +101,30 @@ export const updateApartmentService = async (
   }
 };
 
+export const updateApartmentService = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: UpdateApartmentModel }) =>
+      updateApartment(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
+      toast({
+        variant: "default",
+        title: "Apartment updated successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create Apartment Error",
+        description: error.message,
+      });
+    },
+  });
+
+  return mutation;
+};
 // Delete an apartment
 export const deleteApartmentService = async (id: number) => {
   try {

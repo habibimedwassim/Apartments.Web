@@ -249,3 +249,17 @@ const TN_CITIES = {
 };
 
 export const CITIES: CITIES_TYPE = TN_CITIES;
+
+export function getProvinceAndPostalCode(
+  cityName: string
+): [string | null, string | null] {
+  for (const province in CITIES) {
+    const citiesList = CITIES[province];
+    for (const cityObj of citiesList) {
+      if (cityObj.city.toLowerCase() === cityName.toLowerCase()) {
+        return [province, cityObj.postalCode];
+      }
+    }
+  }
+  return [null, null];
+}

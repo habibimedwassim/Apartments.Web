@@ -23,6 +23,7 @@ export const getMyApartments = async (): Promise<ApartmentModel[]> => {
 export const getApartmentById = async (
   id: number
 ): Promise<ApartmentResponseModel> => {
+  console.log("get by Id API called");
   const response = await api.get<ApartmentResponseModel>(`/apartments/${id}`);
   return response.data;
 };
@@ -60,6 +61,7 @@ export const updateApartment = async (
   id: number,
   data: UpdateApartmentModel
 ) => {
+  console.log("update API called");
   return await api.patch(`/apartments/${id}`, data);
 };
 

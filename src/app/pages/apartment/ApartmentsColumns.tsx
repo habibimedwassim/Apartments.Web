@@ -8,6 +8,8 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { statuses } from "@/components/data-table/data";
 import { ImageOff } from "lucide-react";
+import { archiveApartmentService } from "@/app/services/apartment.services";
+import { useNavigate } from "react-router-dom";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
@@ -124,6 +126,26 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <DataTableRowActions<ApartmentModel> row={row} />,
+    cell: ({ row }) => {
+      const apartmentId = row.original.id;
+      const navigate = useNavigate();
+      const deleteMutation = archiveApartmentService(apartmentId);
+
+      const handleDelete = () => {
+        deleteMutation.mutate();
+      };
+
+      const handleEdit = () => {
+        navigate(`/apartments/edit/${apartmentId}`);
+      };
+
+      return (
+        <DataTableRowActions<ApartmentModel>
+          row={row}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+        />
+      );
+    },
   },
 ];
