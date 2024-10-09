@@ -7,6 +7,7 @@ import { formatToLocalDateTime } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
 import { statuses } from "@/components/data-table/data";
+import { ImageOff } from "lucide-react";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
@@ -23,7 +24,9 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
           src={photos[0].url}
           width="64"
         />
-      ) : null;
+      ) : (
+        <ImageOff className="aspect-square rounded-md object-cover" size={32} />
+      );
     },
     enableHiding: true,
   },

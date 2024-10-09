@@ -20,8 +20,8 @@ import {
   Calendar as CalendarIcon,
   ChevronsUpDown,
   Check,
-  MinusCircle,
   PlusCircle,
+  CircleX,
 } from "lucide-react";
 import {
   Popover,
@@ -198,9 +198,13 @@ const CreateApartmentPage = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel htmlFor="title">Title</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter apartment title" {...field} />
+                        <Input
+                          id="title"
+                          placeholder="Enter apartment title"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -208,13 +212,14 @@ const CreateApartmentPage = () => {
                 />
 
                 <FormItem>
-                  <FormLabel>Province</FormLabel>
+                  <FormLabel htmlFor="province">Province</FormLabel>
                   <Popover
                     open={openProvincePicker}
                     onOpenChange={setOpenProvincePicker}
                   >
                     <PopoverTrigger asChild>
                       <Button
+                        id="province"
                         variant="outline"
                         role="combobox"
                         aria-expanded={openProvincePicker}
@@ -254,13 +259,14 @@ const CreateApartmentPage = () => {
                 </FormItem>
 
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel htmlFor="city">City</FormLabel>
                   <Popover
                     open={openCityPicker}
                     onOpenChange={setOpenCityPicker}
                   >
                     <PopoverTrigger asChild>
                       <Button
+                        id="city"
                         variant="outline"
                         role="combobox"
                         aria-expanded={openCityPicker}
@@ -309,9 +315,14 @@ const CreateApartmentPage = () => {
                   name="postalCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Postal Code</FormLabel>
+                      <FormLabel htmlFor="postalCode">Postal Code</FormLabel>
                       <FormControl>
-                        <Input placeholder="Postal code" {...field} readOnly />
+                        <Input
+                          id="postalCode"
+                          placeholder="Postal code"
+                          {...field}
+                          readOnly
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -323,9 +334,13 @@ const CreateApartmentPage = () => {
                   name="street"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Street</FormLabel>
+                      <FormLabel htmlFor="street">Street</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter street" {...field} />
+                        <Input
+                          id="street"
+                          placeholder="Enter street"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -337,9 +352,10 @@ const CreateApartmentPage = () => {
                   name="size"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Size (Rooms)</FormLabel>
+                      <FormLabel htmlFor="size">Size (Rooms)</FormLabel>
                       <FormControl>
                         <Input
+                          id="size"
                           type="number"
                           placeholder="Enter size"
                           {...field}
@@ -355,9 +371,10 @@ const CreateApartmentPage = () => {
                   name="rentAmount"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Rent Amount</FormLabel>
+                      <FormLabel htmlFor="rentAmount">Rent Amount</FormLabel>
                       <FormControl>
                         <Input
+                          id="rentAmount"
                           type="number"
                           placeholder="Enter rent amount"
                           {...field}
@@ -373,10 +390,13 @@ const CreateApartmentPage = () => {
                   name="availableFrom"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Available From</FormLabel>
+                      <FormLabel htmlFor="availableFrom">
+                        Available From
+                      </FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
+                            id="availableFrom"
                             variant="outline"
                             className={cn(
                               "w-full justify-start text-left font-normal",
@@ -421,8 +441,11 @@ const CreateApartmentPage = () => {
                 <FormItem>
                   {/* Flex container for the label and the button */}
                   <div className="flex justify-between items-center">
-                    <FormLabel>Apartment Photos</FormLabel>
+                    <FormLabel htmlFor="apartmentPhotos">
+                      Apartment Photos
+                    </FormLabel>
                     <Button
+                      id="apartmentPhotos"
                       type="button"
                       variant="outline"
                       size="sm"
@@ -459,7 +482,7 @@ const CreateApartmentPage = () => {
                         disabled={mutation.isPending}
                         className="h-8 gap-1 ml-2"
                       >
-                        <MinusCircle className="h-3.5 w-3.5" />
+                        <CircleX className="h-3.5 w-3.5" />
                       </Button>
                     </div>
                   ))}
