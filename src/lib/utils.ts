@@ -43,7 +43,7 @@ export const formatDate = (date: string): string => {
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 export const formatToLocalDateTime = (utcDate: string): string => {
-  return dayjs.utc(utcDate).local().format("YYYY-MM-DD hh:mm A");
+  return dayjs.utc(utcDate).local().format("YYYY-MM-DD HH:mm");
 };
 
 /**
