@@ -12,16 +12,20 @@ import React from "react";
 export function RouteBreadcrumbs() {
   const location = useLocation();
 
-  // Get the path segments (e.g., ["apartments", "all-apartments"])
+  // Get the path segments (e.g., ["apartments", "edit", "24"])
   const pathSegments = location.pathname
     .split("/")
     .filter((segment) => segment);
 
+  // Remove numeric segments (like IDs) from breadcrumbs
+  const filteredSegments = pathSegments.filter(
+    (segment) => !/^\d+$/.test(segment) // This will filter out segments that are purely numeric (e.g., IDs)
+  );
+
   // Generate breadcrumb items
-  const breadcrumbs = pathSegments.map((segment, index) => {
-    // Construct the path to this breadcrumb
-    const to = `/${pathSegments.slice(0, index + 1).join("/")}`;
-    const isLast = index === pathSegments.length - 1;
+  const breadcrumbs = filteredSegments.map((segment, index) => {
+    const isLast = index === filteredSegments.length - 1;
+    const to = `/${filteredSegments.slice(0, index + 1).join("/")}`;
 
     // Convert segment to a title (e.g., "all-apartments" -> "All Apartments")
     const title =
@@ -30,6 +34,7 @@ export function RouteBreadcrumbs() {
     return (
       <BreadcrumbItem key={to}>
         {isLast ? (
+          // If it's the last segment (like "edit"), don't make it clickable
           <BreadcrumbPage>{title}</BreadcrumbPage>
         ) : (
           <BreadcrumbLink asChild>
