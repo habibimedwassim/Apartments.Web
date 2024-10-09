@@ -7,19 +7,42 @@ import {
   restoreApartment,
 } from "@/app/api/apartment.api";
 import {
-  CreateApartmentModel,
   UpdateApartmentModel,
   ApartmentResponseModel,
 } from "@/app/models/apartment.models";
-import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Fetch all apartments with filtering
-export const useApartments = () => {
+export const getApartmentsService = () => {
   return useQuery({
     queryKey: ["apartments"],
     queryFn: () => getMyApartments(),
     staleTime: 300000,
   });
+};
+
+export const createApartmentService = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createApartment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
+      toast({
+        variant: "default",
+        title: "Apartment created successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create Apartment Error",
+        description: error.message,
+      });
+    },
+  });
+
+  return mutation;
 };
 
 // Fetch a single apartment by ID
@@ -30,17 +53,6 @@ export const getApartmentByIdService = async (
     return await getApartmentById(id);
   } catch (error: any) {
     throw new Error(`Failed to fetch apartment: ${error.message}`);
-  }
-};
-
-// Create a new apartment
-export const createApartmentService = async (data: CreateApartmentModel) => {
-  try {
-    const rr = await createApartment(data);
-    console.log(rr);
-    return "Apartment created successfully.";
-  } catch (error: any) {
-    throw new Error(`Failed to create apartment: ${error.message}`);
   }
 };
 

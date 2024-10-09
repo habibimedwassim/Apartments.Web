@@ -12,6 +12,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { Link, useLocation } from "react-router-dom";
+import { useLogout } from "@/hooks/use-logout";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -21,6 +22,7 @@ export function Menu({ isOpen }: MenuProps) {
   const location = useLocation();
   const pathname = location.pathname;
   const menuList = getMenuList(pathname);
+  const { handleLogout } = useLogout();
 
   return (
     <ScrollArea className="relative overflow-hidden [&>div]:overflow-hidden [&>div>div]:overflow-hidden [&>div>div[style]]:!block no-scrollbar">
@@ -106,7 +108,7 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {}}
+                    onClick={handleLogout}
                     variant="outline"
                     className="w-full justify-center h-10 mt-5 mb-2"
                   >

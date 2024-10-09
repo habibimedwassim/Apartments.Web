@@ -19,9 +19,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { useLogout } from "@/hooks/use-logout";
+import { useAuthStore } from "@/hooks/use-store";
 
 export function UserNav() {
   const { handleLogout } = useLogout();
+  const { user } = useAuthStore();
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -42,20 +44,21 @@ export function UserNav() {
           <TooltipContent side="bottom">Profile</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Doe</p>
+            <p className="text-sm font-medium leading-none">
+              {user ? `${user.firstName}, ${user.lastName}` : ""}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              johndoe@example.com
+              {user ? `${user.email}` : ""}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link to="/dashboard" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
               Dashboard
             </Link>

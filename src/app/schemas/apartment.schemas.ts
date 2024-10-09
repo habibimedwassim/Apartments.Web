@@ -7,7 +7,7 @@ export const createApartmentSchema = z.object({
   street: z.string().min(1, { message: "Street is required" }),
   postalCode: z.string().min(1, { message: "Postal Code is required" }),
   description: z.string().min(1, { message: "Description is required" }),
-  size: z.coerce.number().min(1, { message: "Size must be at least 1" }),
+  size: z.coerce.number().min(0, { message: "Size must be positive" }),
   rentAmount: z.coerce
     .number()
     .min(1, { message: "Rent amount must be positive" }),

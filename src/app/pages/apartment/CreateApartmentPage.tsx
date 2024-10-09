@@ -1,9 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateApartmentModel } from "@/app/models/apartment.models";
-import { useMutation } from "@tanstack/react-query";
-import { createApartmentService } from "@/app/services/apartment.services";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,10 +41,10 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { createApartmentService } from "@/app/services/apartment.services";
 
 // The CreateApartmentPage component
 const CreateApartmentPage = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [photoFields, setPhotoFields] = useState<
     { id: number; file: File | null }[]
@@ -74,28 +71,17 @@ const CreateApartmentPage = () => {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: createApartmentService,
-    onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Apartment created successfully!",
-      });
-      navigate("/apartments");
-    },
-    onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Create Apartment Error",
-        description: error.message,
-      });
-    },
-  });
+  const mutation = createApartmentService();
 
   const onSubmit = (data: CreateApartmentModel) => {
+    if (!data.size) {
+      data.size = 0;
+    }
     data.availableFrom = date ? date.toISOString().split("T")[0] : "";
     data.apartmentPhotos = photoFields.map((field) => field.file!);
     mutation.mutate(data);
+
+    mutation.isSuccess && form.reset();
   };
 
   // Add a new empty photo input field (limit to 4)
@@ -156,6 +142,15 @@ const CreateApartmentPage = () => {
     setPhotoFields([]);
   };
 
+  const showReset = () => {
+    return (
+      form.formState.isDirty ||
+      photoFields.length > 0 ||
+      selectedProvince ||
+      selectedCity ||
+      (date && date.toDateString() !== new Date().toDateString())
+    );
+  };
   return (
     <div>
       <Card>
@@ -164,15 +159,17 @@ const CreateApartmentPage = () => {
             <div className="flex justify-between">
               <h1>New Apartment</h1>
               <div className="flex justify-end">
-                <Button
-                  variant="ghost"
-                  onClick={resetForm}
-                  disabled={mutation.isPending}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  Reset
-                  <Cross2Icon className="ml-2 h-4 w-4" />
-                </Button>
+                {showReset() && (
+                  <Button
+                    variant="ghost"
+                    onClick={resetForm}
+                    disabled={mutation.isPending}
+                    className="h-8 px-2 lg:px-3"
+                  >
+                    Reset
+                    <Cross2Icon className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
 
                 {/* Add Apartment Button */}
                 <Button
@@ -428,12 +425,15 @@ const CreateApartmentPage = () => {
                     <Button
                       type="button"
                       variant="outline"
+                      size="sm"
                       onClick={addPhotoField}
-                      className="mt-2"
                       disabled={photoFields.length >= 4}
+                      className="h-8 gap-1 ml-2"
                     >
-                      <PlusCircle className="h-3.5 w-3.5 mr-2" />
-                      Add Photo
+                      <PlusCircle className="h-3.5 w-3.5" />
+                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                        Add Photo
+                      </span>
                     </Button>
                   </div>
 
@@ -454,9 +454,12 @@ const CreateApartmentPage = () => {
                       <Button
                         type="button"
                         variant="destructive"
+                        size="sm"
                         onClick={() => removePhotoField(field.id)}
+                        disabled={mutation.isPending}
+                        className="h-8 gap-1 ml-2"
                       >
-                        <MinusCircle size="sm" />
+                        <MinusCircle className="h-3.5 w-3.5" />
                       </Button>
                     </div>
                   ))}

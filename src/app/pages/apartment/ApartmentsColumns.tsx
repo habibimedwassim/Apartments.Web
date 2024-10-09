@@ -10,10 +10,6 @@ import { statuses } from "@/components/data-table/data";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
     accessorKey: "apartmentPhotos",
     header: "Cover",
     cell: ({ row }) => {
