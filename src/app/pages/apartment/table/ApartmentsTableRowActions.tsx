@@ -32,30 +32,40 @@ export function ApartmentsTableRowActions<TData>({
   row,
 }: ApartmentsTableRowActionsProps<TData>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const apartmentRow = row.original as ApartmentModel;
+  const [deletePermanentlyDialog, setDeletePermanentlyDialog] = useState(false);
 
+  const apartmentRow = row.original as ApartmentModel;
   const apartmentId = apartmentRow.id;
   const status = apartmentRow.status;
-  const isRestore = status === APARTMENT_STATUS.Archived;
 
   const navigate = useNavigate();
-  const deleteMutation = archiveApartmentService(apartmentId, isRestore);
+  const deleteMutation = archiveApartmentService(
+    apartmentId,
+    status === APARTMENT_STATUS.Archived
+  );
 
+  // Logic to handle delete/archive/restore
   const handleDelete = () => {
-    if (status === APARTMENT_STATUS.Occupied) return;
     deleteMutation.mutate();
   };
 
+  // Logic to handle edit
   const handleEdit = (apartmentId: number) => {
     navigate("/apartments/edit", { state: { apartmentId } });
   };
 
+  // Status-based logic
+  const isAvailable = status === APARTMENT_STATUS.Available;
   const isOccupied = status === APARTMENT_STATUS.Occupied;
   const isArchived = status === APARTMENT_STATUS.Archived;
 
+  // Set labels and disable status based on apartment status
+  const actionLabel = isArchived
+    ? "Restore"
+    : isAvailable
+    ? "Archive"
+    : "Delete";
   const canDelete = !isOccupied;
-  const label = isArchived ? "Restore" : "Delete";
-  const disable = !canDelete;
 
   return (
     <>
@@ -71,25 +81,41 @@ export function ApartmentsTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+          {/* Edit option */}
           <DropdownMenuItem onClick={() => handleEdit(apartmentId)}>
             Edit
           </DropdownMenuItem>
+
+          {/* Archive/Restore/Delete option */}
           <DropdownMenuItem
-            disabled={disable}
+            disabled={!canDelete}
             onClick={() => setOpenDeleteDialog(true)}
           >
-            {label}
+            {actionLabel}
           </DropdownMenuItem>
+
+          {/* If apartment is archived, allow permanent deletion */}
+          {isArchived && (
+            <DropdownMenuItem
+              onClick={() => {
+                setDeletePermanentlyDialog(true);
+              }}
+            >
+              Delete Permanently
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Archive/Restore Confirmation Dialog */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm {label}</AlertDialogTitle>
+            <AlertDialogTitle>{`Confirm ${actionLabel}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to {label.toLowerCase()} this record?
+              Are you sure you want to {actionLabel.toLowerCase()} this
+              apartment?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -100,6 +126,37 @@ export function ApartmentsTableRowActions<TData>({
               onClick={() => {
                 handleDelete();
                 setOpenDeleteDialog(false);
+              }}
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Permanently Confirmation Dialog */}
+      <AlertDialog
+        open={deletePermanentlyDialog}
+        onOpenChange={setDeletePermanentlyDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Permanently</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this apartment permanently? This
+              action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => setDeletePermanentlyDialog(false)}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                handleDelete();
+                setDeletePermanentlyDialog(false);
               }}
             >
               Confirm
