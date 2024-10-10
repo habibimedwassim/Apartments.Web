@@ -19,7 +19,6 @@ import {
   Calendar as CalendarIcon,
   ChevronsUpDown,
   Check,
-  PlusCircle,
   Edit,
 } from "lucide-react";
 import {
