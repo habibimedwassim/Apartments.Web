@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { APARTMENT_STATUS } from "@/app/constants/status";
+import { ApartmentStatus } from "@/app/models/apartment.models";
 import { useNavigate } from "react-router-dom";
 import { ApartmentModel } from "@/app/models/apartment.models";
 import { archiveApartmentService } from "@/app/services/apartment.services";
@@ -41,7 +41,7 @@ export function ApartmentsTableRowActions<TData>({
   const navigate = useNavigate();
   const deleteMutation = archiveApartmentService(
     apartmentId,
-    status === APARTMENT_STATUS.Archived
+    status === ApartmentStatus.Archived
   );
 
   // Logic to handle delete/archive/restore
@@ -55,9 +55,9 @@ export function ApartmentsTableRowActions<TData>({
   };
 
   // Status-based logic
-  const isAvailable = status === APARTMENT_STATUS.Available;
-  const isOccupied = status === APARTMENT_STATUS.Occupied;
-  const isArchived = status === APARTMENT_STATUS.Archived;
+  const isAvailable = status === ApartmentStatus.Available;
+  const isOccupied = status === ApartmentStatus.Occupied;
+  const isArchived = status === ApartmentStatus.Archived;
 
   // Set labels and disable status based on apartment status
   const actionLabel = isArchived
