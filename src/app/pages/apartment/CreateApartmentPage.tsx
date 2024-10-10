@@ -41,8 +41,9 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { createApartmentService } from "@/app/services/apartment.services";
 import { COLORS } from "@/app/constants/colors";
+import { useCreateApartmentMutation } from "@/app/services/mutations/apartment.mutations";
+import { LoadingButton } from "@/components/ui/button-loading";
 
 // The CreateApartmentPage component
 const CreateApartmentPage = () => {
@@ -72,7 +73,7 @@ const CreateApartmentPage = () => {
     },
   });
 
-  const mutation = createApartmentService();
+  const createApartmentMutation = useCreateApartmentMutation();
 
   const onSubmit = (data: CreateApartmentModel) => {
     if (!data.size) {
@@ -80,9 +81,23 @@ const CreateApartmentPage = () => {
     }
     data.availableFrom = date ? date.toISOString().split("T")[0] : "";
     data.apartmentPhotos = photoFields.map((field) => field.file!);
-    mutation.mutate(data);
 
-    mutation.isSuccess && form.reset();
+    createApartmentMutation
+      .mutateAsync(data)
+      .then(() => {
+        resetForm();
+        toast({
+          variant: "default",
+          title: "Apartment created successfully!",
+        });
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          title: "Create Apartment Error",
+          description: err,
+        });
+      });
   };
 
   // Add a new empty photo input field (limit to 4)
@@ -164,7 +179,7 @@ const CreateApartmentPage = () => {
                   <Button
                     variant="ghost"
                     onClick={resetForm}
-                    disabled={mutation.isPending}
+                    disabled={createApartmentMutation.isPending}
                     className="h-8 px-2 lg:px-3"
                   >
                     Reset
@@ -173,19 +188,34 @@ const CreateApartmentPage = () => {
                 )}
 
                 {/* Add Apartment Button */}
-                <Button
+                <LoadingButton
+                  type="submit"
+                  form="apartment-form"
+                  variant="outline"
+                  size="sm"
+                  isLoading={createApartmentMutation.isPending}
+                  loadingText="Adding..."
+                  disabled={createApartmentMutation.isPending}
+                  icon={<PlusCircle className="h-3.5 w-3.5" />}
+                  className="h-8 gap-1 ml-2"
+                >
+                  Add Apartment
+                </LoadingButton>
+                {/* <Button
                   type="submit"
                   form="apartment-form" // Make sure it triggers the form submission
                   variant="outline"
                   size="sm"
-                  disabled={mutation.isPending}
+                  disabled={createApartmentMutation.isPending}
                   className="h-8 gap-1 ml-2"
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    {mutation.isPending ? "Adding..." : "Add Apartment"}
+                    {createApartmentMutation.isPending
+                      ? "Adding..."
+                      : "Add Apartment"}
                   </span>
-                </Button>
+                </Button> */}
               </div>
             </div>
           </CardTitle>
@@ -480,7 +510,7 @@ const CreateApartmentPage = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => removePhotoField(field.id)}
-                        disabled={mutation.isPending}
+                        disabled={createApartmentMutation.isPending}
                         className="h-8 gap-1 ml-2"
                       >
                         <CircleX className="h-3.5 w-3.5" color={COLORS.Red} />

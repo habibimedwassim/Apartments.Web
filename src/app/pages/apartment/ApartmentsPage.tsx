@@ -4,6 +4,7 @@ import { ApartmentModel } from "@/app/models/apartment.models";
 import { useNavigate } from "react-router-dom";
 import { getApartmentsService } from "@/app/services/apartment.services";
 import { apartmentStatuses } from "./table/ApartmentStatuses";
+import { LoaderCircle } from "lucide-react";
 
 const ApartmentsPage = () => {
   const { data: apartments, isLoading } = getApartmentsService();
@@ -13,7 +14,7 @@ const ApartmentsPage = () => {
     navigate("/apartments/new");
   };
   return isLoading ? (
-    <div>Loading...</div>
+    <LoaderCircle className="animate-spin" />
   ) : (
     <DataTable<ApartmentModel, any>
       columns={apartmentColumns}

@@ -10,14 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
-import { resetPassword, resendVerificationCode } from "@/app/api/auth.api";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { EyeOff, Eye } from "lucide-react";
-import { getErrorMessage } from "@/lib/utils";
-import { EmailModel, ResetPasswordModel } from "@/app/models/auth.models";
 import { ModeToggle } from "@/components/common/mode-toggle";
 import {
   InputOTP,
@@ -25,6 +21,10 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import {
+  useResendCodeMutation,
+  useResetPasswordMutation,
+} from "@/app/services/mutations/auth.mutations";
 
 const ResetPasswordPage = () => {
   const location = useLocation();
@@ -42,40 +42,8 @@ const ResetPasswordPage = () => {
     }
   }, [email, navigate]);
 
-  const resetPasswordMutation = useMutation({
-    mutationFn: (data: ResetPasswordModel) => resetPassword(data),
-    onSuccess: () => {
-      toast({
-        title: "Password Reset Successful",
-        description: "Your password has been reset successfully.",
-      });
-      setTimeout(() => navigate("/auth/login"), 2000);
-    },
-    onError: (error) => {
-      const apiErrorMessage = getErrorMessage(error);
-      toast({
-        variant: "destructive",
-        description: apiErrorMessage,
-      });
-    },
-  });
-
-  const resendCodeMutation = useMutation({
-    mutationFn: (data: EmailModel) => resendVerificationCode(data),
-    onSuccess: () => {
-      toast({
-        title: "Verification Code Sent",
-        description: "A new verification code has been sent to your email.",
-      });
-    },
-    onError: (error) => {
-      const apiErrorMessage = getErrorMessage(error);
-      toast({
-        variant: "destructive",
-        description: apiErrorMessage,
-      });
-    },
-  });
+  const resetPasswordMutation = useResetPasswordMutation();
+  const resendCodeMutation = useResendCodeMutation();
 
   const handleResetPassword = () => {
     setError(null);
@@ -89,11 +57,38 @@ const ResetPasswordPage = () => {
       return;
     }
 
-    resetPasswordMutation.mutate({ email, verificationCode: otp, newPassword });
+    resetPasswordMutation
+      .mutateAsync({ email, verificationCode: otp, newPassword })
+      .then(() => {
+        toast({
+          title: "Password Reset Successful",
+          description: "Your password has been reset successfully.",
+        });
+        setTimeout(() => navigate("/auth/login"), 2000);
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          description: err,
+        });
+      });
   };
 
   const handleResendCode = () => {
-    resendCodeMutation.mutate({ email });
+    resendCodeMutation
+      .mutateAsync({ email })
+      .then(() =>
+        toast({
+          title: "Verification Code Sent",
+          description: "A new verification code has been sent to your email.",
+        })
+      )
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          description: err,
+        });
+      });
   };
 
   return (

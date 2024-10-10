@@ -20,6 +20,7 @@ import {
   ChevronsUpDown,
   Check,
   PlusCircle,
+  Edit,
 } from "lucide-react";
 import {
   Popover,
@@ -43,6 +44,7 @@ import { useApartmentByIdService } from "@/app/services/apartment.services"; // 
 import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
 import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
 import { useLocation, useNavigate } from "react-router-dom";
+import { LoadingButton } from "@/components/ui/button-loading";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();
@@ -216,23 +218,23 @@ const EditApartmentPage = () => {
                   Reset
                   <Cross2Icon className="ml-2 h-4 w-4" />
                 </Button>
-                <Button
+                <LoadingButton
                   type="submit"
                   form="apartment-edit-form"
                   variant="outline"
                   size="sm"
+                  isLoading={mutation.isPending || isFetchingApartment}
+                  loadingText="Updating..."
                   disabled={
                     mutation.isPending ||
                     isFetchingApartment ||
-                    !form.formState.isDirty // Disable if no changes made
+                    !form.formState.isDirty
                   }
+                  icon={<Edit className="h-3.5 w-3.5" />}
                   className="h-8 gap-1 ml-2"
                 >
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    {mutation.isPending ? "Updating..." : "Update Apartment"}
-                  </span>
-                </Button>
+                  Update Apartment
+                </LoadingButton>
               </div>
             </div>
           </CardTitle>

@@ -14,14 +14,11 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { ModeToggle } from "@/components/common/mode-toggle";
 
-import { useMutation } from "@tanstack/react-query";
-import { LoginModel } from "@/app/models/auth.models";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
-import { isValidEmail, getErrorMessage } from "@/lib/utils";
-import { loginService } from "@/app/services/auth.services";
-import { useAuthStore } from "@/hooks/use-store";
+import { isValidEmail } from "@/lib/utils";
 import { USER_ROLE } from "@/app/constants/user-role";
+import { useLoginMutation } from "@/app/services/mutations/auth.mutations";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -31,25 +28,7 @@ const LoginPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: (data: LoginModel) => loginService(data),
-    onSuccess: () => {
-      const role = useAuthStore.getState().role;
-      handleRoleRedirection(role);
-
-      setError(null);
-      setEmail("");
-      setPassword("");
-    },
-    onError: (error) => {
-      const apiErrorMessage = getErrorMessage(error);
-      toast({
-        variant: "destructive",
-        title: "Login Error",
-        description: apiErrorMessage,
-      });
-    },
-  });
+  const loginMutation = useLoginMutation();
 
   const handleRoleRedirection = (role: string | null) => {
     if (role === USER_ROLE.ADMIN) {
@@ -78,7 +57,23 @@ const LoginPage = () => {
       return;
     }
 
-    mutation.mutate({ email, password });
+    loginMutation
+      .mutateAsync({ email, password })
+      .then((response) => {
+        const role = response.role ?? null;
+        handleRoleRedirection(role);
+
+        setError(null);
+        setEmail("");
+        setPassword("");
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: "Login Error",
+          description: error,
+        });
+      });
   };
 
   return (
@@ -131,7 +126,7 @@ const LoginPage = () => {
           <LoadingButton
             onClick={handleLogin}
             className="w-full"
-            isLoading={mutation.isPending}
+            isLoading={loginMutation.isPending}
           >
             Sign in
           </LoadingButton>

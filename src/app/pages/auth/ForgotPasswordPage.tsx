@@ -11,13 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
-import { forgotPassword } from "@/app/api/auth.api";
 import { LoadingButton } from "@/components/ui/button-loading";
 import { useToast } from "@/hooks/use-toast";
-import { isValidEmail, getErrorMessage, getInfoMessage } from "@/lib/utils";
-import { EmailModel } from "@/app/models/auth.models";
+import { isValidEmail, getInfoMessage } from "@/lib/utils";
 import { ModeToggle } from "@/components/common/mode-toggle";
+import { useForgotPasswordMutation } from "@/app/services/mutations/auth.mutations";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -25,25 +23,7 @@ const ForgotPasswordPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const mutation = useMutation({
-    mutationFn: (data: EmailModel) => forgotPassword(data),
-    onSuccess: (message) => {
-      const infoMessage = getInfoMessage(message);
-      toast({
-        title: "Email Sent",
-        description: infoMessage,
-      });
-      navigate("/auth/reset-password", { state: { email } });
-    },
-    onError: (error) => {
-      const apiErrorMessage = getErrorMessage(error);
-      toast({
-        variant: "destructive",
-        description: apiErrorMessage,
-      });
-    },
-  });
-
+  const forgotPasswordMutation = useForgotPasswordMutation();
   const handleForgotPassword = () => {
     setError(null);
     if (!isValidEmail(email)) {
@@ -51,7 +31,22 @@ const ForgotPasswordPage = () => {
       return;
     }
 
-    mutation.mutate({ email });
+    forgotPasswordMutation
+      .mutateAsync({ email })
+      .then((message) => {
+        const infoMessage = getInfoMessage(message);
+        toast({
+          title: "Email Sent",
+          description: infoMessage,
+        });
+        navigate("/auth/reset-password", { state: { email } });
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          description: err,
+        });
+      });
   };
 
   return (
@@ -84,7 +79,7 @@ const ForgotPasswordPage = () => {
           <LoadingButton
             onClick={handleForgotPassword}
             className="w-full"
-            isLoading={mutation.isPending}
+            isLoading={forgotPasswordMutation.isPending}
           >
             Send Reset Code
           </LoadingButton>
