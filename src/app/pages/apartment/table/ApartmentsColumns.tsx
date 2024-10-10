@@ -5,11 +5,9 @@ import {
 } from "@/app/models/apartment.models";
 import { formatToLocalDateTime } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
-import { statuses } from "@/components/data-table/data";
+import { apartmentStatuses } from "./ApartmentStatuses";
 import { ImageOff } from "lucide-react";
-import { archiveApartmentService } from "@/app/services/apartment.services";
-import { useNavigate } from "react-router-dom";
+import { ApartmentsTableRowActions } from "@/app/pages/apartment/table/ApartmentsTableRowActions";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
@@ -82,7 +80,7 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
+      const status = apartmentStatuses.find(
         (status) => status.value === row.getValue("status")
       );
 
@@ -127,25 +125,7 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const apartmentId = row.original.id;
-      const navigate = useNavigate();
-      const deleteMutation = archiveApartmentService(apartmentId);
-
-      const handleDelete = () => {
-        deleteMutation.mutate();
-      };
-
-      const handleEdit = (apartmentId: number) => {
-        navigate("/apartments/edit", { state: { apartmentId } });
-      };
-
-      return (
-        <DataTableRowActions<ApartmentModel>
-          row={row}
-          onDelete={handleDelete}
-          onEdit={handleEdit}
-        />
-      );
+      return <ApartmentsTableRowActions row={row} />;
     },
   },
 ];

@@ -1,8 +1,9 @@
 import { DataTable } from "@/components/data-table/data-table";
-import { apartmentColumns } from "./ApartmentsColumns";
+import { apartmentColumns } from "./table/ApartmentsColumns";
 import { ApartmentModel } from "@/app/models/apartment.models";
 import { useNavigate } from "react-router-dom";
 import { getApartmentsService } from "@/app/services/apartment.services";
+import { apartmentStatuses } from "./table/ApartmentStatuses";
 
 const ApartmentsPage = () => {
   const { data: apartments, isLoading } = getApartmentsService();
@@ -16,6 +17,7 @@ const ApartmentsPage = () => {
   ) : (
     <DataTable<ApartmentModel, any>
       columns={apartmentColumns}
+      statuses={apartmentStatuses}
       data={(apartments ?? []) as ApartmentModel[]}
       newButtonLabel="Add Apartment"
       onNewButtonClick={handleAddApartment}

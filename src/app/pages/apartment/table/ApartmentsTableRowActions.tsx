@@ -19,21 +19,43 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { APARTMENT_STATUS } from "@/app/constants/status";
+import { useNavigate } from "react-router-dom";
+import { ApartmentModel } from "@/app/models/apartment.models";
+import { archiveApartmentService } from "@/app/services/apartment.services";
 
-interface DataTableRowActionsProps<TData extends { id: number }> {
+interface ApartmentsTableRowActionsProps<TData> {
   row: Row<TData>;
-  onDelete: (id: number) => void; // Pass delete function as prop
-  onEdit: (id: number) => void; // Pass edit function as prop
 }
 
-export function DataTableRowActions<TData extends { id: number }>({
+export function ApartmentsTableRowActions<TData>({
   row,
-  onDelete,
-  onEdit,
-}: DataTableRowActionsProps<TData>) {
+}: ApartmentsTableRowActionsProps<TData>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const apartment = row.original;
-  const id = apartment.id;
+  const apartmentRow = row.original as ApartmentModel;
+
+  const apartmentId = apartmentRow.id;
+  const status = apartmentRow.status;
+  const isRestore = status === APARTMENT_STATUS.Archived;
+
+  const navigate = useNavigate();
+  const deleteMutation = archiveApartmentService(apartmentId, isRestore);
+
+  const handleDelete = () => {
+    if (status === APARTMENT_STATUS.Occupied) return;
+    deleteMutation.mutate();
+  };
+
+  const handleEdit = (apartmentId: number) => {
+    navigate("/apartments/edit", { state: { apartmentId } });
+  };
+
+  const isOccupied = status === APARTMENT_STATUS.Occupied;
+  const isArchived = status === APARTMENT_STATUS.Archived;
+
+  const canDelete = !isOccupied;
+  const label = isArchived ? "Restore" : "Delete";
+  const disable = !canDelete;
 
   return (
     <>
@@ -49,9 +71,14 @@ export function DataTableRowActions<TData extends { id: number }>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => onEdit(id)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenDeleteDialog(true)}>
-            Delete
+          <DropdownMenuItem onClick={() => handleEdit(apartmentId)}>
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={disable}
+            onClick={() => setOpenDeleteDialog(true)}
+          >
+            {label}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -60,9 +87,9 @@ export function DataTableRowActions<TData extends { id: number }>({
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogTitle>Confirm {label}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this record?
+              Are you sure you want to {label.toLowerCase()} this record?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -71,8 +98,8 @@ export function DataTableRowActions<TData extends { id: number }>({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                onDelete(id);
-                setOpenDeleteDialog(false); // Close dialog after delete
+                handleDelete();
+                setOpenDeleteDialog(false);
               }}
             >
               Confirm

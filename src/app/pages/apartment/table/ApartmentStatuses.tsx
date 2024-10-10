@@ -1,7 +1,7 @@
 import { COLORS } from "@/app/constants/colors";
 import { CircleCheck, CircleMinus, CircleUserRound } from "lucide-react";
 
-export const apartmentaStatuses = [
+export const apartmentStatuses = [
   {
     value: "available",
     label: "Available",

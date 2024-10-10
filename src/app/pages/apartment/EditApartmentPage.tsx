@@ -42,7 +42,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useApartmentByIdService } from "@/app/services/apartment.services"; // To fetch the apartment by ID
 import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
 import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();

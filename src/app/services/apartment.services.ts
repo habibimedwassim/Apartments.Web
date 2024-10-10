@@ -25,7 +25,6 @@ export const useApartmentByIdService = (id: number) => {
   return useQuery({
     queryKey: ["apartments", id],
     queryFn: () => getApartmentById(id),
-    staleTime: 300000,
   });
 };
 
@@ -53,7 +52,7 @@ export const createApartmentService = () => {
   return mutation;
 };
 
-export const archiveApartmentService = (id: number) => {
+export const archiveApartmentService = (id: number, isRestore: boolean) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -62,13 +61,15 @@ export const archiveApartmentService = (id: number) => {
       queryClient.invalidateQueries({ queryKey: ["apartments"] });
       toast({
         variant: "default",
-        title: "Apartment created successfully!",
+        title: isRestore
+          ? "Apartment restored successfully!"
+          : "Apartment deleted successfully!",
       });
     },
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Create Apartment Error",
+        title: isRestore ? "Restore Apartment Error" : "Delete Apartment Error",
         description: error.message,
       });
     },

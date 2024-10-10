@@ -31,6 +31,11 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   newButtonLabel?: string;
   onNewButtonClick?: () => void;
+  statuses?: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +43,7 @@ export function DataTable<TData, TValue>({
   data,
   newButtonLabel,
   onNewButtonClick,
+  statuses,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -46,6 +52,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = React.useState<string>("");
 
   const table = useReactTable({
     data,
@@ -55,11 +62,13 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      globalFilter,
     },
     enableRowSelection: false,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -75,6 +84,7 @@ export function DataTable<TData, TValue>({
         <CardHeader>
           <DataTableToolbar
             table={table}
+            statuses={statuses}
             newButtonLabel={newButtonLabel}
             onNewButtonClick={onNewButtonClick}
           />
