@@ -6,7 +6,6 @@ import {
 import { formatToLocalDateTime } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { apartmentStatuses } from "./ApartmentStatuses";
-import { ImageOff } from "lucide-react";
 import { ApartmentsTableRowActions } from "@/app/pages/apartment/table/ApartmentsTableRowActions";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
