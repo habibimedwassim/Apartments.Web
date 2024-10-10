@@ -16,16 +16,17 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
     cell: ({ row }) => {
       const photos = row.getValue("apartmentPhotos") as ApartmentPhotoModel[];
 
-      return photos.length > 0 ? (
+      return (
         <img
           alt="Apartment img"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={photos[0].url}
+          src={photos.length > 0 ? photos[0].url : "/no-img.svg"}
           width="64"
+          onError={(e) => {
+            e.currentTarget.src = "/no-img.svg";
+          }}
         />
-      ) : (
-        <ImageOff className="aspect-square rounded-md object-cover" size={32} />
       );
     },
     enableHiding: true,
