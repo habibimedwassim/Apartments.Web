@@ -5,6 +5,7 @@ import {
   ApartmentResponseModel,
   mapApartmentData,
   ApartmentModel,
+  mapSingleApartmentData,
 } from "@/app/models/apartment.models";
 
 // Get all apartments with query filter
@@ -20,12 +21,11 @@ export const getMyApartments = async (): Promise<ApartmentModel[]> => {
 };
 
 // Get a single apartment by ID
-export const getApartmentById = async (
-  id: number
-): Promise<ApartmentResponseModel> => {
+export const getApartmentById = async (id: number): Promise<ApartmentModel> => {
   console.log("get by Id API called");
   const response = await api.get<ApartmentResponseModel>(`/apartments/${id}`);
-  return response.data;
+  const refinedResponse = await mapSingleApartmentData(response.data);
+  return refinedResponse;
 };
 
 // Create a new apartment

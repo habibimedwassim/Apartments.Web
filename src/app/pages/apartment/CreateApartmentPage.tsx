@@ -43,7 +43,7 @@ import {
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { COLORS } from "@/app/constants/colors";
 import { useCreateApartmentMutation } from "@/app/services/mutations/apartment.mutations";
-import { LoadingButton } from "@/components/ui/button-loading";
+import { LoadingButton } from "@/components/common/button-loading";
 
 // The CreateApartmentPage component
 const CreateApartmentPage = () => {

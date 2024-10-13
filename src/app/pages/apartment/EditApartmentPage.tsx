@@ -43,7 +43,7 @@ import { useApartmentByIdService } from "@/app/services/apartment.services"; // 
 import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
 import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
 import { useLocation, useNavigate } from "react-router-dom";
-import { LoadingButton } from "@/components/ui/button-loading";
+import { LoadingButton } from "@/components/common/button-loading";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();

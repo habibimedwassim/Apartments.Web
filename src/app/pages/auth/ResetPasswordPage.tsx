@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoadingButton } from "@/components/ui/button-loading";
+import { LoadingButton } from "@/components/common/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { EyeOff, Eye } from "lucide-react";
@@ -48,7 +48,7 @@ const ResetPasswordPage = () => {
   const handleResetPassword = () => {
     setError(null);
 
-    if (otp.length < 4) {
+    if (otp.length < 6) {
       setError("Verification code is required.");
       return;
     }
@@ -75,8 +75,10 @@ const ResetPasswordPage = () => {
   };
 
   const handleResendCode = () => {
+    const type = "password";
+
     resendCodeMutation
-      .mutateAsync({ email })
+      .mutateAsync({ data: { email }, type })
       .then(() =>
         toast({
           title: "Verification Code Sent",
@@ -111,7 +113,7 @@ const ResetPasswordPage = () => {
           <div className="grid gap-2">
             <Label htmlFor="verificationCode">Verification Code</Label>
             <InputOTP
-              maxLength={4}
+              maxLength={6}
               pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
               value={otp}
               onChange={setOtp}
@@ -121,6 +123,8 @@ const ResetPasswordPage = () => {
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />
                 <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
               </InputOTPGroup>
             </InputOTP>
           </div>

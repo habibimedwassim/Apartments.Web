@@ -92,7 +92,8 @@ export const useResetPasswordMutation = () => {
 // Resend Code Mutation
 export const useResendCodeMutation = () => {
   return useMutation({
-    mutationFn: (data: EmailModel) => resendVerificationCode(data),
+    mutationFn: ({ data, type }: { data: EmailModel; type: string }) =>
+      resendVerificationCode(data, type),
     onError: (error: any) => {
       throw getErrorMessage(error);
     },

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoadingButton } from "@/components/ui/button-loading";
+import { LoadingButton } from "@/components/common/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { isValidEmail, getInfoMessage } from "@/lib/utils";
 import { ModeToggle } from "@/components/common/mode-toggle";

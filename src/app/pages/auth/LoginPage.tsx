@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { ModeToggle } from "@/components/common/mode-toggle";
 
-import { LoadingButton } from "@/components/ui/button-loading";
+import { LoadingButton } from "@/components/common/button-loading";
 import { useToast } from "@/hooks/use-toast";
 import { isValidEmail } from "@/lib/utils";
 import { USER_ROLE } from "@/app/constants/user-role";

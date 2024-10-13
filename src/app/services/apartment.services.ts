@@ -79,15 +79,15 @@ export const archiveApartmentService = (id: number, isRestore: boolean) => {
 };
 
 // Fetch a single apartment by ID
-export const getApartmentByIdService = async (
-  id: number
-): Promise<ApartmentResponseModel> => {
-  try {
-    return await getApartmentById(id);
-  } catch (error: any) {
-    throw new Error(`Failed to fetch apartment: ${error.message}`);
-  }
-};
+// export const getApartmentByIdService = async (
+//   id: number
+// ): Promise<ApartmentResponseModel> => {
+//   try {
+//     return await getApartmentById(id);
+//   } catch (error: any) {
+//     throw new Error(`Failed to fetch apartment: ${error.message}`);
+//   }
+// };
 
 // Update an apartment
 export const updatezApartmentService = async (

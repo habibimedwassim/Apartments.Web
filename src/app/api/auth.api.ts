@@ -36,8 +36,14 @@ export const verifyEmail = async (data: VerifyEmailModel) => {
 };
 
 // Resend Verification Code
-export const resendVerificationCode = async (data: EmailModel) => {
-  return await api.post("/auth/resend-code", data);
+export const resendVerificationCode = async (
+  data: EmailModel,
+  type: string
+) => {
+  const requestBody = data;
+  const query = { type };
+  console.log(requestBody, query);
+  return await api.post("/auth/resend-code", requestBody, { params: query });
 };
 
 // Forgot Password
