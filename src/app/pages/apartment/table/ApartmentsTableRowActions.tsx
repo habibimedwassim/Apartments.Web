@@ -49,6 +49,9 @@ export function ApartmentsTableRowActions<TData>({
     deleteMutation.mutate();
   };
 
+  const handleDetails = (apartmentId: number) => {
+    navigate("/apartments/details", { state: { apartmentId } });
+  };
   // Logic to handle edit
   const handleEdit = (apartmentId: number) => {
     navigate("/apartments/edit", { state: { apartmentId } });
@@ -81,6 +84,9 @@ export function ApartmentsTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => handleDetails(apartmentId)}>
+            Details
+          </DropdownMenuItem>
 
           {/* Edit option */}
           <DropdownMenuItem onClick={() => handleEdit(apartmentId)}>

@@ -3,6 +3,7 @@ import PageLayout from "@/app/layouts/page.layout";
 import ApartmentsPage from "@/app/pages/apartment/ApartmentsPage";
 import CreateApartmentPage from "@/app/pages/apartment/CreateApartmentPage";
 import EditApartmentPage from "@/app/pages/apartment/EditApartmentPage";
+import ApartmentDetailsPage from "@/app/pages/apartment/ApartmentDetailsPage";
 
 // Apartment routes extracted
 const apartmentRoutes: RouteObject[] = [
@@ -12,6 +13,15 @@ const apartmentRoutes: RouteObject[] = [
     element: (
       <PageLayout title="Apartments">
         <ApartmentsPage />
+      </PageLayout>
+    ),
+  },
+  {
+    id: "apartments-details",
+    path: "apartments/details", // No dynamic param
+    element: (
+      <PageLayout title="Apartment Details">
+        <ApartmentDetailsPage /> {/* Create this component */}
       </PageLayout>
     ),
   },

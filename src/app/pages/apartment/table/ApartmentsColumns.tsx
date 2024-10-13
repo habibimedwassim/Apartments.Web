@@ -7,6 +7,7 @@ import { formatToLocalDateTime } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { apartmentStatuses } from "./ApartmentStatuses";
 import { ApartmentsTableRowActions } from "@/app/pages/apartment/table/ApartmentsTableRowActions";
+import { useNavigate } from "react-router-dom";
 
 export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
   {
@@ -14,14 +15,19 @@ export const apartmentColumns: ColumnDef<ApartmentModel>[] = [
     header: "Cover",
     cell: ({ row }) => {
       const photos = row.getValue("apartmentPhotos") as ApartmentPhotoModel[];
+      const apartmentId = row.original.id;
+      const navigate = useNavigate();
 
       return (
         <img
           alt="Apartment img"
-          className="aspect-square rounded-md object-cover"
+          className="aspect-square rounded-md object-cover cursor-pointer"
           height="64"
           src={photos.length > 0 ? photos[0].url : "/no-img.svg"}
           width="64"
+          onClick={() =>
+            navigate("/apartments/details", { state: { apartmentId } })
+          }
           onError={(e) => {
             e.currentTarget.src = "/no-img.svg";
           }}

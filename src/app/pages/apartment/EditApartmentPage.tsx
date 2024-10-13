@@ -135,7 +135,7 @@ const EditApartmentPage = () => {
     if (isRentAmountChanged && data.rentAmount) {
       data.rentAmount = parseFloat(data.rentAmount.toFixed(2));
     } else {
-      delete data.rentAmount; // Avoid sending unchanged value
+      delete data.rentAmount;
     }
 
     data.availableFrom = date ? date.toISOString().split("T")[0] : undefined;
