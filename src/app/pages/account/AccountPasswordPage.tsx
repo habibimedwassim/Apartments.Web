@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
@@ -18,19 +19,22 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import { useState, useEffect } from "react";
 import { LoadingButton } from "@/components/common/button-loading";
 import { Edit, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ChangePasswordModel } from "@/app/models/user.models";
 import { useLogout } from "@/hooks/use-logout";
+import { z } from "zod";
+
+type changePasswordFromValues = z.infer<typeof changePasswordSchema>;
 
 const AccountPasswordPage = () => {
   const { toast } = useToast();
   const updateMutation = useUpdatePasswordMutation();
   const { handleLogout } = useLogout();
 
-  const form = useForm({
+  // Form initialization with Zod schema validation
+  const form = useForm<changePasswordFromValues>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: "",
@@ -39,22 +43,10 @@ const AccountPasswordPage = () => {
     },
   });
 
-  // Add states to toggle password visibility
+  // States to toggle password visibility
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const [_, setIsFormValid] = useState(false);
-
-  // Enable the button only when form is valid and new passwords match
-  useEffect(() => {
-    const { newPassword, confirmPassword } = form.watch();
-    if (form.formState.isValid && newPassword === confirmPassword) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [form.watch(), form.formState.isValid]);
 
   const onSubmit = (data: ChangePasswordModel) => {
     updateMutation
@@ -64,7 +56,7 @@ const AccountPasswordPage = () => {
           title: "Password updated successfully",
         });
         form.reset();
-        handleLogout();
+        handleLogout(); // Log out after successful password change
       })
       .catch((err) => {
         toast({
@@ -80,9 +72,10 @@ const AccountPasswordPage = () => {
         <CardHeader>
           <CardTitle>
             <div className="flex justify-between">
+              <h2 className="text-lg font-semibold">Change Password</h2>
               <LoadingButton
                 type="submit"
-                form="account-details-form"
+                form="update-password-form"
                 variant="default"
                 size="sm"
                 isLoading={updateMutation.isPending}

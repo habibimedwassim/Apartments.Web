@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/common/button-loading";
@@ -25,6 +31,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VerifyNewEmailModel } from "@/app/models/user.models";
 import { verificationSchema } from "@/app/schemas/user.schemas";
+import { Mail, MailCheck, MailPlus, RefreshCcw } from "lucide-react";
 
 type VerifyEmailFormValues = z.infer<typeof verificationSchema>;
 
@@ -33,7 +40,7 @@ export const AccountEmailPage = () => {
   const { handleLogout } = useLogout();
   const { profile, setProfile } = useProfileStore();
   const [newEmail, setNewEmail] = useState("");
-  const [isVerifyLoading, setIsVerifyLoading] = useState(false); // Loading state for confirm button
+  const [isVerifyLoading, setIsVerifyLoading] = useState(false);
 
   const updateEmailMutation = useUpdateEmailMutation();
   const resendCodeMutation = useResendCodeMutation();
@@ -54,13 +61,12 @@ export const AccountEmailPage = () => {
     });
   };
 
-  // Handle email change
   const handleEmailChange = () => {
     const data = { email: newEmail };
     updateEmailMutation
       .mutateAsync({ data })
       .then((result) => {
-        updateTempEmail(newEmail); // Set the new email as the temp email
+        updateTempEmail(newEmail);
         toast({
           description: result.message,
         });
@@ -73,7 +79,6 @@ export const AccountEmailPage = () => {
       });
   };
 
-  // Handle resend code
   const handleResendCode = () => {
     const type = "newEmail";
     if (!profile?.tempEmail) return;
@@ -92,11 +97,10 @@ export const AccountEmailPage = () => {
       });
   };
 
-  // Handle verify email
   const handleVerifyEmail = (data: VerifyEmailFormValues) => {
-    setIsVerifyLoading(true); // Start loading
+    setIsVerifyLoading(true);
     const payload: VerifyNewEmailModel = {
-      email: profile?.tempEmail || "", // Use temp email from profile
+      email: profile?.tempEmail || "",
       password: data.password,
       verificationCode: data.verificationCode,
     };
@@ -106,7 +110,7 @@ export const AccountEmailPage = () => {
         toast({
           description: result.message,
         });
-        handleLogout(); // Log out after successful verification
+        handleLogout();
       })
       .catch((error) => {
         toast({
@@ -115,7 +119,7 @@ export const AccountEmailPage = () => {
         });
       })
       .finally(() => {
-        setIsVerifyLoading(false); // Stop loading
+        setIsVerifyLoading(false);
       });
   };
 
@@ -123,7 +127,12 @@ export const AccountEmailPage = () => {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Change Email</CardTitle>
+          <CardTitle>
+            <h2 className="text-lg font-semibold">Change Email</h2>
+          </CardTitle>
+          <CardDescription>
+            After verifying the new email you'll be logged out
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
@@ -131,6 +140,7 @@ export const AccountEmailPage = () => {
             <div className="flex items-center">
               <div className="w-4/5">
                 <Input
+                  id="newEmail"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="Enter new email"
@@ -143,94 +153,102 @@ export const AccountEmailPage = () => {
                   isLoading={updateEmailMutation.isPending}
                   variant="default"
                   size="sm"
-                  className="w-full"
+                  className="h-8 gap-1 ml-2"
+                  icon={<MailPlus className="h-3.5 w-3.5" />}
                 >
                   Update Email
                 </LoadingButton>
               </div>
             </div>
 
-            {/* Temp Email and Resend Code Button */}
+            {/* Temp Email, Resend Code, and Verify Button */}
             {profile?.tempEmail && (
-              <div className="flex items-center">
-                <div className="w-4/5">
+              <div className="flex items-center gap-2">
+                <div className="w-4/5 relative">
                   <Input
                     value={profile.tempEmail} // The disabled input displays tempEmail
                     disabled
-                    className="w-full"
+                    className="w-full pr-24" // Add more padding to the right to make space for the button
                   />
-                </div>
-                <div className="ml-3 w-1/5">
+                  {/* Resend Code Button inside the input */}
                   <LoadingButton
                     onClick={handleResendCode}
                     isLoading={resendCodeMutation.isPending}
-                    variant="default"
+                    variant="ghost"
                     size="sm"
-                    className="w-full"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2" // Use translate to center vertically
+                    icon={<RefreshCcw className="h-4 w-4" />}
                   >
-                    Resend Code
+                    Resend
                   </LoadingButton>
                 </div>
-              </div>
-            )}
-
-            {/* Dialog for Password and Verification Code */}
-            {profile?.tempEmail && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="default" size="sm" className="w-full">
-                    Verify
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Password Confirmation</DialogTitle>
-                    <DialogDescription>
-                      Please enter the verification code and your password to
-                      confirm the email change.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div>
-                    <form
-                      onSubmit={handleSubmit(handleVerifyEmail)}
-                      className="space-y-4"
-                    >
-                      {/* Verification Code Field */}
-                      <Input
-                        {...register("verificationCode")}
-                        placeholder="Enter verification code"
-                      />
-                      {errors.verificationCode && (
-                        <p className="text-red-500 text-sm">
-                          {errors.verificationCode?.message}
-                        </p>
-                      )}
-
-                      {/* Password Field */}
-                      <Input
-                        {...register("password")}
-                        type="password"
-                        placeholder="Enter your password"
-                      />
-                      {errors.password && (
-                        <p className="text-red-500 text-sm">
-                          {errors.password?.message}
-                        </p>
-                      )}
-
-                      <LoadingButton
-                        type="submit"
+                {/* Verify Button aligned next to the input */}
+                <div className="w-1/5">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
                         variant="default"
                         size="sm"
-                        isLoading={isVerifyLoading}
-                        className="w-full"
+                        className="h-8 gap-1 ml-2"
                       >
-                        Confirm
-                      </LoadingButton>
-                    </form>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                        <MailCheck className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                          Verify Email
+                        </span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Password Confirmation</DialogTitle>
+                        <DialogDescription>
+                          Please enter the verification code and your password
+                          to confirm the email change.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div>
+                        <form
+                          onSubmit={handleSubmit(handleVerifyEmail)}
+                          className="space-y-4"
+                        >
+                          {/* Verification Code Field */}
+                          <Input
+                            {...register("verificationCode")}
+                            placeholder="Enter verification code"
+                            autoComplete="one-time-code"
+                          />
+                          {errors.verificationCode && (
+                            <p className="text-red-500 text-sm">
+                              {errors.verificationCode?.message}
+                            </p>
+                          )}
+
+                          {/* Password Field */}
+                          <Input
+                            {...register("password")}
+                            type="password"
+                            placeholder="Enter your password"
+                          />
+                          {errors.password && (
+                            <p className="text-red-500 text-sm">
+                              {errors.password?.message}
+                            </p>
+                          )}
+
+                          <LoadingButton
+                            type="submit"
+                            variant="default"
+                            size="sm"
+                            isLoading={isVerifyLoading}
+                            className="w-full"
+                          >
+                            Confirm
+                          </LoadingButton>
+                        </form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
             )}
           </div>
         </CardContent>

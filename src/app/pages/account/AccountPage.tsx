@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import AccountDetailsPage from "./AccountDetailsPage";
 import AccountPasswordPage from "./AccountPasswordPage";
 import AccountEmailPage from "./AccountEmailPage";
@@ -11,18 +11,18 @@ export default function SettingsPage() {
         <CardContent>
           <Tabs defaultValue="details" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="details">Account Details</TabsTrigger>
-              <TabsTrigger value="password">Update Password</TabsTrigger>
-              <TabsTrigger value="email">Update Email</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
               <AccountDetailsPage />
             </TabsContent>
-            <TabsContent value="password">
-              <AccountPasswordPage />
-            </TabsContent>
             <TabsContent value="email">
               <AccountEmailPage />
+            </TabsContent>
+            <TabsContent value="password">
+              <AccountPasswordPage />
             </TabsContent>
           </Tabs>
         </CardContent>

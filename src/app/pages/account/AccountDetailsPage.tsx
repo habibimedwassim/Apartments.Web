@@ -148,21 +148,9 @@ const AccountDetailsPage = () => {
         <CardHeader>
           <CardTitle>
             <div className="flex justify-between">
-              <LoadingButton
-                type="submit"
-                form="account-details-form"
-                variant="default"
-                size="sm"
-                isLoading={updateMutation.isPending}
-                loadingText="Saving..."
-                disabled={updateMutation.isPending || !form.formState.isDirty}
-                icon={<Edit className="h-3.5 w-3.5" />}
-                className="h-8 gap-1 ml-2"
-              >
-                Save Changes
-              </LoadingButton>
-              {isFiltered && (
-                <div className="flex justify-end">
+              <h2 className="text-lg font-semibold">Account Details</h2>
+              <div className="flex justify-end">
+                {isFiltered && (
                   <Button
                     variant="ghost"
                     onClick={handleReset}
@@ -172,8 +160,21 @@ const AccountDetailsPage = () => {
                     Reset
                     <Cross2Icon className="ml-2 h-4 w-4" />
                   </Button>
-                </div>
-              )}
+                )}
+                <LoadingButton
+                  type="submit"
+                  form="account-details-form"
+                  variant="default"
+                  size="sm"
+                  isLoading={updateMutation.isPending}
+                  loadingText="Saving..."
+                  disabled={updateMutation.isPending || !form.formState.isDirty}
+                  icon={<Edit className="h-3.5 w-3.5" />}
+                  className="h-8 gap-1 ml-2"
+                >
+                  Save Changes
+                </LoadingButton>
+              </div>
             </div>
           </CardTitle>
         </CardHeader>
@@ -225,7 +226,13 @@ const AccountDetailsPage = () => {
                 {/* Email (Disabled) */}
                 <FormItem>
                   <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input id="email" value={profile.email} disabled />
+                  <Input
+                    id="email"
+                    name="email"
+                    value={profile.email}
+                    disabled
+                    autoComplete="email"
+                  />
                 </FormItem>
 
                 {/* Phone Number */}
@@ -251,12 +258,13 @@ const AccountDetailsPage = () => {
                   name="gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Gender</FormLabel>
+                      <FormLabel htmlFor="gender">Gender</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || undefined} // Ensure that the field value is correctly updated
+                        value={field.value || undefined}
+                        name="gender"
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="gender" name="gender">
                           <SelectValue placeholder="Select gender" />
                         </SelectTrigger>
                         <SelectContent>
@@ -283,6 +291,7 @@ const AccountDetailsPage = () => {
                               "w-full justify-start text-left font-normal",
                               !selectedDate && "text-muted-foreground"
                             )}
+                            id="dateOfBirth"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {selectedDate
@@ -299,14 +308,9 @@ const AccountDetailsPage = () => {
                             fromYear={1960}
                             toDate={dateLimit}
                           />
-                          {/* <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={setSelectedDate}
-                            initialFocus
-                          /> */}
                         </PopoverContent>
                       </Popover>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
