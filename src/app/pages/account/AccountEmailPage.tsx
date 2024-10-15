@@ -31,7 +31,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VerifyNewEmailModel } from "@/app/models/user.models";
 import { verificationSchema } from "@/app/schemas/user.schemas";
-import { Mail, MailCheck, MailPlus, RefreshCcw } from "lucide-react";
+import { MailCheck, MailPlus, RefreshCcw } from "lucide-react";
 
 type VerifyEmailFormValues = z.infer<typeof verificationSchema>;
 
