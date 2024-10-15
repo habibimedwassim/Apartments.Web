@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/common/button-loading";
 import { useToast } from "@/hooks/use-toast";
-import { isValidEmail, getInfoMessage } from "@/lib/utils";
+import { isValidEmail } from "@/lib/utils";
 import { ModeToggle } from "@/components/common/mode-toggle";
 import { useForgotPasswordMutation } from "@/app/services/mutations/auth.mutations";
 
@@ -33,11 +33,9 @@ const ForgotPasswordPage = () => {
 
     forgotPasswordMutation
       .mutateAsync({ email })
-      .then((message) => {
-        const infoMessage = getInfoMessage(message);
+      .then((result) => {
         toast({
-          title: "Email Sent",
-          description: infoMessage,
+          description: result.message,
         });
         navigate("/auth/reset-password", { state: { email } });
       })

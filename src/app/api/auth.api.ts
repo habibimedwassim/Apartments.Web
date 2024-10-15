@@ -1,3 +1,4 @@
+import { MessageResponseModel } from "@/app/models/api.models";
 import api from "./base.api";
 import {
   LoginModel,
@@ -6,33 +7,39 @@ import {
   VerifyEmailModel,
   EmailModel,
   ResetPasswordModel,
-  ChangePasswordModel,
 } from "@/app/models/auth.models";
 
 // Login
 export const login = async (data: LoginModel): Promise<LoginResponseModel> => {
   const response = await api.post<LoginResponseModel>("/auth/login", data);
-  return response.data as LoginResponseModel;
-};
-
-// Register
-export const register = async (data: RegisterModel) => {
-  return await api.post("/auth/register", data);
+  return response.data;
 };
 
 // Register Owner
 export const registerOwner = async (data: RegisterModel) => {
-  return await api.post("/auth/register-owner", data);
+  const response = await api.post<MessageResponseModel>(
+    "/auth/register-owner",
+    data
+  );
+  return response.data;
 };
 
 // Register Admin
 export const registerAdmin = async (data: RegisterModel) => {
-  return await api.post("/auth/register-admin", data);
+  const response = await api.post<MessageResponseModel>(
+    "/auth/register-admin",
+    data
+  );
+  return response.data;
 };
 
 // Verify Email
 export const verifyEmail = async (data: VerifyEmailModel) => {
-  return await api.post("/auth/verify-email", data);
+  const response = await api.post<MessageResponseModel>(
+    "/auth/verify-email",
+    data
+  );
+  return response.data;
 };
 
 // Resend Verification Code
@@ -42,26 +49,28 @@ export const resendVerificationCode = async (
 ) => {
   const requestBody = data;
   const query = { type };
-  console.log(requestBody, query);
-  return await api.post("/auth/resend-code", requestBody, { params: query });
+  const response = await api.post<MessageResponseModel>(
+    "/auth/resend-code",
+    requestBody,
+    { params: query }
+  );
+  return response.data;
 };
 
 // Forgot Password
 export const forgotPassword = async (data: EmailModel) => {
-  return await api.post("/auth/forgot-password", data);
+  const response = await api.post<MessageResponseModel>(
+    "/auth/forgot-password",
+    data
+  );
+  return response.data;
 };
 
 // Reset Password
 export const resetPassword = async (data: ResetPasswordModel) => {
-  return await api.post("/auth/reset-password", data);
-};
-
-// Change Password
-export const changePassword = async (data: ChangePasswordModel) => {
-  return await api.patch("/auth/change-password", data);
-};
-
-// Change Email
-export const changeEmail = async (data: EmailModel) => {
-  return await api.patch("/auth/change-email", data);
+  const response = await api.post<MessageResponseModel>(
+    "/auth/reset-password",
+    data
+  );
+  return response.data;
 };

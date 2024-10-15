@@ -19,11 +19,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { useLogout } from "@/hooks/use-logout";
-import { useAuthStore } from "@/hooks/use-store";
+import { useProfileStore, useAuthStore } from "@/hooks/use-store";
+import { USER_ROLE } from "@/app/constants/user-role";
 
 export function UserNav() {
   const { handleLogout } = useLogout();
-  const { user } = useAuthStore();
+  const { profile } = useProfileStore();
+  const { role } = useAuthStore();
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -37,8 +39,10 @@ export function UserNav() {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="#" alt="Avatar" />
                   <AvatarFallback className="bg-transparent">
-                    {user
-                      ? `${user.firstName[0].toUpperCase()}${user.lastName[0].toUpperCase()}`
+                    {profile
+                      ? `${profile.firstName.charAt(
+                          0
+                        )}${profile.lastName.charAt(0)}`.toUpperCase()
                       : "TN"}
                   </AvatarFallback>
                 </Avatar>
@@ -52,10 +56,10 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user ? `${user.firstName}, ${user.lastName}` : ""}
+              {profile ? `${profile.firstName}, ${profile.lastName}` : ""}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user ? `${user.email}` : ""}
+              {profile ? `${profile.email}` : ""}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -68,7 +72,10 @@ export function UserNav() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link to="/account" className="flex items-center">
+            <Link
+              to={role == USER_ROLE.ADMIN ? "/admin/account" : "/account"}
+              className="flex items-center"
+            >
               <User className="w-4 h-4 mr-3 text-muted-foreground" />
               Account
             </Link>

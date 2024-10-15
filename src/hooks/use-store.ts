@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LoginResponseModel } from "@/app/models/auth.models";
+import { UserModel } from "@/app/models/user.models";
 
 interface SidebarState {
   isOpen: boolean;
@@ -22,7 +23,6 @@ export const useSidebarStore = create<SidebarState>()(
 );
 
 interface AuthState {
-  user: LoginResponseModel | null;
   isAuthenticated: boolean;
   token: string | null;
   role: string | null;
@@ -33,14 +33,12 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: null,
       isAuthenticated: false,
       token: null,
       role: null,
 
       login: (userData: LoginResponseModel) => {
         set({
-          user: userData,
           token: userData.accessToken,
           role: userData.role,
           isAuthenticated: true,
@@ -48,11 +46,36 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({ user: null, token: null, role: null, isAuthenticated: false });
+        set({ token: null, role: null, isAuthenticated: false });
       },
     }),
     {
       name: "auth-storage",
+    }
+  )
+);
+
+interface ProfileState {
+  profile: UserModel | null;
+  setProfile: (profileData: UserModel) => void;
+  clearProfile: () => void;
+}
+
+export const useProfileStore = create<ProfileState>()(
+  persist(
+    (set) => ({
+      profile: null,
+
+      setProfile: (profileData: UserModel) => {
+        set({ profile: profileData });
+      },
+
+      clearProfile: () => {
+        set({ profile: null });
+      },
+    }),
+    {
+      name: "profile-storage",
     }
   )
 );

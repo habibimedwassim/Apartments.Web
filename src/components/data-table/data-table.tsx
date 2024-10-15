@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <Card>
+      <Card className="border border-dashed">
         <CardHeader>
           <DataTableToolbar
             table={table}

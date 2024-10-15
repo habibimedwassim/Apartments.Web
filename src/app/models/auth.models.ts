@@ -1,3 +1,5 @@
+import { UserModel } from "@/app/models/user.models";
+
 // Login Model
 export interface LoginModel {
   email: string;
@@ -10,6 +12,7 @@ export interface LoginResponseModel {
   lastName: string;
   fullName: string;
   dateOfBirth?: string;
+  phoneNumber?: string;
   gender?: string;
   role?: string;
   accessToken: string;
@@ -49,3 +52,17 @@ export interface ChangePasswordModel {
   currentPassword: string;
   newPassword: string;
 }
+
+export const mapLoginResponseToUserModel = (
+  loginResponse: LoginResponseModel
+): UserModel => {
+  return {
+    fullName: loginResponse.fullName,
+    firstName: loginResponse.firstName,
+    lastName: loginResponse.lastName,
+    email: loginResponse.email,
+    phoneNumber: loginResponse.phoneNumber,
+    gender: loginResponse.gender,
+    dateOfBirth: loginResponse.dateOfBirth,
+  };
+};

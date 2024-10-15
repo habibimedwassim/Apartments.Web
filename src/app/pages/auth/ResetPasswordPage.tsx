@@ -59,10 +59,9 @@ const ResetPasswordPage = () => {
 
     resetPasswordMutation
       .mutateAsync({ email, verificationCode: otp, newPassword })
-      .then(() => {
+      .then((result) => {
         toast({
-          title: "Password Reset Successful",
-          description: "Your password has been reset successfully.",
+          description: result.message,
         });
         setTimeout(() => navigate("/auth/login"), 2000);
       })
@@ -79,10 +78,9 @@ const ResetPasswordPage = () => {
 
     resendCodeMutation
       .mutateAsync({ data: { email }, type })
-      .then(() =>
+      .then((result) =>
         toast({
-          title: "Verification Code Sent",
-          description: "A new verification code has been sent to your email.",
+          description: result.message,
         })
       )
       .catch((err) => {

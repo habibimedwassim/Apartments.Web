@@ -8,9 +8,12 @@ import {
   BreadcrumbPage,
 } from "../ui/breadcrumb";
 import React from "react";
+import { useAuthStore } from "@/hooks/use-store";
+import { USER_ROLE } from "@/app/constants/user-role";
 
 export function RouteBreadcrumbs() {
   const location = useLocation();
+  const { role } = useAuthStore();
 
   // Get the path segments (e.g., ["apartments", "edit", "24"])
   const pathSegments = location.pathname
@@ -34,7 +37,6 @@ export function RouteBreadcrumbs() {
     return (
       <BreadcrumbItem key={to}>
         {isLast ? (
-          // If it's the last segment (like "edit"), don't make it clickable
           <BreadcrumbPage>{title}</BreadcrumbPage>
         ) : (
           <BreadcrumbLink asChild>
@@ -49,15 +51,20 @@ export function RouteBreadcrumbs() {
     <div className="container pt-8 px-4 sm:px-8">
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+          {role !== USER_ROLE.ADMIN && (
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              {breadcrumbs.length > 0 && <BreadcrumbSeparator />}
+            </>
+          )}
 
           {breadcrumbs.map((breadcrumb, index) => (
             <React.Fragment key={index}>
-              <BreadcrumbSeparator />
+              {index > 0 && <BreadcrumbSeparator />}
               {breadcrumb}
             </React.Fragment>
           ))}

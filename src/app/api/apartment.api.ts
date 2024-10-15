@@ -6,7 +6,9 @@ import {
   mapApartmentData,
   ApartmentModel,
   mapSingleApartmentData,
+  DismissModel,
 } from "@/app/models/apartment.models";
+import { MessageResponseModel } from "@/app/models/api.models";
 
 // Get all apartments with query filter
 export const getMyApartments = async (): Promise<ApartmentModel[]> => {
@@ -49,11 +51,16 @@ export const createApartment = async (data: CreateApartmentModel) => {
     formData.append("apartmentPhotos", photo);
   });
 
-  return await api.post("/apartments", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.post<MessageResponseModel>(
+    "/apartments",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
 };
 
 // Update an existing apartment
@@ -61,16 +68,32 @@ export const updateApartment = async (
   id: number,
   data: UpdateApartmentModel
 ) => {
-  console.log("update API called");
-  return await api.patch(`/apartments/${id}`, data);
+  const response = await api.patch<MessageResponseModel>(
+    `/apartments/${id}`,
+    data
+  );
+  return response.data;
 };
 
-// Delete an apartment
-export const deleteApartment = async (id: number) => {
-  return await api.delete(`/apartments/${id}`);
+// Archive or Restore an apartment
+export const archiveRestoreApartment = async (id: number) => {
+  const response = await api.delete<MessageResponseModel>(`/apartments/${id}`);
+  return response.data;
 };
 
-// Restore an apartment
-export const restoreApartment = async (id: number) => {
-  return await api.get(`/apartments/${id}/restore`);
+// Permanently delete an apartment
+export const deleteApartmentPermanent = async (id: number) => {
+  const response = await api.delete<MessageResponseModel>(
+    `/apartments/${id}?permanent=true`
+  );
+  return response.data;
+};
+
+// Dismiss tenant from apartment
+export const dismissFromApartment = async (id: number, data: DismissModel) => {
+  const response = await api.post<MessageResponseModel>(
+    `/apartments/${id}/dismiss`,
+    data
+  );
+  return response.data;
 };

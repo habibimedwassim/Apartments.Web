@@ -22,7 +22,11 @@ import {
 import { ApartmentStatus } from "@/app/models/apartment.models";
 import { useNavigate } from "react-router-dom";
 import { ApartmentModel } from "@/app/models/apartment.models";
-import { archiveApartmentService } from "@/app/services/apartment.services";
+import {
+  useArchiveApartmentMutation,
+  useDeleteApartmentMutation,
+} from "@/app/services/mutations/apartment.mutations";
+import { useToast } from "@/hooks/use-toast";
 
 interface ApartmentsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -33,20 +37,49 @@ export function ApartmentsTableRowActions<TData>({
 }: ApartmentsTableRowActionsProps<TData>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deletePermanentlyDialog, setDeletePermanentlyDialog] = useState(false);
+  const { toast } = useToast();
 
   const apartmentRow = row.original as ApartmentModel;
   const apartmentId = apartmentRow.id;
   const status = apartmentRow.status;
 
   const navigate = useNavigate();
-  const deleteMutation = archiveApartmentService(
-    apartmentId,
-    status === ApartmentStatus.Archived
-  );
+  const archiveMutation = useArchiveApartmentMutation(apartmentId);
+  const deleteMutation = useDeleteApartmentMutation(apartmentId);
 
   // Logic to handle delete/archive/restore
-  const handleDelete = () => {
-    deleteMutation.mutate();
+  const handleDelete = (permanent: boolean) => {
+    if (permanent == true) {
+      deleteMutation
+        .mutateAsync()
+        .then((result) => {
+          toast({
+            variant: "default",
+            title: result.message,
+          });
+        })
+        .catch((error) => {
+          toast({
+            variant: "destructive",
+            description: error.message,
+          });
+        });
+    } else {
+      archiveMutation
+        .mutateAsync()
+        .then((result) => {
+          toast({
+            variant: "default",
+            title: result.message,
+          });
+        })
+        .catch((error) => {
+          toast({
+            variant: "destructive",
+            description: error.message,
+          });
+        });
+    }
   };
 
   const handleDetails = (apartmentId: number) => {
@@ -130,7 +163,7 @@ export function ApartmentsTableRowActions<TData>({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                handleDelete();
+                handleDelete(false);
                 setOpenDeleteDialog(false);
               }}
             >
@@ -161,7 +194,7 @@ export function ApartmentsTableRowActions<TData>({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                handleDelete();
+                handleDelete(true);
                 setDeletePermanentlyDialog(false);
               }}
             >

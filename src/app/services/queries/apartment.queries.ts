@@ -1,12 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMyApartments, getApartmentById } from "@/app/api/apartment.api";
-import {
-  ApartmentModel,
-  ApartmentResponseModel,
-} from "@/app/models/apartment.models";
+import { ApartmentModel } from "@/app/models/apartment.models";
 
 // Query to get all apartments for the current user
-export const useGetApartments = () => {
+export const useGetApartmentsQuery = () => {
   return useQuery({
     queryKey: ["apartments"],
     queryFn: getMyApartments,
@@ -15,7 +12,7 @@ export const useGetApartments = () => {
 };
 
 // Query to get an apartment by its ID
-export const useGetApartmentById = (id: number) => {
+export const useGetApartmentByIdQuery = (id: number) => {
   return useQuery<ApartmentModel>({
     queryKey: ["apartment", id],
     queryFn: () => getApartmentById(id),

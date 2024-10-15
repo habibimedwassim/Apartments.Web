@@ -42,7 +42,7 @@ export function getAdminMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/",
+          href: "/admin",
           label: "Dashboard",
           active: pathname === "/admin",
           icon: LayoutGrid,
@@ -75,7 +75,7 @@ export function getAdminMenuList(pathname: string): Group[] {
       groupLabel: "Settings",
       menus: [
         {
-          href: "/account",
+          href: "/admin/account",
           label: "Account",
           active: pathname.includes("/account"),
           icon: Settings,

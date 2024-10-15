@@ -78,14 +78,10 @@ export interface ApartmentQueryFilter {
   availableFrom?: string;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  totalPages: number;
-  totalCount: number;
-  itemsFrom: number;
-  itemsTo: number;
+export interface DismissModel {
+  reason: string;
+  requestDate?: string;
 }
-
 // Mapper for a list of apartments
 export const mapApartmentData = async (
   responseModel: ApartmentResponseModel[]

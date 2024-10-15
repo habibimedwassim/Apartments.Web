@@ -39,11 +39,11 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { useApartmentByIdService } from "@/app/services/apartment.services"; // To fetch the apartment by ID
-import { updateApartmentService } from "@/app/services/apartment.services"; // To handle apartment update
 import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@/components/common/button-loading";
+import { useGetApartmentByIdQuery } from "@/app/services/queries/apartment.queries";
+import { useUpdateApartmentMutation } from "@/app/services/mutations/apartment.mutations";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();
@@ -70,7 +70,7 @@ const EditApartmentPage = () => {
     isLoading: isFetchingApartment,
     isError,
     error,
-  } = useApartmentByIdService(apartmentId);
+  } = useGetApartmentByIdQuery(apartmentId);
 
   // Error handling for fetching apartment
   useEffect(() => {
@@ -124,7 +124,7 @@ const EditApartmentPage = () => {
   }, [apartment, form]);
 
   // Prevent submitting the form while fetching or during mutation
-  const mutation = updateApartmentService();
+  const mutation = useUpdateApartmentMutation();
 
   const onSubmit = (data: UpdateApartmentModel) => {
     const isRentAmountChanged =
@@ -140,25 +140,22 @@ const EditApartmentPage = () => {
 
     data.availableFrom = date ? date.toISOString().split("T")[0] : undefined;
 
-    mutation.mutate(
-      { id: apartmentId, data },
-      {
-        onSuccess: () => {
-          toast({
-            variant: "default",
-            title: "Apartment updated successfully!",
-          });
-          navigate("/apartments");
-        },
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: "Update Error",
-            description: error.message,
-          });
-        },
-      }
-    );
+    mutation
+      .mutateAsync({ id: apartmentId, data })
+      .then((result) => {
+        toast({
+          variant: "default",
+          title: result.message,
+        });
+        navigate("/apartments");
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: "Update Error",
+          description: error,
+        });
+      });
   };
 
   const handleProvinceSelect = (province: string) => {

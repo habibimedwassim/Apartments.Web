@@ -18,10 +18,10 @@ const apartmentRoutes: RouteObject[] = [
   },
   {
     id: "apartments-details",
-    path: "apartments/details", // No dynamic param
+    path: "apartments/details",
     element: (
       <PageLayout title="Apartment Details">
-        <ApartmentDetailsPage /> {/* Create this component */}
+        <ApartmentDetailsPage />
       </PageLayout>
     ),
   },

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetApartmentById } from "@/app/services/queries/apartment.queries";
+import { useGetApartmentByIdQuery } from "@/app/services/queries/apartment.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,11 +24,17 @@ export function ApartmentDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const apartmentId = location.state?.apartmentId;
+  useEffect(() => {
+    if (!apartmentId) {
+      navigate("/apartments");
+    }
+  }, [apartmentId, navigate]);
+
   const {
     data: apartment,
     isLoading,
     error,
-  } = useGetApartmentById(apartmentId);
+  } = useGetApartmentByIdQuery(apartmentId);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   if (isLoading) return <div>Loading...</div>;

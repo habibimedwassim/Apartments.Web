@@ -1,7 +1,7 @@
 import { Link, MenuIcon, PanelsTopLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Menu } from "@/components/common/Menu";
+import { Menu } from "@/components/common/menu";
 import {
   Sheet,
   SheetHeader,
@@ -25,7 +25,7 @@ export function SheetMenu() {
             variant="link"
             asChild
           >
-            <Link to="/dashboard" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <PanelsTopLeft className="w-6 h-6 mr-1" />
               <SheetTitle className="font-bold text-lg">Brand</SheetTitle>
             </Link>

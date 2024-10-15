@@ -70,7 +70,6 @@ const LoginPage = () => {
       .catch((error) => {
         toast({
           variant: "destructive",
-          title: "Login Error",
           description: error,
         });
       });
