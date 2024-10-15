@@ -11,7 +11,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { LoadingButton } from "@/components/common/button-loading";
 import { Edit, Eye, EyeOff } from "lucide-react";
@@ -19,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { ChangePasswordModel } from "@/app/models/user.models";
 import { useLogout } from "@/hooks/use-logout";
 
-const UpdateAccountPassword = () => {
+const AccountPasswordPage = () => {
   const { toast } = useToast();
   const updateMutation = useUpdatePasswordMutation();
   const { handleLogout } = useLogout();
@@ -77,7 +83,7 @@ const UpdateAccountPassword = () => {
               <LoadingButton
                 type="submit"
                 form="account-details-form"
-                variant="outline"
+                variant="default"
                 size="sm"
                 isLoading={updateMutation.isPending}
                 loadingText="Saving..."
@@ -89,6 +95,9 @@ const UpdateAccountPassword = () => {
               </LoadingButton>
             </div>
           </CardTitle>
+          <CardDescription>
+            Change your password here. After saving, you'll be logged out.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -205,4 +214,4 @@ const UpdateAccountPassword = () => {
   );
 };
 
-export default UpdateAccountPassword;
+export default AccountPasswordPage;

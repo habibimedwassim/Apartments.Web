@@ -20,7 +20,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { REGEXP_ONLY_DIGITS, REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import {
   useResendCodeMutation,
   useResetPasswordMutation,
@@ -112,7 +112,7 @@ const ResetPasswordPage = () => {
             <Label htmlFor="verificationCode">Verification Code</Label>
             <InputOTP
               maxLength={6}
-              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+              pattern={REGEXP_ONLY_DIGITS}
               value={otp}
               onChange={setOtp}
             >

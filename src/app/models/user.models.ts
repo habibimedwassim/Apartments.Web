@@ -4,6 +4,7 @@ export interface UserResponseModel {
   firstName: string;
   lastName: string;
   email: string;
+  tempEmail?: string;
   phoneNumber?: string;
   gender?: string;
   dateOfBirth?: string;
@@ -27,35 +28,22 @@ export interface EmailModel {
   email: string;
 }
 
-export interface VerifyNewEmailDto {
+export interface VerifyNewEmailModel {
   email: string;
   password: string;
   verificationCode: string;
 }
 
 export interface UserModel {
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  email?: string;
+  tempEmail?: string;
   phoneNumber?: string;
   gender?: string;
   dateOfBirth?: string;
 }
-
-// export function mapToUserModel(
-//   userResponseModel: UserResponseModel
-// ): UserModel {
-//   return {
-//     userName: userResponseModel.userName,
-//     firstName: userResponseModel.firstName,
-//     lastName: userResponseModel.lastName,
-//     email: userResponseModel.email,
-//     phoneNumber: userResponseModel.phoneNumber,
-//     gender: userResponseModel.gender,
-//     dateOfBirth: userResponseModel.dateOfBirth,
-//   };
-// }
 
 export const mapToUserModel = async (
   userResponseModel: UserResponseModel
@@ -65,6 +53,7 @@ export const mapToUserModel = async (
     firstName: userResponseModel.firstName,
     lastName: userResponseModel.lastName,
     email: userResponseModel.email,
+    tempEmail: userResponseModel.tempEmail,
     phoneNumber: userResponseModel.phoneNumber,
     gender: userResponseModel.gender,
     dateOfBirth: userResponseModel.dateOfBirth,

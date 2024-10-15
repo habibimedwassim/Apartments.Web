@@ -1,4 +1,3 @@
-// user.schemas.ts
 import { z } from "zod";
 
 export const updateProfileSchema = z.object({
@@ -34,7 +33,41 @@ export const emailSchema = z.object({
 });
 
 export const verifyNewEmailSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-  verificationCode: z.string().min(1, "Verification code is required"),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+    .regex(/\d/, "Password must contain at least 1 number")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Password must contain at least 1 special character"
+    ),
+
+  verificationCode: z
+    .string()
+    .min(6, { message: "Verification code must be at least 6 characters long" })
+    .max(6, { message: "Verification code must be exactly 6 characters long" }),
+});
+
+export const verificationSchema = z.object({
+  verificationCode: z
+    .string()
+    .length(6, "Verification code must be exactly 6 digits")
+    .regex(/^\d+$/, "Verification code must be numeric"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+    .regex(/\d/, "Password must contain at least 1 number")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Password must contain at least 1 special character"
+    ),
 });

@@ -151,7 +151,7 @@ const AccountDetailsPage = () => {
               <LoadingButton
                 type="submit"
                 form="account-details-form"
-                variant="outline"
+                variant="default"
                 size="sm"
                 isLoading={updateMutation.isPending}
                 loadingText="Saving..."
