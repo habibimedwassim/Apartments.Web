@@ -4,6 +4,8 @@ import DashboardLayout from "@/app/layouts/dashboard.layout";
 import PageLayout from "@/app/layouts/page.layout";
 import apartmentRoutes from "@/app/routes/apartment.routes";
 import AccountPage from "@/app/pages/account/AccountPage";
+import apartmentRequestsRoutes from "./apartment-request.routes";
+import tenantRoutes from "./tenant.routes";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -32,7 +34,9 @@ const ownerRoutes: RouteObject = {
         </PageLayout>
       ),
     },
+    ...tenantRoutes,
     ...apartmentRoutes,
+    ...apartmentRequestsRoutes,
   ],
 };
 

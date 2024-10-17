@@ -1,5 +1,4 @@
 import { Ellipsis, LogOut } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { getMenuList } from "@/lib/menu-lists";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Link, useLocation } from "react-router-dom";
 import { useLogout } from "@/hooks/use-logout";
+import { NotificationBadge } from "./notification-badge";
+import { useNotificationStore } from "@/hooks/use-store";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -21,8 +22,12 @@ interface MenuProps {
 export function Menu({ isOpen }: MenuProps) {
   const location = useLocation();
   const pathname = location.pathname;
-  const menuList = getMenuList(pathname);
   const { handleLogout } = useLogout();
+
+  const notificationCounts = useNotificationStore(
+    (state) => state.notificationCounts
+  );
+  const menuList = getMenuList(pathname, notificationCounts);
 
   return (
     <ScrollArea className="relative overflow-hidden [&>div]:overflow-hidden [&>div>div]:overflow-hidden [&>div>div[style]]:!block no-scrollbar">
@@ -51,9 +56,19 @@ export function Menu({ isOpen }: MenuProps) {
                 <p className="pb-2"></p>
               )}
               {menus.map(
-                ({ href, label, icon: Icon, active, submenus }, index) =>
+                (
+                  {
+                    href,
+                    label,
+                    icon: Icon,
+                    active,
+                    submenus,
+                    notificationCount,
+                  },
+                  index
+                ) =>
                   !submenus || submenus.length === 0 ? (
-                    <div className="w-full" key={index}>
+                    <div className="w-full relative" key={index}>
                       <TooltipProvider disableHoverableContent>
                         <Tooltip delayDuration={100}>
                           <TooltipTrigger asChild>
@@ -78,6 +93,12 @@ export function Menu({ isOpen }: MenuProps) {
                                 >
                                   {label}
                                 </p>
+                                {notificationCount && notificationCount > 0 && (
+                                  <NotificationBadge
+                                    count={notificationCount}
+                                    className="ml-2"
+                                  />
+                                )}
                               </Link>
                             </Button>
                           </TooltipTrigger>
@@ -97,6 +118,7 @@ export function Menu({ isOpen }: MenuProps) {
                         active={active}
                         submenus={submenus}
                         isOpen={isOpen}
+                        notificationCount={notificationCount || undefined}
                       />
                     </div>
                   )

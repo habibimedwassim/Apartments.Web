@@ -1,7 +1,6 @@
 import { USER_ROLE } from "@/app/constants/user-role";
-import { useAuthStore } from "@/hooks/use-store";
+import { useAuthStore, useNotificationStore } from "@/hooks/use-store"; // Import notification store
 import {
-  Users,
   Settings,
   LayoutGrid,
   LucideIcon,
@@ -14,6 +13,7 @@ type Submenu = {
   href: string;
   label: string;
   active?: boolean;
+  notificationCount?: number | undefined; // Notification count for submenu
 };
 
 type Menu = {
@@ -22,6 +22,7 @@ type Menu = {
   active: boolean;
   icon: LucideIcon;
   submenus?: Submenu[];
+  notificationCount: number | undefined; // Notification count for parent menu
 };
 
 type Group = {
@@ -29,14 +30,21 @@ type Group = {
   menus: Menu[];
 };
 
-export function getMenuList(pathname: string): Group[] {
-  const role = useAuthStore((state) => state.role);
+export function getMenuList(
+  pathname: string,
+  notificationCounts: Record<string, number>
+): Group[] {
+  const role = useAuthStore().role;
   return role === USER_ROLE.ADMIN
-    ? getAdminMenuList(pathname)
-    : getOwnerMenuList(pathname);
+    ? getAdminMenuList(pathname, notificationCounts)
+    : getOwnerMenuList(pathname, notificationCounts);
 }
 
-export function getAdminMenuList(pathname: string): Group[] {
+function getAdminMenuList(
+  pathname: string,
+  notificationCounts: Record<string, number>
+): Group[] {
+  const usersCount = notificationCounts["Users"] || 0;
   return [
     {
       groupLabel: "",
@@ -47,6 +55,7 @@ export function getAdminMenuList(pathname: string): Group[] {
           active: pathname === "/admin",
           icon: LayoutGrid,
           submenus: [],
+          notificationCount: 0, // Placeholder for future use
         },
       ],
     },
@@ -58,14 +67,17 @@ export function getAdminMenuList(pathname: string): Group[] {
           label: "Users",
           active: pathname.includes("/admin/users"),
           icon: HomeIcon,
+          notificationCount: usersCount > 0 ? usersCount : undefined,
           submenus: [
             {
               href: "/admin/users",
               label: "All Users",
+              notificationCount: usersCount > 0 ? usersCount : undefined,
             },
             {
               href: "/admin/users/new",
               label: "New User",
+              notificationCount: 0,
             },
           ],
         },
@@ -79,13 +91,23 @@ export function getAdminMenuList(pathname: string): Group[] {
           label: "Account",
           active: pathname.includes("/account"),
           icon: Settings,
+          notificationCount: 0,
         },
       ],
     },
   ];
 }
 
-export function getOwnerMenuList(pathname: string): Group[] {
+function getOwnerMenuList(
+  pathname: string,
+  notificationCounts: Record<string, number>
+): Group[] {
+  const rentalRequestCount = notificationCounts["RentRequest"] || 0;
+  const leaveRequestCount = notificationCounts["LeaveRequest"] || 0;
+  const paymentRequestCount = notificationCounts["PaymentRequest"] || 0;
+  const totalRequestCount =
+    rentalRequestCount + leaveRequestCount + paymentRequestCount;
+
   return [
     {
       groupLabel: "",
@@ -95,57 +117,36 @@ export function getOwnerMenuList(pathname: string): Group[] {
           label: "Dashboard",
           active: pathname === "/",
           icon: LayoutGrid,
+          notificationCount: 0, // No notifications for Dashboard
           submenus: [],
         },
-      ],
-    },
-    {
-      groupLabel: "Contents",
-      menus: [
         {
           href: "",
-          label: "Apartments",
-          active: pathname.includes("/apartments"),
-          icon: HomeIcon,
+          label: "Requests",
+          active: pathname.includes("requests"),
+          icon: DoorOpen,
+          notificationCount: totalRequestCount, // Sum of rental + leave requests
           submenus: [
             {
-              href: "/apartments",
-              label: "All Apartments",
+              href: "/rental-requests",
+              label: "Rental Requests",
+              notificationCount: rentalRequestCount, // Dynamic rental request count
             },
             {
-              href: "/apartments/new",
-              label: "New Apartment",
+              href: "/leave-requests",
+              label: "Leave Requests",
+              notificationCount:
+                leaveRequestCount > 0 ? leaveRequestCount : undefined, // Dynamic leave request count
             },
           ],
         },
         {
-          href: "/requests",
-          label: "Rental Requests",
-          active: pathname.includes("/requests"),
-          icon: DoorOpen,
-        },
-        {
-          href: "/payments",
-          label: "Payments",
-          active: pathname.includes("/requests"),
+          href: "/transactions",
+          label: "Transactions",
+          active: pathname.includes("/Transactions"),
           icon: Banknote,
-        },
-      ],
-    },
-    {
-      groupLabel: "Settings",
-      menus: [
-        {
-          href: "/users",
-          label: "Users",
-          active: pathname.includes("/users"),
-          icon: Users,
-        },
-        {
-          href: "/account",
-          label: "Account",
-          active: pathname.includes("/account"),
-          icon: Settings,
+          notificationCount:
+            paymentRequestCount > 0 ? paymentRequestCount : undefined, // Dynamic payment request count
         },
       ],
     },

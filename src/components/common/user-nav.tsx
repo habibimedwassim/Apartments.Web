@@ -40,9 +40,9 @@ export function UserNav() {
                   <AvatarImage src="#" alt="Avatar" />
                   <AvatarFallback className="bg-transparent">
                     {profile
-                      ? `${profile.firstName.charAt(
+                      ? `${profile.firstName!.charAt(
                           0
-                        )}${profile.lastName.charAt(0)}`.toUpperCase()
+                        )}${profile.lastName!.charAt(0)}`.toUpperCase()
                       : "TN"}
                   </AvatarFallback>
                 </Avatar>

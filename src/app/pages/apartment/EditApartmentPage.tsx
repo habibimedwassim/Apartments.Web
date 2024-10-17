@@ -72,6 +72,8 @@ const EditApartmentPage = () => {
     error,
   } = useGetApartmentByIdQuery(apartmentId);
 
+  const isOccupied = apartment?.status === "occupied";
+
   // Error handling for fetching apartment
   useEffect(() => {
     if (isError) {
@@ -138,7 +140,11 @@ const EditApartmentPage = () => {
       delete data.rentAmount;
     }
 
-    data.availableFrom = date ? date.toISOString().split("T")[0] : undefined;
+    if (!isOccupied) {
+      data.availableFrom = date ? date.toISOString().split("T")[0] : undefined;
+    } else {
+      delete data.availableFrom;
+    }
 
     mutation
       .mutateAsync({ id: apartmentId, data })
@@ -430,40 +436,42 @@ const EditApartmentPage = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="availableFrom"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel htmlFor="availableFrom">
-                        Available From
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            id="availableFrom"
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !date && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, "PPP") : "Pick a date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormItem>
-                  )}
-                />
+                {!isOccupied && (
+                  <FormField
+                    control={form.control}
+                    name="availableFrom"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel htmlFor="availableFrom">
+                          Available From
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="availableFrom"
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {date ? format(date, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={date}
+                              onSelect={setDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
 
               <div className="mt-4">

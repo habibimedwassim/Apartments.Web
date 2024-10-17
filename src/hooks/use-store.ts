@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LoginResponseModel } from "@/app/models/auth.models";
 import { UserModel } from "@/app/models/user.models";
+import { NotificationModel } from "@/app/models/notification.models";
 
 interface SidebarState {
   isOpen: boolean;
@@ -76,6 +77,50 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: "profile-storage",
+    }
+  )
+);
+
+interface NotificationState {
+  notificationCounts: Record<string, number>; // Store counts for each type dynamically
+  updateCount: (type: string, count: number) => void;
+  incrementCount: (type: string) => void; // Add this helper function
+  clearNotificationsByType: (type: string) => void;
+}
+
+export const useNotificationStore = create<NotificationState>()(
+  persist(
+    (set) => ({
+      notificationCounts: {},
+
+      updateCount: (type: string, count: number) =>
+        set((state) => ({
+          notificationCounts: {
+            ...state.notificationCounts,
+            [type]: count,
+          },
+        })),
+
+      // Increment count for a specific type
+      incrementCount: (type: string) =>
+        set((state) => ({
+          notificationCounts: {
+            ...state.notificationCounts,
+            [type]: (state.notificationCounts[type] || 0) + 1,
+          },
+        })),
+
+      clearNotificationsByType: (type: string) =>
+        set((state) => {
+          const updatedCounts = { ...state.notificationCounts };
+          delete updatedCounts[type];
+          return {
+            notificationCounts: updatedCounts,
+          };
+        }),
+    }),
+    {
+      name: "notification-storage",
     }
   )
 );

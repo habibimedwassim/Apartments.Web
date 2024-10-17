@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ChevronDown, Dot, LucideIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { NotificationBadge } from "@/components/common/notification-badge"; // Import the badge component
 import {
   Collapsible,
   CollapsibleContent,
@@ -29,6 +29,8 @@ type Submenu = {
   href: string;
   label: string;
   active?: boolean;
+  extra?: JSX.Element | null;
+  notificationCount?: number; // Add notification count for each submenu
 };
 
 interface CollapseMenuButtonProps {
@@ -37,6 +39,8 @@ interface CollapseMenuButtonProps {
   active: boolean;
   submenus: Submenu[];
   isOpen: boolean | undefined;
+  extra?: JSX.Element | null;
+  notificationCount?: number; // Add notification count for the main menu
 }
 
 export function CollapseMenuButton({
@@ -45,6 +49,8 @@ export function CollapseMenuButton({
   active,
   submenus,
   isOpen,
+  extra,
+  notificationCount, // Add notification count prop for the parent menu
 }: CollapseMenuButtonProps) {
   const location = useLocation();
   const pathname = location.pathname;
@@ -82,7 +88,12 @@ export function CollapseMenuButton({
               >
                 {label}
               </p>
+              {/* Show parent notification count */}
+              {notificationCount && notificationCount > 0 && (
+                <NotificationBadge count={notificationCount} className="ml-2" />
+              )}
             </div>
+            {extra && <div>{extra}</div>}
             <div
               className={cn(
                 "whitespace-nowrap",
@@ -100,34 +111,48 @@ export function CollapseMenuButton({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-        {submenus.map(({ href, label, active }, index) => (
-          <Button
-            key={index}
-            variant={
-              (active === undefined && pathname === href) || active
-                ? "secondary"
-                : "ghost"
-            }
-            className="w-full justify-start h-10 mb-1"
-            asChild
-          >
-            <Link to={href}>
-              <span className="mr-4 ml-2">
-                <Dot size={18} />
-              </span>
-              <p
-                className={cn(
-                  "max-w-[170px] truncate",
-                  isOpen
-                    ? "translate-x-0 opacity-100"
-                    : "-translate-x-96 opacity-0"
+        {submenus.map(
+          ({ href, label, active, extra, notificationCount }, index) => (
+            <Button
+              key={index}
+              variant={
+                (active === undefined && pathname === href) || active
+                  ? "secondary"
+                  : "ghost"
+              }
+              className="w-full justify-start h-10 mb-1"
+              asChild
+            >
+              <Link to={href}>
+                <span className="mr-4 ml-2">
+                  <Dot size={18} />
+                </span>
+                <p
+                  className={cn(
+                    "max-w-[170px] truncate",
+                    isOpen
+                      ? "translate-x-0 opacity-100"
+                      : "-translate-x-96 opacity-0"
+                  )}
+                >
+                  {label}
+                </p>
+                {/* Show submenu notification count */}
+                {notificationCount && notificationCount > 0 && (
+                  <NotificationBadge
+                    count={notificationCount}
+                    className="ml-2"
+                  />
                 )}
-              >
-                {label}
-              </p>
-            </Link>
-          </Button>
-        ))}
+                {extra && (
+                  <div className="absolute top-0 right-0 mt-2 mr-2">
+                    {extra}
+                  </div>
+                )}
+              </Link>
+            </Button>
+          )
+        )}
       </CollapsibleContent>
     </Collapsible>
   ) : (
@@ -153,7 +178,15 @@ export function CollapseMenuButton({
                     >
                       {label}
                     </p>
+                    {/* Show parent notification count */}
+                    {notificationCount && notificationCount > 0 && (
+                      <NotificationBadge
+                        count={notificationCount}
+                        className="ml-2"
+                      />
+                    )}
                   </div>
+                  {extra && <div>{extra}</div>}
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -168,7 +201,7 @@ export function CollapseMenuButton({
           {label}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label, active }, index) => (
+        {submenus.map(({ href, label, active, notificationCount }, index) => (
           <DropdownMenuItem key={index} asChild>
             <Link
               className={`cursor-pointer ${
@@ -178,6 +211,10 @@ export function CollapseMenuButton({
               to={href}
             >
               <p className="max-w-[180px] truncate">{label}</p>
+              {/* Show submenu notification count */}
+              {notificationCount && notificationCount > 0 && (
+                <NotificationBadge count={notificationCount} className="ml-2" />
+              )}
             </Link>
           </DropdownMenuItem>
         ))}

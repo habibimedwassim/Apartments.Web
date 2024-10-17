@@ -1,4 +1,4 @@
-import api from "./base.api";
+import api from "@/app/api/base.api";
 import {
   CreateApartmentModel,
   UpdateApartmentModel,
@@ -10,7 +10,7 @@ import {
 } from "@/app/models/apartment.models";
 import { MessageResponseModel } from "@/app/models/api.models";
 
-// Get all apartments with query filter
+// Get all apartments
 export const getMyApartments = async (): Promise<ApartmentModel[]> => {
   const response = await api.get<ApartmentResponseModel[]>(
     "users/me/apartments"

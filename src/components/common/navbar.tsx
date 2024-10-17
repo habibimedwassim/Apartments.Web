@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/common/mode-toggle";
 import { SheetMenu } from "@/components/common/sheet-menu";
 import { UserNav } from "@/components/common/user-nav";
+import { NotificationBell } from "./notification-bell";
 
 interface NavbarProps {
   title: string;
@@ -17,6 +18,7 @@ export function Navbar({ title }: NavbarProps) {
           </div>
           <div className="flex flex-1 items-center justify-end">
             <ModeToggle />
+            <NotificationBell />
             <UserNav />
           </div>
         </div>

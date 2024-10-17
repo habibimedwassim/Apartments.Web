@@ -44,6 +44,15 @@ export interface UserModel {
   gender?: string;
   dateOfBirth?: string;
 }
+export interface TenantModel {
+  id: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  gender?: string;
+  dateOfBirth?: string;
+}
 
 export const mapToUserModel = async (
   userResponseModel: UserResponseModel
@@ -54,6 +63,26 @@ export const mapToUserModel = async (
     lastName: userResponseModel.lastName,
     email: userResponseModel.email,
     tempEmail: userResponseModel.tempEmail,
+    phoneNumber: userResponseModel.phoneNumber,
+    gender: userResponseModel.gender,
+    dateOfBirth: userResponseModel.dateOfBirth,
+  };
+};
+
+export const mapToTenantsList = async (
+  responseModel: UserResponseModel[]
+): Promise<TenantModel[]> => {
+  return Promise.all(responseModel.map(mapToTenantModel));
+};
+
+export const mapToTenantModel = async (
+  userResponseModel: UserResponseModel
+): Promise<TenantModel> => {
+  return {
+    id: userResponseModel.id,
+    firstName: userResponseModel.firstName,
+    lastName: userResponseModel.lastName,
+    email: userResponseModel.email,
     phoneNumber: userResponseModel.phoneNumber,
     gender: userResponseModel.gender,
     dateOfBirth: userResponseModel.dateOfBirth,
