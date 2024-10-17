@@ -1,5 +1,7 @@
+import { REQUEST_TYPES } from "@/app/constants/request";
 import { USER_ROLE } from "@/app/constants/user-role";
-import { useAuthStore, useNotificationStore } from "@/hooks/use-store"; // Import notification store
+import { NotificationType } from "@/app/models/notification.models";
+import { useAuthStore } from "@/hooks/use-store";
 import {
   Settings,
   LayoutGrid,
@@ -7,13 +9,15 @@ import {
   HomeIcon,
   Banknote,
   DoorOpen,
+  Users,
 } from "lucide-react";
 
 type Submenu = {
   href: string;
   label: string;
   active?: boolean;
-  notificationCount?: number | undefined; // Notification count for submenu
+  notificationCount?: number | undefined;
+  type?: NotificationType;
 };
 
 type Menu = {
@@ -22,13 +26,24 @@ type Menu = {
   active: boolean;
   icon: LucideIcon;
   submenus?: Submenu[];
-  notificationCount: number | undefined; // Notification count for parent menu
+  notificationCount: number | undefined;
+  type?: NotificationType;
 };
 
 type Group = {
   groupLabel: string;
   menus: Menu[];
 };
+
+// Helper function to sum notification counts safely
+function safeSum(...values: Array<number | undefined>): number {
+  return values.reduce((acc: number, val) => acc + (val || 0), 0);
+}
+
+// Helper function to return notification count if greater than 0, otherwise undefined
+function displayNotificationCount(count?: number): number | undefined {
+  return count && count > 0 ? count : undefined;
+}
 
 export function getMenuList(
   pathname: string,
@@ -55,7 +70,7 @@ function getAdminMenuList(
           active: pathname === "/admin",
           icon: LayoutGrid,
           submenus: [],
-          notificationCount: 0, // Placeholder for future use
+          notificationCount: displayNotificationCount(0),
         },
       ],
     },
@@ -67,12 +82,12 @@ function getAdminMenuList(
           label: "Users",
           active: pathname.includes("/admin/users"),
           icon: HomeIcon,
-          notificationCount: usersCount > 0 ? usersCount : undefined,
+          notificationCount: displayNotificationCount(usersCount),
           submenus: [
             {
               href: "/admin/users",
               label: "All Users",
-              notificationCount: usersCount > 0 ? usersCount : undefined,
+              notificationCount: displayNotificationCount(usersCount),
             },
             {
               href: "/admin/users/new",
@@ -91,7 +106,7 @@ function getAdminMenuList(
           label: "Account",
           active: pathname.includes("/account"),
           icon: Settings,
-          notificationCount: 0,
+          notificationCount: displayNotificationCount(0),
         },
       ],
     },
@@ -102,11 +117,14 @@ function getOwnerMenuList(
   pathname: string,
   notificationCounts: Record<string, number>
 ): Group[] {
-  const rentalRequestCount = notificationCounts["RentRequest"] || 0;
-  const leaveRequestCount = notificationCounts["LeaveRequest"] || 0;
-  const paymentRequestCount = notificationCounts["PaymentRequest"] || 0;
-  const totalRequestCount =
-    rentalRequestCount + leaveRequestCount + paymentRequestCount;
+  const rentalRequestCount = notificationCounts[REQUEST_TYPES.Rent] || 0;
+  const leaveRequestCount = notificationCounts[REQUEST_TYPES.Leave] || 0;
+  const paymentRequestCount = notificationCounts[REQUEST_TYPES.Payment] || 0;
+  const totalRequestCount = safeSum(
+    rentalRequestCount,
+    leaveRequestCount,
+    paymentRequestCount
+  );
 
   return [
     {
@@ -117,36 +135,81 @@ function getOwnerMenuList(
           label: "Dashboard",
           active: pathname === "/",
           icon: LayoutGrid,
-          notificationCount: 0, // No notifications for Dashboard
+          notificationCount: displayNotificationCount(0),
           submenus: [],
+        },
+      ],
+    },
+    {
+      groupLabel: "Content",
+      menus: [
+        {
+          href: "",
+          label: "Apartments",
+          active: pathname.includes("apartments"),
+          icon: DoorOpen,
+          notificationCount: displayNotificationCount(0),
+          submenus: [
+            {
+              href: "/apartments",
+              label: "Apartments",
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "apartments/new",
+              label: "New Apartment",
+              notificationCount: displayNotificationCount(0),
+            },
+          ],
         },
         {
           href: "",
           label: "Requests",
           active: pathname.includes("requests"),
           icon: DoorOpen,
-          notificationCount: totalRequestCount, // Sum of rental + leave requests
+          notificationCount: displayNotificationCount(totalRequestCount),
           submenus: [
             {
               href: "/rental-requests",
               label: "Rental Requests",
-              notificationCount: rentalRequestCount, // Dynamic rental request count
+              notificationCount: displayNotificationCount(rentalRequestCount),
+              type: "rent",
             },
             {
               href: "/leave-requests",
               label: "Leave Requests",
-              notificationCount:
-                leaveRequestCount > 0 ? leaveRequestCount : undefined, // Dynamic leave request count
+              notificationCount: displayNotificationCount(leaveRequestCount),
+              type: "leave",
             },
           ],
         },
         {
           href: "/transactions",
           label: "Transactions",
-          active: pathname.includes("/Transactions"),
+          active: pathname.includes("transactions"),
           icon: Banknote,
-          notificationCount:
-            paymentRequestCount > 0 ? paymentRequestCount : undefined, // Dynamic payment request count
+          notificationCount: displayNotificationCount(paymentRequestCount),
+          type: "payment",
+        },
+        {
+          href: "/tenants",
+          label: "Tenants",
+          active: pathname.includes("tenants"),
+          icon: Users,
+          notificationCount: displayNotificationCount(0),
+        },
+      ],
+    },
+    {
+      groupLabel: "Settings",
+      menus: [
+        {
+          href: "/account",
+          label: "Account",
+          active: pathname === "/account",
+          icon: Settings,
+          notificationCount: displayNotificationCount(0),
+          submenus: [],
         },
       ],
     },

@@ -2,7 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LoginResponseModel } from "@/app/models/auth.models";
 import { UserModel } from "@/app/models/user.models";
-import { NotificationModel } from "@/app/models/notification.models";
+import {
+  NotificationModel,
+  NotificationType,
+} from "@/app/models/notification.models";
 
 interface SidebarState {
   isOpen: boolean;
@@ -82,42 +85,57 @@ export const useProfileStore = create<ProfileState>()(
 );
 
 interface NotificationState {
-  notificationCounts: Record<string, number>; // Store counts for each type dynamically
-  updateCount: (type: string, count: number) => void;
-  incrementCount: (type: string) => void; // Add this helper function
-  clearNotificationsByType: (type: string) => void;
+  notifications: NotificationModel[];
+  unreadCounts: Record<NotificationType, number>;
+  fetchUnreadNotifications: (data: NotificationModel[]) => void;
+  markAsRead: (type: NotificationType) => void;
+  addNotification: (notification: NotificationModel) => void;
 }
 
 export const useNotificationStore = create<NotificationState>()(
   persist(
     (set) => ({
-      notificationCounts: {},
-
-      updateCount: (type: string, count: number) =>
-        set((state) => ({
-          notificationCounts: {
-            ...state.notificationCounts,
-            [type]: count,
+      notifications: [],
+      unreadCounts: {
+        rent: 0,
+        leave: 0,
+        payment: 0,
+        dismiss: 0,
+      },
+      fetchUnreadNotifications: (data: NotificationModel[]) => {
+        const unreadCounts = data.reduce(
+          (acc: Record<NotificationType, number>, notification) => {
+            if (!notification.isRead) {
+              acc[notification.type] = (acc[notification.type] || 0) + 1;
+            }
+            return acc;
           },
-        })),
-
-      // Increment count for a specific type
-      incrementCount: (type: string) =>
+          { rent: 0, leave: 0, payment: 0, dismiss: 0 }
+        );
+        set({ notifications: data, unreadCounts });
+      },
+      markAsRead: (type: NotificationType) => {
         set((state) => ({
-          notificationCounts: {
-            ...state.notificationCounts,
-            [type]: (state.notificationCounts[type] || 0) + 1,
+          notifications: state.notifications.map((n) =>
+            n.type === type ? { ...n, isRead: true } : n
+          ),
+          unreadCounts: {
+            ...state.unreadCounts,
+            [type]: 0,
           },
-        })),
-
-      clearNotificationsByType: (type: string) =>
-        set((state) => {
-          const updatedCounts = { ...state.notificationCounts };
-          delete updatedCounts[type];
-          return {
-            notificationCounts: updatedCounts,
-          };
-        }),
+        }));
+      },
+      addNotification: (notification: NotificationModel) => {
+        set((state) => ({
+          notifications: [notification, ...state.notifications],
+          unreadCounts: {
+            ...state.unreadCounts,
+            [notification.type]:
+              state.unreadCounts[notification.type] +
+              (notification.isRead ? 0 : 1),
+          },
+        }));
+      },
     }),
     {
       name: "notification-storage",

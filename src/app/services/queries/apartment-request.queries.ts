@@ -18,17 +18,6 @@ export const useGetApartmentRequestByIdQuery = (id: number) => {
   });
 };
 
-// Query to get all apartment requests for the current owner (filtered)
-// export const useGetApartmentRequestsQuery = (
-//   filters: ApartmentRequestQueryFilterModel
-// ) => {
-//   return useQuery<ApartmentRequestModel[]>({
-//     queryKey: ["apartmentRequests", filters],
-//     queryFn: () => getApartmentRequests(filters),
-//     staleTime: 300000, // 5 minutes
-//   });
-// };
-
 // Query to get tenant information associated with a specific request
 export const useGetTenantFromRequestQuery = (id: number) => {
   return useQuery({
@@ -41,9 +30,9 @@ export const useGetApartmentRequestsQuery = (
   filter: ApartmentRequestQueryFilterModel
 ) => {
   return useQuery<ApartmentRequestModel[]>({
-    queryKey: [`${filter.type.toLowerCase()}-requests`],
+    queryKey: [`${filter.type}-requests`],
     queryFn: () => getApartmentRequests(filter),
-    staleTime: 300000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
 

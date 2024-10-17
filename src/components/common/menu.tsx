@@ -10,10 +10,12 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLogout } from "@/hooks/use-logout";
 import { NotificationBadge } from "./notification-badge";
 import { useNotificationStore } from "@/hooks/use-store";
+import { useMarkAsReadMutation } from "@/app/services/mutations/notification.mutations"; // Import mutation
+import { NotificationType } from "@/app/models/notification.models";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -22,12 +24,32 @@ interface MenuProps {
 export function Menu({ isOpen }: MenuProps) {
   const location = useLocation();
   const pathname = location.pathname;
+  const navigate = useNavigate();
   const { handleLogout } = useLogout();
 
   const notificationCounts = useNotificationStore(
-    (state) => state.notificationCounts
+    (state) => state.unreadCounts
   );
+  const { markAsRead } = useNotificationStore();
+  const markAsReadMutation = useMarkAsReadMutation(); // Use the mutation to mark as read
   const menuList = getMenuList(pathname, notificationCounts);
+
+  const handleMenuItemClick = (type?: NotificationType, href?: string) => {
+    console.log(type, href);
+    if (type) {
+      markAsReadMutation
+        .mutateAsync(type)
+        .then(() => {
+          markAsRead(type); // Update Zustand store to mark as read
+          if (href) {
+            navigate(href); // Redirect to the specified path
+          }
+        })
+        .catch(() => {});
+    } else if (href) {
+      navigate(href);
+    }
+  };
 
   return (
     <ScrollArea className="relative overflow-hidden [&>div]:overflow-hidden [&>div>div]:overflow-hidden [&>div>div[style]]:!block no-scrollbar">
@@ -64,6 +86,7 @@ export function Menu({ isOpen }: MenuProps) {
                     active,
                     submenus,
                     notificationCount,
+                    type,
                   },
                   index
                 ) =>
@@ -75,6 +98,7 @@ export function Menu({ isOpen }: MenuProps) {
                             <Button
                               variant={active ? "secondary" : "ghost"}
                               className="w-full justify-start h-10 mb-1"
+                              onClick={() => handleMenuItemClick(type, href)}
                               asChild
                             >
                               <Link to={href}>
@@ -119,6 +143,7 @@ export function Menu({ isOpen }: MenuProps) {
                         submenus={submenus}
                         isOpen={isOpen}
                         notificationCount={notificationCount || undefined}
+                        onClick={handleMenuItemClick}
                       />
                     </div>
                   )

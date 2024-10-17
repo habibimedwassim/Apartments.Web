@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, Dot, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { NotificationBadge } from "@/components/common/notification-badge"; // Import the badge component
+import { NotificationBadge } from "@/components/common/notification-badge";
 import {
   Collapsible,
   CollapsibleContent,
@@ -24,13 +24,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useLocation } from "react-router-dom";
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
+import { NotificationType } from "@/app/models/notification.models";
 
 type Submenu = {
   href: string;
   label: string;
   active?: boolean;
   extra?: JSX.Element | null;
-  notificationCount?: number; // Add notification count for each submenu
+  notificationCount?: number;
+  type?: NotificationType;
 };
 
 interface CollapseMenuButtonProps {
@@ -40,7 +42,8 @@ interface CollapseMenuButtonProps {
   submenus: Submenu[];
   isOpen: boolean | undefined;
   extra?: JSX.Element | null;
-  notificationCount?: number; // Add notification count for the main menu
+  notificationCount?: number;
+  onClick?: (type?: NotificationType, href?: string) => void;
 }
 
 export function CollapseMenuButton({
@@ -50,7 +53,8 @@ export function CollapseMenuButton({
   submenus,
   isOpen,
   extra,
-  notificationCount, // Add notification count prop for the parent menu
+  notificationCount,
+  onClick,
 }: CollapseMenuButtonProps) {
   const location = useLocation();
   const pathname = location.pathname;
@@ -88,7 +92,6 @@ export function CollapseMenuButton({
               >
                 {label}
               </p>
-              {/* Show parent notification count */}
               {notificationCount && notificationCount > 0 && (
                 <NotificationBadge count={notificationCount} className="ml-2" />
               )}
@@ -112,7 +115,7 @@ export function CollapseMenuButton({
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
         {submenus.map(
-          ({ href, label, active, extra, notificationCount }, index) => (
+          ({ href, label, active, extra, notificationCount, type }, index) => (
             <Button
               key={index}
               variant={
@@ -121,6 +124,11 @@ export function CollapseMenuButton({
                   : "ghost"
               }
               className="w-full justify-start h-10 mb-1"
+              onClick={() =>
+                notificationCount && notificationCount > 0
+                  ? onClick?.(type, href)
+                  : null
+              }
               asChild
             >
               <Link to={href}>
@@ -137,7 +145,6 @@ export function CollapseMenuButton({
                 >
                   {label}
                 </p>
-                {/* Show submenu notification count */}
                 {notificationCount && notificationCount > 0 && (
                   <NotificationBadge
                     count={notificationCount}
@@ -178,7 +185,6 @@ export function CollapseMenuButton({
                     >
                       {label}
                     </p>
-                    {/* Show parent notification count */}
                     {notificationCount && notificationCount > 0 && (
                       <NotificationBadge
                         count={notificationCount}
@@ -201,23 +207,32 @@ export function CollapseMenuButton({
           {label}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label, active, notificationCount }, index) => (
-          <DropdownMenuItem key={index} asChild>
-            <Link
-              className={`cursor-pointer ${
-                ((active === undefined && pathname === href) || active) &&
-                "bg-secondary"
-              }`}
-              to={href}
-            >
-              <p className="max-w-[180px] truncate">{label}</p>
-              {/* Show submenu notification count */}
-              {notificationCount && notificationCount > 0 && (
-                <NotificationBadge count={notificationCount} className="ml-2" />
-              )}
-            </Link>
-          </DropdownMenuItem>
-        ))}
+        {submenus.map(
+          ({ href, label, active, notificationCount, type }, index) => (
+            <DropdownMenuItem key={index} asChild>
+              <Link
+                className={`cursor-pointer ${
+                  ((active === undefined && pathname === href) || active) &&
+                  "bg-secondary"
+                }`}
+                to={href}
+                onClick={() =>
+                  notificationCount && notificationCount > 0
+                    ? onClick?.(type, href)
+                    : null
+                }
+              >
+                <p className="max-w-[180px] truncate">{label}</p>
+                {notificationCount && notificationCount > 0 && (
+                  <NotificationBadge
+                    count={notificationCount}
+                    className="ml-2"
+                  />
+                )}
+              </Link>
+            </DropdownMenuItem>
+          )
+        )}
         <DropdownMenuArrow className="fill-border" />
       </DropdownMenuContent>
     </DropdownMenu>

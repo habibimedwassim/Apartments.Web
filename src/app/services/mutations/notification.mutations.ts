@@ -1,16 +1,16 @@
 import { markAsRead } from "@/app/api/notification.api";
+import { NotificationType } from "@/app/models/notification.models";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useMarkAsReadMutation = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: markAsRead,
-    onSuccess: () => {
+  return useMutation({
+    mutationFn: (type: string) => markAsRead(type),
+    onSuccess: (_, type: NotificationType) => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
-    },
-    onError: (error: string) => {
-      throw error;
+      if (type) {
+        queryClient.invalidateQueries({ queryKey: [`${type}-requests`] });
+      }
     },
   });
-  return mutation;
 };

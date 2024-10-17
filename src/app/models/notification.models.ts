@@ -1,7 +1,9 @@
+export type NotificationType = "rent" | "leave" | "payment" | "dismiss";
+
 export interface NotificationModel {
   id: number;
-  createdDate: string;
   message: string;
-  type: string;
+  type: NotificationType;
   isRead: boolean;
+  createdAt: string;
 }
