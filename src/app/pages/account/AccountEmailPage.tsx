@@ -128,7 +128,9 @@ export const AccountEmailPage = () => {
       <Card>
         <CardHeader>
           <CardTitle>
-            <h2 className="text-lg font-semibold">Change Email</h2>
+            <div className="flex justify-between">
+              <h2 className="text-lg font-semibold">Change Email</h2>
+            </div>
           </CardTitle>
           <CardDescription>
             After verifying the new email you'll be logged out

@@ -11,7 +11,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { useState } from "react";
 import { CalendarIcon, Edit } from "lucide-react";
 import {
@@ -177,6 +183,7 @@ const AccountDetailsPage = () => {
               </div>
             </div>
           </CardTitle>
+          <CardDescription>Update your details here.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>

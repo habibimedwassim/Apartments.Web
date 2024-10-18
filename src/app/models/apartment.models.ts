@@ -63,6 +63,10 @@ export interface ApartmentPhotoModel {
   url: string;
 }
 
+export interface UploadApartmentPhotosModel {
+  apartmentPhotos: File[];
+}
+
 export interface ApartmentQueryFilter {
   pageNumber: number;
   sortBy?: string;

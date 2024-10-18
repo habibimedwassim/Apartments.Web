@@ -7,6 +7,8 @@ import {
   ApartmentModel,
   mapSingleApartmentData,
   DismissModel,
+  ApartmentPhotoModel,
+  UploadApartmentPhotosModel,
 } from "@/app/models/apartment.models";
 import { MessageResponseModel } from "@/app/models/api.models";
 
@@ -94,6 +96,58 @@ export const dismissFromApartment = async (id: number, data: DismissModel) => {
   const response = await api.post<MessageResponseModel>(
     `/apartments/${id}/dismiss`,
     data
+  );
+  return response.data;
+};
+
+// Get apartment photos
+export const getApartmentPhotos = async (id: number) => {
+  const response = await api.get<ApartmentPhotoModel[]>(
+    `/apartments/${id}/photos`
+  );
+  return response.data;
+};
+// get apartment photo by apartment id and photo id
+export const getApartmentPhoto = async (
+  apartmentId: number,
+  photoId: number
+) => {
+  const response = await api.get<ApartmentPhotoModel>(
+    `/apartments/${apartmentId}/photos/${photoId}`
+  );
+  return response.data;
+};
+
+//delete photo from apartment by apartment id and photo id
+export const deleteApartmentPhoto = async (
+  apartmentId: number,
+  photoId: number
+) => {
+  const response = await api.delete<MessageResponseModel>(
+    `/apartments/${apartmentId}/photos/${photoId}`
+  );
+  return response.data;
+};
+
+// add apartment photos to apartment
+export const uploadApartmentPhotos = async (
+  id: number,
+  data: UploadApartmentPhotosModel
+) => {
+  const formData = new FormData();
+
+  data.apartmentPhotos.forEach((photo) => {
+    formData.append("apartmentPhotos", photo);
+  });
+
+  const response = await api.post<MessageResponseModel>(
+    `/apartments/${id}/photos`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
   return response.data;
 };

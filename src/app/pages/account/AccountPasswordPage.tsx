@@ -51,17 +51,17 @@ const AccountPasswordPage = () => {
   const onSubmit = (data: ChangePasswordModel) => {
     updateMutation
       .mutateAsync({ data })
-      .then(() => {
+      .then((result) => {
         toast({
-          title: "Password updated successfully",
+          title: result.message,
         });
         form.reset();
-        handleLogout(); // Log out after successful password change
+        handleLogout();
       })
       .catch((err) => {
         toast({
           variant: "destructive",
-          description: err.message || "An error occurred",
+          description: err || "An error occurred",
         });
       });
   };

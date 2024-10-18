@@ -12,17 +12,17 @@ export default function SettingsPage() {
           <Tabs defaultValue="details" className="space-y-4">
             <TabsList>
               <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="email">Email</TabsTrigger>
               <TabsTrigger value="password">Password</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
               <AccountDetailsPage />
             </TabsContent>
-            <TabsContent value="email">
-              <AccountEmailPage />
-            </TabsContent>
             <TabsContent value="password">
               <AccountPasswordPage />
+            </TabsContent>
+            <TabsContent value="email">
+              <AccountEmailPage />
             </TabsContent>
           </Tabs>
         </CardContent>

@@ -24,9 +24,10 @@ import {
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
+  title?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   newButtonLabel?: string;
@@ -39,6 +40,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
+  title,
   columns,
   data,
   newButtonLabel,
@@ -82,6 +84,7 @@ export function DataTable<TData, TValue>({
     <>
       <Card className="border border-dashed">
         <CardHeader>
+          <CardTitle className="mb-2 text-lg font-bold">{title}</CardTitle>
           <DataTableToolbar
             table={table}
             statuses={statuses}

@@ -6,6 +6,7 @@ import apartmentRoutes from "@/app/routes/apartment.routes";
 import AccountPage from "@/app/pages/account/AccountPage";
 import apartmentRequestsRoutes from "./apartment-request.routes";
 import tenantRoutes from "./tenant.routes";
+import TransactionsPage from "../pages/transaction/TransactionsPage";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -22,6 +23,15 @@ const ownerRoutes: RouteObject = {
       element: (
         <PageLayout title="Home">
           <h1>Home Page</h1>
+        </PageLayout>
+      ),
+    },
+    {
+      id: "owner-transactions",
+      path: "/transactions",
+      element: (
+        <PageLayout title="Transactions">
+          <TransactionsPage />
         </PageLayout>
       ),
     },

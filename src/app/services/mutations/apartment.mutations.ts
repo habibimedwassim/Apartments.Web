@@ -4,8 +4,13 @@ import {
   updateApartment,
   archiveRestoreApartment,
   deleteApartmentPermanent,
+  deleteApartmentPhoto,
+  uploadApartmentPhotos,
 } from "@/app/api/apartment.api";
-import { UpdateApartmentModel } from "@/app/models/apartment.models";
+import {
+  UpdateApartmentModel,
+  UploadApartmentPhotosModel,
+} from "@/app/models/apartment.models";
 
 // Mutation to create a new apartment
 export const useCreateApartmentMutation = () => {
@@ -39,6 +44,7 @@ export const useUpdateApartmentMutation = () => {
   return mutation;
 };
 
+// Mutation to archive or restore an apartment
 export const useArchiveApartmentMutation = (id: number) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -54,6 +60,7 @@ export const useArchiveApartmentMutation = (id: number) => {
   return mutation;
 };
 
+// Mutation to permanently delete an apartment
 export const useDeleteApartmentMutation = (id: number) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -62,6 +69,46 @@ export const useDeleteApartmentMutation = (id: number) => {
       queryClient.invalidateQueries({ queryKey: ["apartments"] });
     },
     onError: (error) => {
+      throw error;
+    },
+  });
+
+  return mutation;
+};
+
+// Mutation to delete a photo from an apartment
+export const useDeleteApartmentPhotoMutation = (
+  apartmentId: number,
+  photoId: number
+) => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => deleteApartmentPhoto(apartmentId, photoId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["apartmentPhotos", apartmentId],
+      });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
+
+  return mutation;
+};
+
+// Mutation to upload photos to an apartment
+export const useUploadApartmentPhotosMutation = (apartmentId: number) => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (data: UploadApartmentPhotosModel) =>
+      uploadApartmentPhotos(apartmentId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["apartmentPhotos", apartmentId],
+      });
+    },
+    onError: (error: string) => {
       throw error;
     },
   });
