@@ -31,18 +31,17 @@ export function Menu({ isOpen }: MenuProps) {
     (state) => state.unreadCounts
   );
   const { markAsRead } = useNotificationStore();
-  const markAsReadMutation = useMarkAsReadMutation(); // Use the mutation to mark as read
+  const markAsReadMutation = useMarkAsReadMutation();
   const menuList = getMenuList(pathname, notificationCounts);
 
   const handleMenuItemClick = (type?: NotificationType, href?: string) => {
-    console.log(type, href);
     if (type) {
       markAsReadMutation
         .mutateAsync(type)
         .then(() => {
-          markAsRead(type); // Update Zustand store to mark as read
+          markAsRead(type);
           if (href) {
-            navigate(href); // Redirect to the specified path
+            navigate(href);
           }
         })
         .catch(() => {});

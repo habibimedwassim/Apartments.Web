@@ -223,7 +223,7 @@ const EditApartmentPage = () => {
                 <LoadingButton
                   type="submit"
                   form="apartment-edit-form"
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   isLoading={mutation.isPending || isFetchingApartment}
                   loadingText="Updating..."

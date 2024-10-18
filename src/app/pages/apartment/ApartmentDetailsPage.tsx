@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Edit } from "lucide-react";
 import { apartmentStatuses } from "./table/ApartmentStatuses";
 
 export function ApartmentDetailsPage() {
@@ -147,12 +147,13 @@ export function ApartmentDetailsPage() {
                   {getStatus(apartment.status)}
                 </div>
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   onClick={() =>
                     navigate("/apartments/edit", { state: { apartmentId } })
                   }
                 >
+                  <Edit className="h-3.5 w-3.5 mr-2" />
                   Edit Apartment
                 </Button>
               </div>

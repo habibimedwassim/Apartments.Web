@@ -10,6 +10,7 @@ import {
   Banknote,
   DoorOpen,
   Users,
+  House,
 } from "lucide-react";
 
 type Submenu = {
@@ -147,7 +148,7 @@ function getOwnerMenuList(
           href: "",
           label: "Apartments",
           active: pathname.includes("apartments"),
-          icon: DoorOpen,
+          icon: House,
           notificationCount: displayNotificationCount(0),
           submenus: [
             {

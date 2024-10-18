@@ -40,8 +40,7 @@ export function DataTableToolbar<TData>({
           className="h-8 w-[150px] lg:w-[250px]"
           autoComplete="off"
         />
-
-        {table.getColumn("status") && (
+        {statuses && table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
@@ -66,7 +65,7 @@ export function DataTableToolbar<TData>({
       <DataTableViewOptions table={table} />
       {newButtonLabel && onNewButtonClick && (
         <Button
-          variant="outline"
+          variant="default"
           size="sm"
           className="h-8 gap-1 ml-2"
           onClick={onNewButtonClick}

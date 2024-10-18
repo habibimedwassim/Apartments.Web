@@ -191,7 +191,7 @@ const CreateApartmentPage = () => {
                 <LoadingButton
                   type="submit"
                   form="apartment-form"
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   isLoading={createApartmentMutation.isPending}
                   loadingText="Adding..."
@@ -478,7 +478,7 @@ const CreateApartmentPage = () => {
                     <Button
                       id="apartmentPhotos"
                       type="button"
-                      variant="outline"
+                      variant="default"
                       size="sm"
                       onClick={addPhotoField}
                       disabled={photoFields.length >= 4}

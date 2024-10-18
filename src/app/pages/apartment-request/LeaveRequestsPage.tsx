@@ -1,9 +1,14 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Bell, AtSign, BellOff } from "lucide-react";
+
 const LeaveRequestsPage = () => {
-  return (
-    <div>
-      <h1>Leave Requestsa</h1>
-    </div>
-  );
+  return <></>;
 };
 
 export default LeaveRequestsPage;

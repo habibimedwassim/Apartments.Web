@@ -54,7 +54,7 @@ export const tenantColumns: ColumnDef<TenantModel>[] = [
           size="sm"
           onClick={() =>
             navigate("/tenants/details", { state: { tenantId: tenant.id } })
-          } // Pass tenantId via state
+          }
         >
           View Details
         </Button>

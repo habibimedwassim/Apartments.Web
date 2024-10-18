@@ -14,7 +14,13 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useGetUnreadNotificationsQuery } from "@/app/services/queries/notification.queries";
 import { useNotificationStore } from "@/hooks/use-store";
 import { useMarkAsReadMutation } from "@/app/services/mutations/notification.mutations";
@@ -71,62 +77,65 @@ export function NotificationBell() {
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
         <Tooltip delayDuration={100}>
-          <TooltipTrigger asChild>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="relative h-8 w-8 rounded-full bg-background mr-2"
-                size="icon"
-              >
-                <Bell className="h-5 w-5" />
-                {totalUnread > 0 && (
-                  <span className="absolute top-0 right-0 block h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                    {totalUnread > 99 ? "99+" : totalUnread}
-                  </span>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-          </TooltipTrigger>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="relative h-8 w-8 rounded-full mr-2"
+            >
+              <Bell className="w-5 h-5" />
+              {totalUnread > 0 && (
+                <span className="absolute top-0 right-0 block h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                  {totalUnread > 99 ? "99+" : totalUnread}
+                </span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
           <TooltipContent side="bottom">Notifications</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <DropdownMenuContent
-        className="w-96 max-h-96 overflow-y-auto" // Wider (w-96) and smaller height (max-h-96)
+        className="p-0 w-80 max-h-[400px] overflow-auto"
         align="end"
         forceMount
       >
-        <DropdownMenuLabel className="font-normal">
-          <p className="text-sm font-medium">Notifications</p>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <ScrollArea className="h-64 w-full rounded-md border">
-          {" "}
-          {/* Adjust the height to make it smaller */}
-          <div className="p-4">
-            {notifications.length ? (
-              notifications.map((notification, index) => (
-                <Card
-                  key={index}
-                  className="mb-4 cursor-pointer hover:bg-muted transition"
-                  onClick={() =>
-                    handleNotificationClick(
-                      notification.type as NotificationType
-                    )
-                  }
-                >
-                  <CardHeader>
-                    <CardTitle className="text-sm font-medium">
-                      {notification.type.toUpperCase() + " Request"}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>{notification.message}</CardContent>
-                </Card>
-              ))
-            ) : (
-              <p className="text-sm">No unread notifications</p>
-            )}
-          </div>
-        </ScrollArea>
+        <Card className="shadow-none border-0">
+          <CardHeader className="border-b">
+            <CardTitle>Notifications</CardTitle>
+            <CardDescription>
+              {totalUnread > 0
+                ? `You have ${totalUnread} unread ${
+                    totalUnread === 1 ? "notification" : "notifications"
+                  }.`
+                : "No unread notifications."}
+            </CardDescription>
+          </CardHeader>
+          {totalUnread > 0 && (
+            <CardContent className="p-2">
+              <ScrollArea className="h-64 w-full">
+                {notifications.length > 0 &&
+                  notifications.map((notification, index) => (
+                    <div
+                      key={index}
+                      className="mb-4 p-2 grid grid-cols-[auto_1fr] items-start gap-4 pb-4 last:mb-0 last:pb-0 cursor-pointer hover:bg-muted rounded-lg"
+                      onClick={() =>
+                        handleNotificationClick(
+                          notification.type as NotificationType
+                        )
+                      }
+                    >
+                      <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-blue-500" />
+                      <div className="grid gap-1">
+                        <p className="text-sm font-medium mb-2">
+                          {notification.message}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </ScrollArea>
+            </CardContent>
+          )}
+        </Card>
       </DropdownMenuContent>
     </DropdownMenu>
   );
