@@ -84,7 +84,9 @@ export function DataTable<TData, TValue>({
     <>
       <Card className="border border-dashed">
         <CardHeader>
-          <CardTitle className="mb-2 text-lg font-bold">{title}</CardTitle>
+          {title && (
+            <CardTitle className="mb-4 text-lg font-bold">{title}</CardTitle>
+          )}
           <DataTableToolbar
             table={table}
             statuses={statuses}
