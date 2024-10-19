@@ -25,7 +25,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfToday } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ApartmentRequestModel } from "@/app/models/apartment-request.models";
 import { useNavigate } from "react-router-dom";
