@@ -8,14 +8,10 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 
 export const transactionColumns: ColumnDef<TransactionRequestModel>[] = [
   {
-    accessorKey: "id",
-    header: "id",
-  },
-  {
-    accessorKey: "apartmentId",
+    accessorKey: "apartment",
     header: "Apartment",
     cell: ({ row }) => {
-      const apartmentId = row.getValue("apartmentId") as number;
+      const apartmentId = row.getValue("apartment") as number;
       const navigate = useNavigate();
 
       return (

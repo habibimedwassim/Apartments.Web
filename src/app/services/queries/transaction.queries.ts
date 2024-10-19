@@ -2,11 +2,14 @@ import {
   getTenantTransactions,
   getTransactions,
 } from "@/app/api/transaction.api";
-import { TransactionRequestModel } from "@/app/models/transaction.models";
+import {
+  TransactionModel,
+  TransactionRequestModel,
+} from "@/app/models/transaction.models";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetTransactionsQuery = () => {
-  return useQuery<TransactionRequestModel[]>({
+  return useQuery<TransactionModel[]>({
     queryKey: ["transactions"],
     queryFn: () => getTransactions(),
     staleTime: 5 * 60 * 1000,
@@ -14,7 +17,7 @@ export const useGetTransactionsQuery = () => {
 };
 
 export const useGetTenantTransactionsQuery = (id: number) => {
-  return useQuery<TransactionRequestModel>({
+  return useQuery<TransactionModel[]>({
     queryKey: ["transactions", id],
     queryFn: () => getTenantTransactions(id),
   });

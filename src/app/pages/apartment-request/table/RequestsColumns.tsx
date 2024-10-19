@@ -8,10 +8,6 @@ import { RequestTableRowActions } from "./RequestsTableRowActions";
 
 export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
   {
-    accessorKey: "id",
-    header: "id",
-  },
-  {
     accessorKey: "tenantId",
     header: "Tenant",
     cell: ({ row }) => {

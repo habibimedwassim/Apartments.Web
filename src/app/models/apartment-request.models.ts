@@ -23,3 +23,5 @@ export interface ApartmentRequestQueryFilterModel {
   apartmentId?: number;
   status?: string;
 }
+
+export type RequestType = "rent" | "leave" | "payment" | "dismiss";

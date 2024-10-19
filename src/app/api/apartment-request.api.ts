@@ -65,3 +65,15 @@ export const getApartmentRequests = async (
   );
   return response.data;
 };
+
+// schedule meeting for an apartment request
+export const scheduleMeeting = async (
+  id: number,
+  meetingDate: string
+): Promise<MessageResponseModel> => {
+  const response = await api.post<MessageResponseModel>(
+    `/requests/${id}/meeting`,
+    { meetingDate }
+  );
+  return response.data;
+};

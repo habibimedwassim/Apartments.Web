@@ -1,20 +1,24 @@
 import api from "@/app/api/base.api";
-import { TransactionRequestModel } from "@/app/models/transaction.models";
+import {
+  mapToTransactionsList,
+  TransactionModel,
+  TransactionRequestModel,
+} from "@/app/models/transaction.models";
 
-export const getTransactions = async (): Promise<TransactionRequestModel[]> => {
+export const getTransactions = async (): Promise<TransactionModel[]> => {
   console.log("Transactions Api called");
   const response = await api.get<TransactionRequestModel[]>(
     `/users/me/transactions`
   );
-  return response.data;
+  const result = await mapToTransactionsList(response.data);
+  return result;
 };
 
 export const getTenantTransactions = async (
   id: number
-): Promise<TransactionRequestModel> => {
-  const response = await api.get<TransactionRequestModel>(
+): Promise<TransactionModel[]> => {
+  const response = await api.get<TransactionRequestModel[]>(
     `/users/${id}/transactions`
   );
-  console.log(id);
-  return response.data;
+  return await mapToTransactionsList(response.data);
 };

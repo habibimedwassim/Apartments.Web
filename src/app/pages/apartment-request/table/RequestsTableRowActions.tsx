@@ -1,4 +1,4 @@
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Calendar as CalendarIcon } from "lucide-react";
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format, startOfToday } from "date-fns";
+import { cn } from "@/lib/utils";
 import { ApartmentRequestModel } from "@/app/models/apartment-request.models";
 import { useNavigate } from "react-router-dom";
-import { useApproveRejectRequestMutation } from "@/app/services/mutations/apartment-request.mutations";
+import {
+  useApproveRejectRequestMutation,
+  useScheduleMeetingMutation,
+} from "@/app/services/mutations/apartment-request.mutations";
 import { useToast } from "@/hooks/use-toast";
-import { REQUEST_ACTIONS } from "@/app/constants/request";
+import {
+  REQUEST_ACTIONS,
+  REQUEST_STATUSES,
+  REQUEST_TYPES,
+} from "@/app/constants/request";
 
 interface RequestTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -33,49 +48,108 @@ export function RequestTableRowActions<TData>({
   row,
 }: RequestTableRowActionsProps<TData>) {
   const [openActionDialog, setOpenActionDialog] = useState(false);
-  const [actionType, setActionType] = useState("");
+  const [actionType, setActionType] = useState<string | null>(null);
+  const [meetingDate, setMeetingDate] = useState<Date | undefined>(new Date());
   const { toast } = useToast();
 
   const requestRow = row.original as ApartmentRequestModel;
   const requestId = requestRow.id;
+  const requestType = requestRow.requestType.toLowerCase();
+  const requestStatus = requestRow.status;
   const navigate = useNavigate();
-  const mutation = useApproveRejectRequestMutation();
 
-  // Logic to handle actions like Approve, Reject, etc.
+  const mutation = useApproveRejectRequestMutation(requestType);
+  const scheduleMeetingMutation = useScheduleMeetingMutation();
+
+  const getAvailableActions = () => {
+    switch (requestType) {
+      case REQUEST_TYPES.Rent:
+        if (requestStatus === REQUEST_STATUSES.Pending) {
+          return [REQUEST_ACTIONS.Reject, REQUEST_ACTIONS.ScheduleMeeting];
+        }
+        if (requestStatus === REQUEST_STATUSES.MeetingScheduled) {
+          return [REQUEST_ACTIONS.Approve, REQUEST_ACTIONS.Reject];
+        }
+        break;
+      case REQUEST_TYPES.Leave:
+        if (requestStatus === REQUEST_STATUSES.Pending) {
+          return [REQUEST_ACTIONS.Approve, REQUEST_ACTIONS.Reject];
+        }
+        break;
+      case REQUEST_TYPES.Payment:
+        if (requestStatus === REQUEST_STATUSES.Pending) {
+          return [REQUEST_ACTIONS.Accept, REQUEST_ACTIONS.Late];
+        }
+        break;
+      default:
+        return [];
+    }
+    return [];
+  };
+
+  const availableActions = getAvailableActions();
+
   const handleAction = (type: string) => {
     setActionType(type);
     setOpenActionDialog(true);
   };
 
   const confirmAction = () => {
-    if (actionType === REQUEST_ACTIONS.Approve) {
-      mutation
+    if (!actionType) return;
+
+    if (actionType === REQUEST_ACTIONS.ScheduleMeeting && meetingDate) {
+      const formattedDate = format(meetingDate, "yyyy-MM-dd");
+      scheduleMeetingMutation
         .mutateAsync({
           id: requestId,
-          action: REQUEST_ACTIONS.Approve,
+          meetingDate: formattedDate,
         })
         .then((result) => {
           toast({
             variant: "default",
             title: result.message,
           });
-        });
-    } else if (actionType === REQUEST_ACTIONS.Reject) {
-      mutation
-        .mutateAsync({ id: requestId, action: REQUEST_ACTIONS.Reject })
-        .then((result) => {
+        })
+        .catch((error) => {
           toast({
-            variant: "default",
-            title: result.message,
+            variant: "destructive",
+            title: error,
           });
+        })
+        .finally(() => {
+          setOpenActionDialog(false);
+          setActionType(null);
+          setMeetingDate(new Date());
         });
+      return;
     }
-    setOpenActionDialog(false);
+
+    mutation
+      .mutateAsync({
+        id: requestId,
+        action: actionType,
+      })
+      .then((result) => {
+        toast({
+          variant: "default",
+          title: result.message,
+        });
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: error,
+        });
+      })
+      .finally(() => {
+        setOpenActionDialog(false);
+        setActionType(null);
+      });
   };
 
-  // Navigate to view tenant details
-  const handleViewTenant = (requestId: number) => {
-    navigate(`/requests/tenant/${requestId}`); // Assuming you have a route for tenant details
+  const handleViewTenant = () => {
+    const tenantId = row.getValue("tenantId") as number;
+    navigate("/tenants/details", { state: { tenantId: tenantId } });
   };
 
   return (
@@ -93,29 +167,50 @@ export function RequestTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => handleAction(REQUEST_ACTIONS.Approve)}
-          >
-            Approve
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleAction(REQUEST_ACTIONS.Reject)}
-          >
-            Reject
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleViewTenant(requestId)}>
+          {availableActions.map((action) => (
+            <DropdownMenuItem key={action} onClick={() => handleAction(action)}>
+              {action}
+            </DropdownMenuItem>
+          ))}
+
+          <DropdownMenuItem onClick={handleViewTenant}>
             View Tenant
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Confirmation Dialog */}
       <AlertDialog open={openActionDialog} onOpenChange={setOpenActionDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{`Confirm ${actionType}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to {actionType} this request?
+              {actionType === REQUEST_ACTIONS.ScheduleMeeting ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="availableFrom"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !meetingDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {meetingDate ? format(meetingDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={meetingDate}
+                      onSelect={setMeetingDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <p>Are you sure you want to {actionType} this request?</p>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
