@@ -11,92 +11,102 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { ApartmentPreviewCard } from "../components/ApartmentPreviewCard";
+import { TransactionTableRowActions } from "./TransactionTableRowActions";
+import {
+  ChevronDownCircle,
+  ChevronLeftCircleIcon,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 
 export const transactionColumns = (
   isTenantDetailsPage = false
-): ColumnDef<TransactionModel>[] => [
-  {
-    accessorKey: "rentAmount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rent Amount" />
-    ),
-    cell: ({ row }) => {
-      const rentAmount = parseFloat(row.getValue("rentAmount"));
-      return `${rentAmount.toFixed(2)} TND`;
+): ColumnDef<TransactionModel>[] => {
+  const columns: ColumnDef<TransactionModel>[] = [
+    {
+      accessorKey: "rentAmount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Rent Amount" />
+      ),
+      cell: ({ row }) => {
+        const rentAmount = parseFloat(row.getValue("rentAmount"));
+        return `${rentAmount.toFixed(2)} TND`;
+      },
     },
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      const status = transactionStatuses.find(
-        (status) => status.value === row.getValue("status")
-      );
+    {
+      accessorKey: "status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
+      cell: ({ row }) => {
+        const status = transactionStatuses.find(
+          (status) => status.value === row.getValue("status")
+        );
 
-      if (!status) return null;
+        if (!status) return null;
 
-      return (
-        <div className="flex items-center">
-          {status.icon && (
-            <status.icon
-              className="mr-2 h-4 w-4 text-muted-foreground"
-              color={status.color}
-            />
-          )}
-          <span>{status.label}</span>
-        </div>
-      );
+        return (
+          <div className="flex items-center">
+            {status.icon && (
+              <status.icon
+                className="mr-2 h-4 w-4 text-muted-foreground"
+                color={status.color}
+              />
+            )}
+            <span>{status.label}</span>
+          </div>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "dateFrom",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date From" />
-    ),
-    cell: ({ row }) => {
-      const dateFrom = row.getValue("dateFrom") as string;
-      return dateFrom ? formatToLocalDateTime(dateFrom) : "N/A";
+    {
+      accessorKey: "dateFrom",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date From" />
+      ),
+      cell: ({ row }) => {
+        const dateFrom = row.getValue("dateFrom") as string;
+        return dateFrom ? dateFrom : "N/A";
+      },
     },
-  },
-  {
-    accessorKey: "dateTo",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date To" />
-    ),
-    cell: ({ row }) => {
-      const dateTo = row.getValue("dateTo") as string;
-      if (dateTo && !dateTo.startsWith("--")) {
-        return formatToLocalDateTime(dateTo);
-      }
-      return dateTo;
+    {
+      accessorKey: "dateTo",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date To" />
+      ),
+      cell: ({ row }) => {
+        const dateTo = row.getValue("dateTo") as string;
+        return dateTo;
+      },
     },
-  },
-  {
-    accessorKey: "createdDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created Date" />
-    ),
-    cell: ({ row }) => {
-      const createdDate = row.getValue("createdDate") as string;
-      return formatToLocalDateTime(createdDate);
+    {
+      accessorKey: "createdDate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Created Date" />
+      ),
+      cell: ({ row }) => {
+        const createdDate = row.getValue("createdDate") as string;
+        return formatToLocalDateTime(createdDate);
+      },
     },
-  },
-  {
-    accessorKey: "apartment",
-    header: "Apartment",
-    cell: ({ row }) => {
-      const apartment = row.original.apartment;
-      const apartmentId = apartment?.id;
-      const navigate = useNavigate();
-
-      if (isTenantDetailsPage) {
+  ];
+  if (!isTenantDetailsPage) {
+    columns.push({
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        return <TransactionTableRowActions row={row} />;
+      },
+    });
+  } else {
+    columns.push({
+      accessorKey: "apartment",
+      header: "Apartment",
+      cell: ({ row }) => {
+        const apartment = row.original.apartment;
         return (
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="sm">
-                Details
+              <Button size="sm">
+                <ChevronDownCircle className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent>
@@ -104,20 +114,9 @@ export const transactionColumns = (
             </PopoverContent>
           </Popover>
         );
-      }
+      },
+    });
+  }
 
-      return (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            navigate("/apartments/details", { state: { apartmentId } })
-          }
-          disabled={!apartmentId}
-        >
-          View Apartment
-        </Button>
-      );
-    },
-  },
-];
+  return columns;
+};

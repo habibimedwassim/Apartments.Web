@@ -1,4 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,11 +19,16 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { useGetOwnerDashboardQuery } from "@/app/services/queries/dashboard.queries";
 import {
   CircleDollarSign,
-  HouseIcon,
+  House,
   SquareArrowOutUpRight,
   Users,
+  TrendingUp,
 } from "lucide-react";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +54,7 @@ export function OwnerDashboard() {
   const chartConfig = {
     revenue: {
       label: "Revenue",
-      color: "#8884d8",
+      color: "hsl(var(--foreground))",
     },
   };
 
@@ -95,7 +107,7 @@ export function OwnerDashboard() {
             <CardTitle>
               <div className="flex justify-between">
                 <span>Total Apartments</span>
-                <HouseIcon />
+                <House />
               </div>
             </CardTitle>
           </CardHeader>
@@ -204,18 +216,26 @@ export function OwnerDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Revenue By Month</CardTitle>
+            <CardDescription>
+              Monthly revenue trends for this year
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig}>
-              <BarChart
-                data={dashboardData.revenueByMonth}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <ChartTooltip />
-                <Bar dataKey="revenue" fill="var(--color-revenue)" radius={5} />
+              <BarChart accessibilityLayer data={dashboardData.revenueByMonth}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar dataKey="revenue" fill="var(--color-revenue)" radius={8} />
               </BarChart>
             </ChartContainer>
           </CardContent>

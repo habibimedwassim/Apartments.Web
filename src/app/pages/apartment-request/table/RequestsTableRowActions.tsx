@@ -148,10 +148,14 @@ export function RequestTableRowActions<TData>({
   };
 
   const handleViewTenant = () => {
-    const tenantId = row.getValue("tenantId") as number;
+    const tenantId = requestRow.tenantId as number;
     navigate("/tenants/details", { state: { tenantId: tenantId } });
   };
 
+  const handleViewApartment = () => {
+    const apartmentId = requestRow.apartmentId as number;
+    navigate("/apartments/details", { state: { apartmentId: apartmentId } });
+  };
   return (
     <>
       <DropdownMenu>
@@ -175,6 +179,9 @@ export function RequestTableRowActions<TData>({
 
           <DropdownMenuItem onClick={handleViewTenant}>
             View Tenant
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleViewApartment}>
+            View Apartment
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

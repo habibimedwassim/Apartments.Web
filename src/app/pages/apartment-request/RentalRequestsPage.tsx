@@ -6,7 +6,7 @@ import { requestStatuses } from "./table/RequestStatuses";
 
 const RentalRequestsPage = () => {
   const { data: requests, isLoading } = useGetRentRequestsQuery();
-  const columns = createRequestColumns(requestStatuses);
+  const columns = createRequestColumns(requestStatuses, true);
   return isLoading ? (
     <LoaderCircle className="animate-spin" />
   ) : (

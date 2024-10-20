@@ -1,6 +1,12 @@
 import { COLORS } from "@/app/constants/colors";
 import { TRANSACTION_STATUS } from "@/app/constants/transaction";
-import { CircleAlert, CircleCheck, CirclePause, CircleX } from "lucide-react";
+import {
+  CircleAlert,
+  CircleCheck,
+  CirclePause,
+  CircleUserRound,
+  CircleX,
+} from "lucide-react";
 
 export const transactionStatuses = [
   {
@@ -36,7 +42,7 @@ export const transactionStatuses = [
   {
     value: TRANSACTION_STATUS.Departed,
     label: TRANSACTION_STATUS.Departed,
-    icon: CircleX,
+    icon: CircleUserRound,
     color: COLORS.Red,
   },
 ];
