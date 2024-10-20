@@ -221,6 +221,7 @@ const ApartmentPhotoManager = ({ apartmentId }: ApartmentPhotoManagerProps) => {
             <div key={field.id} className="flex items-center space-x-4 mt-2">
               <Input
                 type="file"
+                accept="image/*"
                 onChange={(e) =>
                   handlePhotoChange(field.id, e.target.files?.[0] || null)
                 }

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import AccountDetailsPage from "./AccountDetailsPage";
 import AccountPasswordPage from "./AccountPasswordPage";
 import AccountEmailPage from "./AccountEmailPage";
+import AccountAvatarPage from "./AccountAvatarPage";
 
 export default function SettingsPage() {
   return (
@@ -14,6 +15,7 @@ export default function SettingsPage() {
               <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="password">Password</TabsTrigger>
               <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="avatar">Avatar</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
               <AccountDetailsPage />
@@ -23,6 +25,9 @@ export default function SettingsPage() {
             </TabsContent>
             <TabsContent value="email">
               <AccountEmailPage />
+            </TabsContent>
+            <TabsContent value="avatar">
+              <AccountAvatarPage />
             </TabsContent>
           </Tabs>
         </CardContent>

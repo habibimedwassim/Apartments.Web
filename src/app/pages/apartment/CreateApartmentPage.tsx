@@ -477,6 +477,7 @@ const CreateApartmentPage = () => {
                     >
                       <Input
                         type="file"
+                        accept="image/*"
                         onChange={(e) =>
                           handlePhotoChange(
                             field.id,
