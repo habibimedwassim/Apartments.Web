@@ -45,7 +45,6 @@ import { COLORS } from "@/app/constants/colors";
 import { useCreateApartmentMutation } from "@/app/services/mutations/apartment.mutations";
 import { LoadingButton } from "@/components/common/button-loading";
 
-// The CreateApartmentPage component
 const CreateApartmentPage = () => {
   const { toast } = useToast();
   const [photoFields, setPhotoFields] = useState<
@@ -100,7 +99,6 @@ const CreateApartmentPage = () => {
       });
   };
 
-  // Add a new empty photo input field (limit to 4)
   const addPhotoField = () => {
     if (photoFields.length >= 4) {
       toast({
@@ -112,18 +110,16 @@ const CreateApartmentPage = () => {
     }
     setPhotoFields((prevFields) => [
       ...prevFields,
-      { id: prevFields.length + 1, file: null }, // Unique id for each field
+      { id: prevFields.length + 1, file: null },
     ]);
   };
 
-  // Remove photo input field by ID
   const removePhotoField = (id: number) => {
     setPhotoFields((prevFields) =>
       prevFields.filter((field) => field.id !== id)
     );
   };
 
-  // Handle photo input change
   const handlePhotoChange = (id: number, file: File) => {
     setPhotoFields((prevFields) =>
       prevFields.map((field) =>
@@ -203,7 +199,7 @@ const CreateApartmentPage = () => {
                 </LoadingButton>
                 {/* <Button
                   type="submit"
-                  form="apartment-form" // Make sure it triggers the form submission
+                  form="apartment-form" 
                   variant="outline"
                   size="sm"
                   disabled={createApartmentMutation.isPending}

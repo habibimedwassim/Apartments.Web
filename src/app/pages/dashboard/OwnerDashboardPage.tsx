@@ -61,7 +61,6 @@ export function OwnerDashboard() {
 
   return (
     <div className="grid gap-4">
-      {/* Top Section - Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <CardHeader>
@@ -111,8 +110,6 @@ export function OwnerDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Middle Section - Requests Tabs */}
       <div>
         <Card>
           <CardContent>
@@ -203,10 +200,7 @@ export function OwnerDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Bottom Section - Chart and Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Revenue By Month Chart */}
         <Card>
           <CardHeader>
             <CardTitle>Revenue By Month</CardTitle>
@@ -226,8 +220,6 @@ export function OwnerDashboard() {
             </ChartContainer>
           </CardContent>
         </Card>
-
-        {/* Recent Transactions Table */}
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">

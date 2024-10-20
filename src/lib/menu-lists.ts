@@ -36,12 +36,10 @@ type Group = {
   menus: Menu[];
 };
 
-// Helper function to sum notification counts safely
 function safeSum(...values: Array<number | undefined>): number {
   return values.reduce((acc: number, val) => acc + (val || 0), 0);
 }
 
-// Helper function to return notification count if greater than 0, otherwise undefined
 function displayNotificationCount(count?: number): number | undefined {
   return count && count > 0 ? count : undefined;
 }
@@ -157,7 +155,7 @@ function getOwnerMenuList(
               notificationCount: displayNotificationCount(0),
             },
             {
-              href: "apartments/new",
+              href: "/apartments/new",
               label: "New Apartment",
               notificationCount: displayNotificationCount(0),
             },

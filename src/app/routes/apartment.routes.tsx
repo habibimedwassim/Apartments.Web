@@ -5,7 +5,6 @@ import CreateApartmentPage from "@/app/pages/apartment/CreateApartmentPage";
 import EditApartmentPage from "@/app/pages/apartment/EditApartmentPage";
 import ApartmentDetailsPage from "@/app/pages/apartment/ApartmentDetailsPage";
 
-// Apartment routes extracted
 const apartmentRoutes: RouteObject[] = [
   {
     id: "apartments",

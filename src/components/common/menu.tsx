@@ -155,7 +155,7 @@ export function Menu({ isOpen }: MenuProps) {
                 <TooltipTrigger asChild>
                   <Button
                     onClick={handleLogout}
-                    variant="outline"
+                    variant="default"
                     className="w-full justify-center h-10 mt-5 mb-2"
                   >
                     <span className={cn(isOpen === false ? "" : "mr-4")}>

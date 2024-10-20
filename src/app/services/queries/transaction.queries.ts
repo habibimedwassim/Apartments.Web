@@ -2,10 +2,7 @@ import {
   getTenantTransactions,
   getTransactions,
 } from "@/app/api/transaction.api";
-import {
-  TransactionModel,
-  TransactionRequestModel,
-} from "@/app/models/transaction.models";
+import { TransactionModel } from "@/app/models/transaction.models";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetTransactionsQuery = () => {

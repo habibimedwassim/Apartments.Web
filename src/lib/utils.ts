@@ -8,7 +8,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Email validation regular expression
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**

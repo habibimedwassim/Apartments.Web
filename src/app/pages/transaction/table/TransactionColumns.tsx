@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/popover";
 import { ApartmentPreviewCard } from "../components/ApartmentPreviewCard";
 
-// Function to render the apartment preview card
-
 export const transactionColumns = (
   isTenantDetailsPage = false
 ): ColumnDef<TransactionModel>[] => [
@@ -93,7 +91,6 @@ export const transactionColumns = (
       const apartmentId = apartment?.id;
       const navigate = useNavigate();
 
-      // If on the tenant details page, show a popover with apartment preview
       if (isTenantDetailsPage) {
         return (
           <Popover>
@@ -109,7 +106,6 @@ export const transactionColumns = (
         );
       }
 
-      // On the transactions page, navigate to the apartment details page
       return (
         <Button
           variant="outline"

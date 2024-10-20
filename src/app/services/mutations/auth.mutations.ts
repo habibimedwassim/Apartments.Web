@@ -18,7 +18,6 @@ import {
   mapLoginResponseToUserModel,
 } from "@/app/models/auth.models";
 
-// Login Mutation
 export const useLoginMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -34,35 +33,30 @@ export const useLoginMutation = () => {
   });
 };
 
-// Register Owner Mutation
 export const useRegisterOwnerMutation = () => {
   return useMutation({
     mutationFn: (data: RegisterModel) => registerOwner(data),
   });
 };
 
-// Register Admin Mutation
 export const useRegisterAdminMutation = () => {
   return useMutation({
     mutationFn: (data: RegisterModel) => registerAdmin(data),
   });
 };
 
-// Forgot Password Mutation
 export const useForgotPasswordMutation = () => {
   return useMutation({
     mutationFn: (data: EmailModel) => forgotPassword(data),
   });
 };
 
-// Reset Password Mutation
 export const useResetPasswordMutation = () => {
   return useMutation({
     mutationFn: (data: ResetPasswordModel) => resetPassword(data),
   });
 };
 
-// Resend Code Mutation
 export const useResendCodeMutation = () => {
   return useMutation({
     mutationFn: ({ data, type }: { data: EmailModel; type: string }) =>

@@ -12,7 +12,6 @@ import {
 } from "@/app/models/apartment.models";
 import { MessageResponseModel } from "@/app/models/api.models";
 
-// Get all apartments
 export const getMyApartments = async (): Promise<ApartmentModel[]> => {
   const response = await api.get<ApartmentResponseModel[]>(
     "users/me/apartments"
@@ -24,7 +23,6 @@ export const getMyApartments = async (): Promise<ApartmentModel[]> => {
   return refinedResponse;
 };
 
-// Get a single apartment by ID
 export const getApartmentById = async (id: number): Promise<ApartmentModel> => {
   console.log("get by Id API called");
   const response = await api.get<ApartmentResponseModel>(`/apartments/${id}`);
@@ -32,7 +30,6 @@ export const getApartmentById = async (id: number): Promise<ApartmentModel> => {
   return refinedResponse;
 };
 
-// Create a new apartment
 export const createApartment = async (data: CreateApartmentModel) => {
   const formData = new FormData();
 
@@ -42,13 +39,11 @@ export const createApartment = async (data: CreateApartmentModel) => {
   formData.append("postalCode", data.postalCode);
   formData.append("description", data.description);
 
-  // Ensure numbers are converted to strings before appending
   formData.append("size", data.size.toString());
   formData.append("rentAmount", data.rentAmount.toString());
 
   if (data.availableFrom) formData.append("availableFrom", data.availableFrom);
 
-  // Append files for apartmentPhotos
   data.apartmentPhotos.forEach((photo) => {
     formData.append("apartmentPhotos", photo);
   });
@@ -65,7 +60,6 @@ export const createApartment = async (data: CreateApartmentModel) => {
   return response.data;
 };
 
-// Update an existing apartment
 export const updateApartment = async (
   id: number,
   data: UpdateApartmentModel
@@ -77,13 +71,11 @@ export const updateApartment = async (
   return response.data;
 };
 
-// Archive or Restore an apartment
 export const archiveRestoreApartment = async (id: number) => {
   const response = await api.delete<MessageResponseModel>(`/apartments/${id}`);
   return response.data;
 };
 
-// Permanently delete an apartment
 export const deleteApartmentPermanent = async (id: number) => {
   const response = await api.delete<MessageResponseModel>(
     `/apartments/${id}?permanent=true`
@@ -91,7 +83,6 @@ export const deleteApartmentPermanent = async (id: number) => {
   return response.data;
 };
 
-// Dismiss tenant from apartment
 export const dismissFromApartment = async (id: number, data: DismissModel) => {
   const response = await api.post<MessageResponseModel>(
     `/apartments/${id}/dismiss`,
@@ -100,14 +91,13 @@ export const dismissFromApartment = async (id: number, data: DismissModel) => {
   return response.data;
 };
 
-// Get apartment photos
 export const getApartmentPhotos = async (id: number) => {
   const response = await api.get<ApartmentPhotoModel[]>(
     `/apartments/${id}/photos`
   );
   return response.data;
 };
-// get apartment photo by apartment id and photo id
+
 export const getApartmentPhoto = async (
   apartmentId: number,
   photoId: number
@@ -118,7 +108,6 @@ export const getApartmentPhoto = async (
   return response.data;
 };
 
-//delete photo from apartment by apartment id and photo id
 export const deleteApartmentPhoto = async (
   apartmentId: number,
   photoId: number
@@ -129,7 +118,6 @@ export const deleteApartmentPhoto = async (
   return response.data;
 };
 
-// add apartment photos to apartment
 export const uploadApartmentPhotos = async (
   id: number,
   data: UploadApartmentPhotosModel

@@ -1,4 +1,3 @@
-// Define prop types
 interface NotificationBadgeProps {
   className?: string;
   count: number;
@@ -8,7 +7,6 @@ export const NotificationBadge = ({
   className = "",
   count,
 }: NotificationBadgeProps) => {
-  // Do not display the badge if the count is 0
   if (count === 0) return null;
 
   const displayCount = count > 99 ? "+99" : count;

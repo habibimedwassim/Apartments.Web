@@ -10,7 +10,6 @@ import {
 } from "@/app/models/apartment-request.models";
 import { REQUEST_TYPES } from "@/app/constants/request";
 
-// Query to get a specific apartment request by its ID
 export const useGetApartmentRequestByIdQuery = (id: number) => {
   return useQuery<ApartmentRequestModel>({
     queryKey: ["apartmentRequest", id],
@@ -18,7 +17,6 @@ export const useGetApartmentRequestByIdQuery = (id: number) => {
   });
 };
 
-// Query to get tenant information associated with a specific request
 export const useGetTenantFromRequestQuery = (id: number) => {
   return useQuery({
     queryKey: ["tenantFromRequest", id],

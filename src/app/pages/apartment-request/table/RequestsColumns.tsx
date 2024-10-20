@@ -6,7 +6,6 @@ import { formatToLocalDateTime } from "@/lib/utils";
 import { RequestTableRowActions } from "./RequestsTableRowActions";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 
-// Function to create columns dynamically with statuses passed as a parameter
 export const createRequestColumns = (
   statuses: {
     value: string;

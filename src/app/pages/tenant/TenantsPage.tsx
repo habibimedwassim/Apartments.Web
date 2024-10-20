@@ -1,4 +1,3 @@
-// TenantsPage.tsx
 import { useGetTenantsQuery } from "@/app/services/queries/user.queries";
 import { TenantModel } from "@/app/models/user.models";
 import { DataTable } from "@/components/data-table/data-table";

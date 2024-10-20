@@ -51,24 +51,6 @@ export const leaveRequestStatuses = [
 
 export const dismissRequestStatuses = [
   {
-    value: "Approved",
-    label: "Approved",
-    icon: CircleCheck,
-    color: COLORS.Green,
-  },
-  {
-    value: "Pending",
-    label: "Pending",
-    icon: CirclePause,
-    color: COLORS.Yellow,
-  },
-  {
-    value: "Rejected",
-    label: "Rejected",
-    icon: CircleX,
-    color: COLORS.Red,
-  },
-  {
     value: "Terminated",
     label: "Terminated",
     icon: CircleX,

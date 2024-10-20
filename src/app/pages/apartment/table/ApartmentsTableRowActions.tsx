@@ -2,7 +2,7 @@ import { EllipsisVertical, Calendar as CalendarIcon } from "lucide-react";
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LoadingButton } from "@/components/common/button-loading"; // Import the LoadingButton component
+import { LoadingButton } from "@/components/common/button-loading";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +64,6 @@ export function ApartmentsTableRowActions<TData>({
   const deleteMutation = useDeleteApartmentMutation(apartmentId);
   const dismissTenantMutation = useDismissTenantMutation();
 
-  // Determine available actions based on the apartment's status
   const getAvailableActions = () => {
     switch (status) {
       case ApartmentStatus.Available:
@@ -140,7 +139,7 @@ export function ApartmentsTableRowActions<TData>({
           variant: "default",
           title: result.message,
         });
-        setOpenDismissDialog(false); // Close the dialog after success
+        setOpenDismissDialog(false);
       })
       .catch((error) => {
         toast({
@@ -209,7 +208,6 @@ export function ApartmentsTableRowActions<TData>({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Dismiss Tenant Confirmation Dialog */}
       <AlertDialog open={openDismissDialog} onOpenChange={setOpenDismissDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -264,7 +262,6 @@ export function ApartmentsTableRowActions<TData>({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Archive/Restore Confirmation Dialog */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -290,7 +287,6 @@ export function ApartmentsTableRowActions<TData>({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete Permanently Confirmation Dialog */}
       <AlertDialog
         open={openPermanentDeleteDialog}
         onOpenChange={setOpenPermanentDeleteDialog}

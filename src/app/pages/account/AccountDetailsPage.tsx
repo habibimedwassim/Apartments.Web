@@ -28,7 +28,7 @@ import {
 import { format, startOfToday } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useProfileStore } from "@/hooks/use-store";
-import { updateProfileSchema } from "@/app/schemas/user.schemas"; // Validation schema for user update
+import { updateProfileSchema } from "@/app/schemas/user.schemas";
 import { useUpdateProfileMutation } from "@/app/services/mutations/user.mutations";
 import { UpdateUserModel } from "@/app/models/user.models";
 import { LoadingButton } from "@/components/common/button-loading";
@@ -51,7 +51,6 @@ const AccountDetailsPage = () => {
     profile?.dateOfBirth ? new Date(profile.dateOfBirth) : undefined
   );
 
-  // Initialize form with react-hook-form
   const form = useForm<UpdateUserModel>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -71,7 +70,7 @@ const AccountDetailsPage = () => {
       { shouldDirty: true }
     );
   };
-  // Reset form fields with profile data
+
   const handleReset = () => {
     if (profile) {
       form.reset(profile);
@@ -82,9 +81,7 @@ const AccountDetailsPage = () => {
     }
   };
 
-  // Handle form submission
   const onSubmit = (data: UpdateUserModel) => {
-    // Create a payload with only the changed values
     const payload: Partial<UpdateUserModel> = {};
 
     if (data.firstName !== profile?.firstName) {
@@ -114,7 +111,7 @@ const AccountDetailsPage = () => {
       toast({
         title: "No changes detected",
       });
-      return; // No changes, don't submit
+      return;
     }
 
     updateMutation

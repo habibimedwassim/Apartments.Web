@@ -138,7 +138,6 @@ export const AccountEmailPage = () => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            {/* New Email Input with Update Button */}
             <div className="flex items-center">
               <div className="w-4/5">
                 <Input
@@ -163,28 +162,25 @@ export const AccountEmailPage = () => {
               </div>
             </div>
 
-            {/* Temp Email, Resend Code, and Verify Button */}
             {profile?.tempEmail && (
               <div className="flex items-center gap-2">
                 <div className="w-4/5 relative">
                   <Input
-                    value={profile.tempEmail} // The disabled input displays tempEmail
+                    value={profile.tempEmail}
                     disabled
-                    className="w-full pr-24" // Add more padding to the right to make space for the button
+                    className="w-full pr-24"
                   />
-                  {/* Resend Code Button inside the input */}
                   <LoadingButton
                     onClick={handleResendCode}
                     isLoading={resendCodeMutation.isPending}
                     variant="ghost"
                     size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2" // Use translate to center vertically
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
                     icon={<RefreshCcw className="h-4 w-4" />}
                   >
                     Resend
                   </LoadingButton>
                 </div>
-                {/* Verify Button aligned next to the input */}
                 <div className="w-1/5">
                   <Dialog>
                     <DialogTrigger asChild>
@@ -212,7 +208,6 @@ export const AccountEmailPage = () => {
                           onSubmit={handleSubmit(handleVerifyEmail)}
                           className="space-y-4"
                         >
-                          {/* Verification Code Field */}
                           <Input
                             {...register("verificationCode")}
                             placeholder="Enter verification code"
@@ -224,7 +219,6 @@ export const AccountEmailPage = () => {
                             </p>
                           )}
 
-                          {/* Password Field */}
                           <Input
                             {...register("password")}
                             type="password"

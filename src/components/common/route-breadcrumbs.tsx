@@ -15,22 +15,18 @@ export function RouteBreadcrumbs() {
   const location = useLocation();
   const { role } = useAuthStore();
 
-  // Get the path segments (e.g., ["apartments", "edit", "24"])
   const pathSegments = location.pathname
     .split("/")
     .filter((segment) => segment);
 
-  // Remove numeric segments (like IDs) from breadcrumbs
   const filteredSegments = pathSegments.filter(
-    (segment) => !/^\d+$/.test(segment) // This will filter out segments that are purely numeric (e.g., IDs)
+    (segment) => !/^\d+$/.test(segment)
   );
 
-  // Generate breadcrumb items
   const breadcrumbs = filteredSegments.map((segment, index) => {
     const isLast = index === filteredSegments.length - 1;
     const to = `/${filteredSegments.slice(0, index + 1).join("/")}`;
 
-    // Convert segment to a title (e.g., "all-apartments" -> "All Apartments")
     const title =
       segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
 

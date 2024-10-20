@@ -7,7 +7,6 @@ import {
 import { UserModel } from "@/app/models/user.models";
 import { MessageResponseModel } from "@/app/models/api.models";
 
-// Get apartment request by ID
 export const getApartmentRequestById = async (
   id: number
 ): Promise<ApartmentRequestModel> => {
@@ -15,13 +14,11 @@ export const getApartmentRequestById = async (
   return response.data;
 };
 
-// Get tenant associated with an apartment request by request ID
 export const getTenantFromApartmentRequest = async (id: number) => {
   const response = await api.get<UserModel>(`/requests/${id}/user`);
   return response.data;
 };
 
-// Approve or Reject an apartment request
 export const approveRejectApartmentRequest = async (
   id: number,
   action: string
@@ -32,7 +29,6 @@ export const approveRejectApartmentRequest = async (
   return response.data;
 };
 
-// Update an apartment request
 export const updateApartmentRequest = async (
   id: number,
   data: UpdateApartmentRequestModel
@@ -44,7 +40,6 @@ export const updateApartmentRequest = async (
   return response.data;
 };
 
-// Cancel an apartment request
 export const cancelApartmentRequest = async (
   id: number
 ): Promise<MessageResponseModel> => {
@@ -52,7 +47,6 @@ export const cancelApartmentRequest = async (
   return response.data;
 };
 
-// Get all requests for the current user with optional filters
 export const getApartmentRequests = async (
   filters: ApartmentRequestQueryFilterModel
 ): Promise<ApartmentRequestModel[]> => {
@@ -66,7 +60,6 @@ export const getApartmentRequests = async (
   return response.data;
 };
 
-// schedule meeting for an apartment request
 export const scheduleMeeting = async (
   id: number,
   meetingDate: string

@@ -10,11 +10,7 @@ const DismissRequestsPage = () => {
   return isLoading ? (
     <LoaderCircle className="animate-spin" />
   ) : (
-    <DataTable
-      columns={columns}
-      statuses={dismissRequestStatuses}
-      data={requests || []}
-    />
+    <DataTable columns={columns} data={requests || []} />
   );
 };
 

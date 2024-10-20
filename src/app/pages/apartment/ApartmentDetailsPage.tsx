@@ -66,7 +66,6 @@ export function ApartmentDetailsPage() {
   return (
     <div className="flex justify-center">
       <Card className="flex flex-col lg:flex-row w-full rounded-xl">
-        {/* Left Side: Carousel at 35% width */}
         <div className="lg:w-[35%] w-full p-4">
           <Carousel className="relative w-full">
             <CarouselContent>
@@ -137,7 +136,6 @@ export function ApartmentDetailsPage() {
           </Carousel>
         </div>
 
-        {/* Right Side: Apartment Details at 65% width */}
         <div className="lg:w-[65%] w-full">
           <CardHeader>
             <CardTitle>

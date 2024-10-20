@@ -13,11 +13,10 @@ export const useGetTenantsQuery = () => {
   return useQuery<TenantModel[]>({
     queryKey: ["tenants"],
     queryFn: getMyTenants,
-    staleTime: 300000, // Cache for 5 minutes
+    staleTime: 300000,
   });
 };
 
-// Query to get an apartment by its ID
 export const useGetTenantByIdQuery = (id: number) => {
   return useQuery<TenantModel>({
     queryKey: ["tenants", id],

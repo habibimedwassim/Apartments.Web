@@ -14,14 +14,12 @@ export const TenantDetailsPage = () => {
   const navigate = useNavigate();
   const tenantId = location.state?.tenantId;
 
-  // Redirect to tenants list if no tenantId is provided
   useEffect(() => {
     if (!tenantId) {
       navigate("/tenants");
     }
   }, [tenantId, navigate]);
 
-  // Fetch tenant details using the tenantId
   const {
     data: tenant,
     isLoading: isTenantLoading,
@@ -30,7 +28,6 @@ export const TenantDetailsPage = () => {
   const { data: transactions, isLoading: isTransactionsLoading } =
     useGetTenantTransactionsQuery(tenantId);
 
-  // Combine loading states for both tenant and transactions
   const isLoading = isTenantLoading || isTransactionsLoading;
 
   if (isLoading) return <LoaderCircle className="animate-spin" />;

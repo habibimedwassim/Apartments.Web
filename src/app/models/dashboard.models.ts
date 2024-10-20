@@ -34,7 +34,6 @@ export interface RevenueByMonthModel {
   revenue: number;
 }
 
-// Function to map and normalize OwnerDashboardData
 export const mapToOwnerDashboardData = (
   data: OwnerDashboardData
 ): OwnerDashboardData => {
@@ -44,14 +43,12 @@ export const mapToOwnerDashboardData = (
   };
 };
 
-// Function to normalize a list of transactions
 export const normalizeTransactionList = (
   transactions: DashboardTransactionModel[]
 ): DashboardTransactionModel[] => {
   return transactions.map(normalizeTransactionDates);
 };
 
-// Function to normalize transaction dates
 export const normalizeTransactionDates = (
   transaction: DashboardTransactionModel
 ): DashboardTransactionModel => {

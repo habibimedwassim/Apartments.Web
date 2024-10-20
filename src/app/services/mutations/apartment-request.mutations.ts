@@ -8,7 +8,6 @@ import {
 import { UpdateApartmentRequestModel } from "@/app/models/apartment-request.models";
 import { REQUEST_ACTIONS } from "@/app/constants/request";
 
-// Mutation to approve or reject an apartment request
 export const useApproveRejectRequestMutation = (requestType: string) => {
   const queryClient = useQueryClient();
 
@@ -47,7 +46,6 @@ export const useScheduleMeetingMutation = () => {
   });
 };
 
-// Mutation to cancel an apartment request
 export const useCancelRequestMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -61,7 +59,6 @@ export const useCancelRequestMutation = () => {
   });
 };
 
-// Mutation to update an apartment request
 export const useUpdateRequestMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -80,26 +77,3 @@ export const useUpdateRequestMutation = () => {
     },
   });
 };
-
-// export const useApproveRejectRequestMutation = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: ({
-//       id,
-//       action,
-//     }: {
-//       id: number;
-//       action: string;
-//       type: string;
-//     }) => approveRejectApartmentRequest(id, action),
-
-//     onSuccess: (_, { type }) => {
-//       queryClient.invalidateQueries({ queryKey: [`${type}-requests`] });
-//     },
-
-//     onError: (error: string) => {
-//       throw error;
-//     },
-//   });
-// };

@@ -28,7 +28,6 @@ import { useEffect } from "react";
 import { NotificationType } from "@/app/models/notification.models";
 import { useNavigate } from "react-router-dom";
 
-// Notification Bell Component
 export function NotificationBell() {
   const { notifications, unreadCounts, fetchUnreadNotifications, markAsRead } =
     useNotificationStore();
@@ -36,14 +35,12 @@ export function NotificationBell() {
   const mutation = useMarkAsReadMutation();
   const navigate = useNavigate();
 
-  // Fetch and store unread notifications on mount
   useEffect(() => {
     if (unreadNotificationsFromAPI) {
       fetchUnreadNotifications(unreadNotificationsFromAPI);
     }
   }, [unreadNotificationsFromAPI, fetchUnreadNotifications]);
 
-  // Get the total unread count
   const totalUnread = Object.values(unreadCounts).reduce(
     (total, count) => total + count,
     0

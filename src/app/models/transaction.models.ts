@@ -37,14 +37,12 @@ export interface TransactionModel {
   status: string;
 }
 
-// Mapper for a list of transactions
 export const mapToTransactionsList = async (
   responseModel: TransactionRequestModel[]
 ): Promise<TransactionModel[]> => {
   return Promise.all(responseModel.map(mapToTransactionModel));
 };
 
-// Mapper for a single transaction
 export const mapToTransactionModel = async (
   transaction: TransactionRequestModel
 ): Promise<TransactionModel> => {
@@ -64,7 +62,7 @@ export const mapToTransactionModel = async (
             email: transaction.apartment.owner.email,
             phoneNumber: transaction.apartment.owner.phoneNumber,
           }
-        : undefined, // Map owner details if present
+        : undefined,
     },
     rentAmount: transaction.rentAmount,
     dateFrom: transaction.dateFrom,
@@ -75,7 +73,6 @@ export const mapToTransactionModel = async (
   return normalizeTransactionDates(result);
 };
 
-// Normalize date fields in the transaction
 export const normalizeTransactionDates = (
   transaction: TransactionModel
 ): TransactionModel => {

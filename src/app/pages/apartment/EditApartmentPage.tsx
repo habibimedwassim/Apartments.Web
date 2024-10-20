@@ -39,7 +39,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { updateApartmentSchema } from "@/app/schemas/apartment.schemas"; // Validation schema for update
+import { updateApartmentSchema } from "@/app/schemas/apartment.schemas";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@/components/common/button-loading";
 import { useGetApartmentByIdQuery } from "@/app/services/queries/apartment.queries";
@@ -55,10 +55,9 @@ const EditApartmentPage = () => {
   const [openCityPicker, setOpenCityPicker] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  // Fetch apartment data by ID
+
   const apartmentId = location.state?.apartmentId;
 
-  // Redirect if no apartment ID is passed
   useEffect(() => {
     if (!apartmentId) {
       navigate("/apartments");
@@ -74,7 +73,6 @@ const EditApartmentPage = () => {
 
   const isOccupied = apartment?.status === "occupied";
 
-  // Error handling for fetching apartment
   useEffect(() => {
     if (isError) {
       toast({
@@ -86,7 +84,6 @@ const EditApartmentPage = () => {
     }
   }, [isError, error, navigate, toast]);
 
-  // Initialize form with react-hook-form
   const form = useForm<UpdateApartmentModel>({
     resolver: zodResolver(updateApartmentSchema),
     defaultValues: {
@@ -101,7 +98,6 @@ const EditApartmentPage = () => {
     },
   });
 
-  // Update form values and local state when apartment data is fetched
   useEffect(() => {
     if (apartment) {
       form.reset({
@@ -125,7 +121,6 @@ const EditApartmentPage = () => {
     }
   }, [apartment, form]);
 
-  // Prevent submitting the form while fetching or during mutation
   const mutation = useUpdateApartmentMutation();
 
   const onSubmit = (data: UpdateApartmentModel) => {
@@ -133,7 +128,6 @@ const EditApartmentPage = () => {
       apartment &&
       data.rentAmount?.toFixed(2) !== apartment.rentAmount.toFixed(2);
 
-    // Round rentAmount only if it has changed
     if (isRentAmountChanged && data.rentAmount) {
       data.rentAmount = parseFloat(data.rentAmount.toFixed(2));
     } else {
@@ -169,7 +163,6 @@ const EditApartmentPage = () => {
     setSelectedCity("");
     setPostalCode("");
 
-    // Set values with `shouldDirty` to mark the form as dirty
     form.setValue("city", "", { shouldDirty: true });
     form.setValue("postalCode", "", { shouldDirty: true });
 
@@ -181,7 +174,6 @@ const EditApartmentPage = () => {
     setSelectedCity(city);
     setPostalCode(postalCode || "");
 
-    // Set values with `shouldDirty` to mark the form as dirty
     form.setValue("city", city, { shouldDirty: true });
     form.setValue("postalCode", postalCode || "", { shouldDirty: true });
 
@@ -195,7 +187,6 @@ const EditApartmentPage = () => {
 
     const [province, postalCode] = getProvinceAndPostalCode(apartment.city);
 
-    // Reset province, city, and postal code based on the apartment data
     setSelectedProvince(province || "");
     setSelectedCity(apartment?.city || "");
     setPostalCode(postalCode || "");

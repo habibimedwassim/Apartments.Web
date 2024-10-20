@@ -33,7 +33,6 @@ const AccountPasswordPage = () => {
   const updateMutation = useUpdatePasswordMutation();
   const { handleLogout } = useLogout();
 
-  // Form initialization with Zod schema validation
   const form = useForm<changePasswordFromValues>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
@@ -43,7 +42,6 @@ const AccountPasswordPage = () => {
     },
   });
 
-  // States to toggle password visibility
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -99,7 +97,6 @@ const AccountPasswordPage = () => {
               id="update-password-form"
             >
               <div className="grid grid-cols-1 gap-4">
-                {/* Current Password */}
                 <FormField
                   control={form.control}
                   name="currentPassword"
@@ -133,7 +130,6 @@ const AccountPasswordPage = () => {
                   )}
                 />
 
-                {/* New Password */}
                 <FormField
                   control={form.control}
                   name="newPassword"
@@ -165,7 +161,6 @@ const AccountPasswordPage = () => {
                   )}
                 />
 
-                {/* Confirm Password */}
                 <FormField
                   control={form.control}
                   name="confirmPassword"

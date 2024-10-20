@@ -1,6 +1,5 @@
 import { formatToLocalDateTime } from "@/lib/utils";
 
-// Create Apartment Model
 export interface CreateApartmentModel {
   title: string;
   city: string;
@@ -13,7 +12,6 @@ export interface CreateApartmentModel {
   apartmentPhotos: File[];
 }
 
-// Update Apartment Model
 export interface UpdateApartmentModel {
   title?: string;
   city?: string;
@@ -25,7 +23,6 @@ export interface UpdateApartmentModel {
   availableFrom?: string;
 }
 
-// Apartment Response Model
 export interface ApartmentResponseModel {
   id: number;
   title: string;
@@ -86,14 +83,13 @@ export interface DismissModel {
   reason: string;
   requestDate?: string;
 }
-// Mapper for a list of apartments
+
 export const mapApartmentData = async (
   responseModel: ApartmentResponseModel[]
 ): Promise<ApartmentModel[]> => {
   return Promise.all(responseModel.map(mapSingleApartmentData));
 };
 
-// Mapper for a single apartment
 export const mapSingleApartmentData = async (
   apartment: ApartmentResponseModel
 ): Promise<ApartmentModel> => {

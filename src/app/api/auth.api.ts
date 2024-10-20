@@ -9,13 +9,11 @@ import {
   ResetPasswordModel,
 } from "@/app/models/auth.models";
 
-// Login
 export const login = async (data: LoginModel): Promise<LoginResponseModel> => {
   const response = await api.post<LoginResponseModel>("/auth/login", data);
   return response.data;
 };
 
-// Register Owner
 export const registerOwner = async (data: RegisterModel) => {
   const response = await api.post<MessageResponseModel>(
     "/auth/register-owner",
@@ -24,7 +22,6 @@ export const registerOwner = async (data: RegisterModel) => {
   return response.data;
 };
 
-// Register Admin
 export const registerAdmin = async (data: RegisterModel) => {
   const response = await api.post<MessageResponseModel>(
     "/auth/register-admin",
@@ -33,7 +30,6 @@ export const registerAdmin = async (data: RegisterModel) => {
   return response.data;
 };
 
-// Verify Email
 export const verifyEmail = async (data: VerifyEmailModel) => {
   const response = await api.post<MessageResponseModel>(
     "/auth/verify-email",
@@ -42,7 +38,6 @@ export const verifyEmail = async (data: VerifyEmailModel) => {
   return response.data;
 };
 
-// Resend Verification Code
 export const resendVerificationCode = async (
   data: EmailModel,
   type: string
@@ -57,7 +52,6 @@ export const resendVerificationCode = async (
   return response.data;
 };
 
-// Forgot Password
 export const forgotPassword = async (data: EmailModel) => {
   const response = await api.post<MessageResponseModel>(
     "/auth/forgot-password",
@@ -66,7 +60,6 @@ export const forgotPassword = async (data: EmailModel) => {
   return response.data;
 };
 
-// Reset Password
 export const resetPassword = async (data: ResetPasswordModel) => {
   const response = await api.post<MessageResponseModel>(
     "/auth/reset-password",

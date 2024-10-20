@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Define the schema for creating an apartment
 export const createApartmentSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   city: z.string().min(1, { message: "City is required" }),
@@ -16,7 +15,6 @@ export const createApartmentSchema = z.object({
   apartmentPhotos: z.array(z.instanceof(File)).optional(),
 });
 
-// Define the schema for updating an apartment
 export const updateApartmentSchema = z
   .object({
     title: z.string().optional(),
