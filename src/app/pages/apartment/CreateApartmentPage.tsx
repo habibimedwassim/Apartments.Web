@@ -182,8 +182,6 @@ const CreateApartmentPage = () => {
                     <Cross2Icon className="ml-2 h-4 w-4" />
                   </Button>
                 )}
-
-                {/* Add Apartment Button */}
                 <LoadingButton
                   type="submit"
                   form="apartment-form"
@@ -197,21 +195,6 @@ const CreateApartmentPage = () => {
                 >
                   Add Apartment
                 </LoadingButton>
-                {/* <Button
-                  type="submit"
-                  form="apartment-form" 
-                  variant="outline"
-                  size="sm"
-                  disabled={createApartmentMutation.isPending}
-                  className="h-8 gap-1 ml-2"
-                >
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    {createApartmentMutation.isPending
-                      ? "Adding..."
-                      : "Add Apartment"}
-                  </span>
-                </Button> */}
               </div>
             </div>
           </CardTitle>
