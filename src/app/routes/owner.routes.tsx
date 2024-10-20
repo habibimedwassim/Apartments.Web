@@ -7,6 +7,7 @@ import AccountPage from "@/app/pages/account/AccountPage";
 import apartmentRequestsRoutes from "./apartment-request.routes";
 import tenantRoutes from "./tenant.routes";
 import TransactionsPage from "../pages/transaction/TransactionsPage";
+import { OwnerDashboard } from "../pages/dashboard/OwnerDashboardPage";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -22,7 +23,7 @@ const ownerRoutes: RouteObject = {
       path: "",
       element: (
         <PageLayout title="Home">
-          <h1>Home Page</h1>
+          <OwnerDashboard />
         </PageLayout>
       ),
     },

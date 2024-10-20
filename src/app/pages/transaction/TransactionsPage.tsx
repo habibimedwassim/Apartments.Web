@@ -11,7 +11,7 @@ const TransactionsPage = () => {
     <LoaderCircle className="animate-spin" />
   ) : (
     <DataTable
-      columns={transactionColumns}
+      columns={transactionColumns()}
       statuses={transactionStatuses}
       data={transactions || []}
     />

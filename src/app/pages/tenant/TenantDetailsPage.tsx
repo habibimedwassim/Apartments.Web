@@ -1,16 +1,10 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetTenantByIdQuery } from "@/app/services/queries/user.queries";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoaderCircle } from "lucide-react";
 import { useGetTenantTransactionsQuery } from "@/app/services/queries/transaction.queries";
-import { TransactionRequestModel } from "@/app/models/transaction.models";
+import { TransactionModel } from "@/app/models/transaction.models";
 import { transactionColumns } from "../transaction/table/TransactionColumns";
 import { DataTable } from "@/components/data-table/data-table";
 import { transactionStatuses } from "../transaction/table/TransactionStatuses";
@@ -71,11 +65,11 @@ export const TenantDetailsPage = () => {
         </CardContent>
       </Card>
       <div>
-        <DataTable<TransactionRequestModel, any>
+        <DataTable<TransactionModel, any>
           title="Transactions History"
           statuses={transactionStatuses}
-          columns={transactionColumns}
-          data={(transactions ?? []) as TransactionRequestModel[]}
+          columns={transactionColumns(true)}
+          data={(transactions ?? []) as TransactionModel[]}
         />
       </div>
     </div>

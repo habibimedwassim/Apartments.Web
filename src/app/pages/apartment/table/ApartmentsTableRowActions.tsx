@@ -1,7 +1,8 @@
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Calendar as CalendarIcon } from "lucide-react";
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/common/button-loading"; // Import the LoadingButton component
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -25,8 +25,17 @@ import { ApartmentModel } from "@/app/models/apartment.models";
 import {
   useArchiveApartmentMutation,
   useDeleteApartmentMutation,
+  useDismissTenantMutation,
 } from "@/app/services/mutations/apartment.mutations";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface ApartmentsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -36,72 +45,122 @@ export function ApartmentsTableRowActions<TData>({
   row,
 }: ApartmentsTableRowActionsProps<TData>) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [deletePermanentlyDialog, setDeletePermanentlyDialog] = useState(false);
+  const [openPermanentDeleteDialog, setOpenPermanentDeleteDialog] =
+    useState(false);
+  const [openDismissDialog, setOpenDismissDialog] = useState(false);
+  const [dismissReason, setDismissReason] = useState("");
+  const [requestDate, setRequestDate] = useState<Date | undefined>(new Date());
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actionType, setActionType] = useState<string | null>(null);
   const { toast } = useToast();
 
   const apartmentRow = row.original as ApartmentModel;
   const apartmentId = apartmentRow.id;
   const status = apartmentRow.status;
-
   const navigate = useNavigate();
+
   const archiveMutation = useArchiveApartmentMutation(apartmentId);
   const deleteMutation = useDeleteApartmentMutation(apartmentId);
+  const dismissTenantMutation = useDismissTenantMutation();
 
-  // Logic to handle delete/archive/restore
-  const handleDelete = (permanent: boolean) => {
-    if (permanent == true) {
-      deleteMutation
-        .mutateAsync()
-        .then((result) => {
-          toast({
-            variant: "default",
-            title: result.message,
-          });
-        })
-        .catch((error) => {
-          toast({
-            variant: "destructive",
-            description: error.message,
-          });
-        });
-    } else {
-      archiveMutation
-        .mutateAsync()
-        .then((result) => {
-          toast({
-            variant: "default",
-            title: result.message,
-          });
-        })
-        .catch((error) => {
-          toast({
-            variant: "destructive",
-            description: error.message,
-          });
-        });
+  // Determine available actions based on the apartment's status
+  const getAvailableActions = () => {
+    switch (status) {
+      case ApartmentStatus.Available:
+        return ["Details", "Edit", "Archive"];
+      case ApartmentStatus.Occupied:
+        return ["Details", "Edit", "Dismiss Tenant"];
+      case ApartmentStatus.Archived:
+        return ["Details", "Restore", "Delete Permanently"];
+      default:
+        return [];
     }
   };
 
-  const handleDetails = (apartmentId: number) => {
+  const availableActions = getAvailableActions();
+
+  const handleAction = (type: string) => {
+    setActionType(type);
+    if (type === "Delete Permanently") {
+      setOpenPermanentDeleteDialog(true);
+    } else if (type === "Archive" || type === "Restore") {
+      setOpenDeleteDialog(true);
+    } else if (type === "Dismiss Tenant") {
+      setOpenDismissDialog(true);
+    }
+  };
+
+  const handleDelete = (permanent: boolean) => {
+    setIsSubmitting(true);
+    const mutation = permanent ? deleteMutation : archiveMutation;
+    mutation
+      .mutateAsync()
+      .then((result) => {
+        toast({
+          variant: "default",
+          title: result.message,
+        });
+        setOpenDeleteDialog(false);
+        setOpenPermanentDeleteDialog(false);
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          description: error.message,
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        setActionType(null);
+      });
+  };
+
+  const confirmDismiss = () => {
+    if (!requestDate || !dismissReason) {
+      toast({
+        variant: "destructive",
+        title: "Please provide a reason and date",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    const formattedDate = format(requestDate, "yyyy-MM-dd");
+    dismissTenantMutation
+      .mutateAsync({
+        id: apartmentId,
+        data: {
+          reason: dismissReason,
+          requestDate: formattedDate,
+        },
+      })
+      .then((result) => {
+        toast({
+          variant: "default",
+          title: result.message,
+        });
+        setOpenDismissDialog(false); // Close the dialog after success
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: error.message,
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        setDismissReason("");
+        setRequestDate(new Date());
+      });
+  };
+
+  const handleDetails = () => {
     navigate("/apartments/details", { state: { apartmentId } });
   };
-  // Logic to handle edit
-  const handleEdit = (apartmentId: number) => {
+
+  const handleEdit = () => {
     navigate("/apartments/edit", { state: { apartmentId } });
   };
-
-  // Status-based logic
-  const isAvailable = status === ApartmentStatus.Available;
-  const isOccupied = status === ApartmentStatus.Occupied;
-  const isArchived = status === ApartmentStatus.Archived;
-
-  // Set labels and disable status based on apartment status
-  const actionLabel = isArchived
-    ? "Restore"
-    : isAvailable
-    ? "Archive"
-    : "Delete";
-  const canDelete = !isOccupied;
 
   return (
     <>
@@ -117,43 +176,100 @@ export function ApartmentsTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => handleDetails(apartmentId)}>
-            Details
-          </DropdownMenuItem>
 
-          {/* Edit option */}
-          <DropdownMenuItem onClick={() => handleEdit(apartmentId)}>
-            Edit
-          </DropdownMenuItem>
-
-          {/* Archive/Restore/Delete option */}
-          <DropdownMenuItem
-            disabled={!canDelete}
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            {actionLabel}
-          </DropdownMenuItem>
-
-          {/* If apartment is archived, allow permanent deletion */}
-          {isArchived && (
+          {availableActions.includes("Details") && (
+            <DropdownMenuItem onClick={handleDetails}>Details</DropdownMenuItem>
+          )}
+          {availableActions.includes("Edit") && (
+            <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+          )}
+          {availableActions.includes("Archive") && (
+            <DropdownMenuItem onClick={() => handleAction("Archive")}>
+              Archive
+            </DropdownMenuItem>
+          )}
+          {availableActions.includes("Restore") && (
+            <DropdownMenuItem onClick={() => handleAction("Restore")}>
+              Restore
+            </DropdownMenuItem>
+          )}
+          {availableActions.includes("Delete Permanently") && (
             <DropdownMenuItem
-              onClick={() => {
-                setDeletePermanentlyDialog(true);
-              }}
+              onClick={() => handleAction("Delete Permanently")}
             >
               Delete Permanently
+            </DropdownMenuItem>
+          )}
+          {availableActions.includes("Dismiss Tenant") && (
+            <DropdownMenuItem onClick={() => handleAction("Dismiss Tenant")}>
+              Dismiss Tenant
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Dismiss Tenant Confirmation Dialog */}
+      <AlertDialog open={openDismissDialog} onOpenChange={setOpenDismissDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Dismiss Tenant</AlertDialogTitle>
+            <AlertDialogDescription>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Enter reason for dismissal"
+                  value={dismissReason}
+                  onChange={(e) => setDismissReason(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !requestDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {requestDate ? format(requestDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={requestDate}
+                      onSelect={setRequestDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenDismissDialog(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <LoadingButton
+              isLoading={isSubmitting}
+              onClick={confirmDismiss}
+              loadingText="Dismissing..."
+              disabled={isSubmitting}
+            >
+              Confirm
+            </LoadingButton>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Archive/Restore Confirmation Dialog */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{`Confirm ${actionLabel}`}</AlertDialogTitle>
+            <AlertDialogTitle>{`Confirm ${actionType}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to {actionLabel.toLowerCase()} this
+              Are you sure you want to {actionType?.toLowerCase()} this
               apartment?
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -161,22 +277,22 @@ export function ApartmentsTableRowActions<TData>({
             <AlertDialogCancel onClick={() => setOpenDeleteDialog(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                handleDelete(false);
-                setOpenDeleteDialog(false);
-              }}
+            <LoadingButton
+              isLoading={isSubmitting}
+              onClick={() => handleDelete(false)}
+              loadingText="Processing..."
+              disabled={isSubmitting}
             >
               Confirm
-            </AlertDialogAction>
+            </LoadingButton>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       {/* Delete Permanently Confirmation Dialog */}
       <AlertDialog
-        open={deletePermanentlyDialog}
-        onOpenChange={setDeletePermanentlyDialog}
+        open={openPermanentDeleteDialog}
+        onOpenChange={setOpenPermanentDeleteDialog}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -188,18 +304,18 @@ export function ApartmentsTableRowActions<TData>({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              onClick={() => setDeletePermanentlyDialog(false)}
+              onClick={() => setOpenPermanentDeleteDialog(false)}
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                handleDelete(true);
-                setDeletePermanentlyDialog(false);
-              }}
+            <LoadingButton
+              isLoading={isSubmitting}
+              onClick={() => handleDelete(true)}
+              loadingText="Deleting..."
+              disabled={isSubmitting}
             >
               Confirm
-            </AlertDialogAction>
+            </LoadingButton>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -44,6 +44,13 @@ export interface UserModel {
   gender?: string;
   dateOfBirth?: string;
 }
+
+export interface OwnerModel {
+  fullName?: string;
+  email?: string;
+  phoneNumber?: string;
+}
+
 export interface TenantModel {
   id: number;
   firstName?: string;

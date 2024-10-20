@@ -6,8 +6,10 @@ import {
   deleteApartmentPermanent,
   deleteApartmentPhoto,
   uploadApartmentPhotos,
+  dismissFromApartment,
 } from "@/app/api/apartment.api";
 import {
+  DismissModel,
   UpdateApartmentModel,
   UploadApartmentPhotosModel,
 } from "@/app/models/apartment.models";
@@ -73,6 +75,23 @@ export const useDeleteApartmentMutation = (id: number) => {
     },
   });
 
+  return mutation;
+};
+
+// Mutation to dismiss a tenant from an apartment
+export const useDismissTenantMutation = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: DismissModel }) =>
+      dismissFromApartment(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
   return mutation;
 };
 
