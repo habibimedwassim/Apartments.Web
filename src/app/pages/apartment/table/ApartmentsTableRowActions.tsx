@@ -36,6 +36,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 interface ApartmentsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -215,7 +216,7 @@ export function ApartmentsTableRowActions<TData>({
             <AlertDialogTitle>Dismiss Tenant</AlertDialogTitle>
             <AlertDialogDescription>
               <div className="space-y-4">
-                <input
+                <Input
                   type="text"
                   placeholder="Enter reason for dismissal"
                   value={dismissReason}

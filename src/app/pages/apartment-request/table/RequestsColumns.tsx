@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { requestStatuses } from "./RequestStatuses";
 import { formatToLocalDateTime } from "@/lib/utils";
 import { RequestTableRowActions } from "./RequestsTableRowActions";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 
 export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
   {
@@ -49,7 +50,9 @@ export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => {
       const status = requestStatuses.find(
         (status) => status.value === row.getValue("status")
@@ -72,7 +75,9 @@ export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
   },
   {
     accessorKey: "requestDate",
-    header: "Request Date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Request Date" />
+    ),
     cell: ({ row }) => {
       const requestDate = row.getValue("requestDate") as string;
       return requestDate ? formatToLocalDateTime(requestDate) : "N/A";
@@ -80,15 +85,19 @@ export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
   },
   {
     accessorKey: "reason",
-    header: "Reason",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Reason" />
+    ),
     cell: ({ row }) => {
       const reason = row.getValue("reason") as string | null;
-      return reason && reason.trim() !== "" ? reason : "Not provided";
+      return reason && reason.trim() !== "" ? reason : "--";
     },
   },
   {
     accessorKey: "createdDate",
-    header: "Created Date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created Date" />
+    ),
     cell: ({ row }) => {
       const createdDate = row.getValue("createdDate") as string;
       return formatToLocalDateTime(createdDate);

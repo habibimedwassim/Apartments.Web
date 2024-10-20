@@ -1,4 +1,5 @@
 import { TenantModel } from "@/app/models/user.models";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
@@ -7,19 +8,27 @@ import { useNavigate } from "react-router-dom";
 export const tenantColumns: ColumnDef<TenantModel>[] = [
   {
     accessorKey: "firstName",
-    header: "First Name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="First Name" />
+    ),
   },
   {
     accessorKey: "lastName",
-    header: "Last Name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last Name" />
+    ),
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
   },
   {
     accessorKey: "phoneNumber",
-    header: "Phone Number",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phone Number" />
+    ),
     cell: ({ row }) => {
       const phoneNumber = row.getValue("phoneNumber");
       return phoneNumber || "N/A";
@@ -27,7 +36,9 @@ export const tenantColumns: ColumnDef<TenantModel>[] = [
   },
   {
     accessorKey: "gender",
-    header: "Gender",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
     cell: ({ row }) => {
       const gender = row.getValue("gender");
       return gender || "N/A";
@@ -35,7 +46,9 @@ export const tenantColumns: ColumnDef<TenantModel>[] = [
   },
   {
     accessorKey: "dateOfBirth",
-    header: "Date of Birth",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date of Birth" />
+    ),
     cell: ({ row }) => {
       const dateOfBirth = row.getValue("dateOfBirth");
       return dateOfBirth || "N/A";

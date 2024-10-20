@@ -7,6 +7,5 @@ export const useGetOwnerDashboardQuery = () => {
   return useQuery<OwnerDashboardData>({
     queryKey: ["ownerDashboard"],
     queryFn: () => getOwnerDashboard(),
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };

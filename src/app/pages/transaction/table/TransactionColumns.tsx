@@ -69,12 +69,10 @@ export const transactionColumns = (
     ),
     cell: ({ row }) => {
       const dateTo = row.getValue("dateTo") as string;
-
-      if (!dateTo || dateTo.startsWith("0001")) {
-        return "--";
+      if (dateTo && !dateTo.startsWith("--")) {
+        return formatToLocalDateTime(dateTo);
       }
-
-      return formatToLocalDateTime(dateTo);
+      return dateTo;
     },
   },
   {

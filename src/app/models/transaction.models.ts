@@ -79,7 +79,7 @@ export const mapToTransactionModel = async (
 export const normalizeTransactionDates = (
   transaction: TransactionModel
 ): TransactionModel => {
-  if (transaction.dateTo?.startsWith("0001-01-01")) {
+  if (transaction.dateTo?.startsWith("0001")) {
     transaction.dateTo = "--";
   }
   return transaction;

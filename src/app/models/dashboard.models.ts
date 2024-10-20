@@ -1,5 +1,3 @@
-import { ApartmentRequestModel } from "./apartment-request.models";
-
 export interface OwnerDashboardData {
   totalOwnedApartments: number;
   occupiedApartments: number;
@@ -7,7 +5,9 @@ export interface OwnerDashboardData {
   totalTenants: number;
   totalRevenue: number;
   recentTransactions: DashboardTransactionModel[];
-  recentRequests: ApartmentRequestModel[];
+  recentRentRequests: RequestModel[];
+  recentLeaveRequests: RequestModel[];
+  recentDismissRequests: RequestModel[];
   revenueByMonth: RevenueByMonthModel[];
 }
 
@@ -33,3 +33,30 @@ export interface RevenueByMonthModel {
   month: string;
   revenue: number;
 }
+
+// Function to map and normalize OwnerDashboardData
+export const mapToOwnerDashboardData = (
+  data: OwnerDashboardData
+): OwnerDashboardData => {
+  return {
+    ...data,
+    recentTransactions: normalizeTransactionList(data.recentTransactions),
+  };
+};
+
+// Function to normalize a list of transactions
+export const normalizeTransactionList = (
+  transactions: DashboardTransactionModel[]
+): DashboardTransactionModel[] => {
+  return transactions.map(normalizeTransactionDates);
+};
+
+// Function to normalize transaction dates
+export const normalizeTransactionDates = (
+  transaction: DashboardTransactionModel
+): DashboardTransactionModel => {
+  if (transaction.dateTo?.startsWith("0001")) {
+    transaction.dateTo = "--";
+  }
+  return transaction;
+};
