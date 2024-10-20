@@ -98,6 +98,7 @@ export const useDeleteApartmentPhotoMutation = (apartmentId: number) => {
       queryClient.invalidateQueries({
         queryKey: ["apartmentPhotos", apartmentId],
       });
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
     },
     onError: (error: string) => {
       throw error;
@@ -116,6 +117,7 @@ export const useUploadApartmentPhotosMutation = (apartmentId: number) => {
       queryClient.invalidateQueries({
         queryKey: ["apartmentPhotos", apartmentId],
       });
+      queryClient.invalidateQueries({ queryKey: ["apartments"] });
     },
     onError: (error: string) => {
       throw error;
