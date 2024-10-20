@@ -12,16 +12,32 @@ import {
 } from "@/components/ui/popover";
 import { ApartmentPreviewCard } from "../components/ApartmentPreviewCard";
 import { TransactionTableRowActions } from "./TransactionTableRowActions";
-import {
-  ChevronDownCircle,
-  ChevronLeftCircleIcon,
-  SquareArrowOutUpRight,
-} from "lucide-react";
+import { ChevronDownCircle } from "lucide-react";
+import UserButton from "@/components/common/button-user";
 
 export const transactionColumns = (
   isTenantDetailsPage = false
 ): ColumnDef<TransactionModel>[] => {
   const columns: ColumnDef<TransactionModel>[] = [
+    {
+      accessorKey: "tenant",
+      header: "Tenant",
+      cell: ({ row }) => {
+        const transaction = row.original as TransactionModel;
+        const tenantId = transaction.tenant as number;
+
+        const navigate = useNavigate();
+
+        return (
+          <UserButton
+            avatar={transaction.avatar}
+            onClick={() =>
+              navigate("/tenants/details", { state: { tenantId: tenantId } })
+            }
+          />
+        );
+      },
+    },
     {
       accessorKey: "rentAmount",
       header: ({ column }) => (
@@ -116,6 +132,8 @@ export const transactionColumns = (
         );
       },
     });
+
+    columns.shift();
   }
 
   return columns;

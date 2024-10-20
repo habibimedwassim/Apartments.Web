@@ -1,5 +1,6 @@
 export interface UserResponseModel {
   id: number;
+  avatar?: string;
   fullName: string;
   firstName: string;
   lastName: string;
@@ -12,6 +13,7 @@ export interface UserResponseModel {
 }
 
 export interface UpdateUserModel {
+  avatar?: File;
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
@@ -35,6 +37,7 @@ export interface VerifyNewEmailModel {
 }
 
 export interface UserModel {
+  avatar?: string;
   firstName?: string;
   lastName?: string;
   fullName?: string;
@@ -53,6 +56,7 @@ export interface OwnerModel {
 
 export interface TenantModel {
   id: number;
+  avatar?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -65,6 +69,7 @@ export const mapToUserModel = async (
   userResponseModel: UserResponseModel
 ): Promise<UserModel> => {
   return {
+    avatar: userResponseModel.avatar,
     fullName: userResponseModel.fullName,
     firstName: userResponseModel.firstName,
     lastName: userResponseModel.lastName,
@@ -87,6 +92,7 @@ export const mapToTenantModel = async (
 ): Promise<TenantModel> => {
   return {
     id: userResponseModel.id,
+    avatar: userResponseModel.avatar,
     firstName: userResponseModel.firstName,
     lastName: userResponseModel.lastName,
     email: userResponseModel.email,

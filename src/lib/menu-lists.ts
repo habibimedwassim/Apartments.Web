@@ -74,7 +74,7 @@ function getAdminMenuList(
       ],
     },
     {
-      groupLabel: "Contents",
+      groupLabel: "Managment",
       menus: [
         {
           href: "",
@@ -140,7 +140,7 @@ function getOwnerMenuList(
       ],
     },
     {
-      groupLabel: "Content",
+      groupLabel: "Managment",
       menus: [
         {
           href: "",

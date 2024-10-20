@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <Card className="border border-dashed">
+      <Card className="border">
         <CardHeader>
           {title && (
             <CardTitle className="mb-4 text-lg font-bold">{title}</CardTitle>

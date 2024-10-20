@@ -54,7 +54,7 @@ export function OwnerDashboard() {
   const chartConfig = {
     revenue: {
       label: "Revenue",
-      color: "hsl(var(--foreground))",
+      color: "hsl(var(--chart-1))",
     },
   };
 
@@ -84,9 +84,9 @@ export function OwnerDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xl font-bold">
+            <h1 className="text-xl font-bold">
               {dashboardData.totalRevenue} TND
-            </p>
+            </h1>
           </CardContent>
         </Card>
         <Card>
@@ -122,8 +122,39 @@ export function OwnerDashboard() {
           </CardContent>
         </Card>
       </div>
-      <div>
-        <Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Chart section on the left */}
+        <Card className="order-1 lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Revenue By Month</CardTitle>
+            <CardDescription>
+              Monthly revenue trends for this year
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <BarChart accessibilityLayer data={dashboardData.revenueByMonth}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar dataKey="revenue" fill="var(--color-revenue)" radius={8} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Tabs section on the right */}
+        <Card className="order-2">
           <CardContent>
             <Tabs
               defaultValue="rent"
@@ -212,34 +243,9 @@ export function OwnerDashboard() {
           </CardContent>
         </Card>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue By Month</CardTitle>
-            <CardDescription>
-              Monthly revenue trends for this year
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig}>
-              <BarChart accessibilityLayer data={dashboardData.revenueByMonth}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Bar dataKey="revenue" fill="var(--color-revenue)" radius={8} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+
+      {/* Transactions section at the bottom */}
+      <div className="grid grid-cols-1 gap-4">
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">

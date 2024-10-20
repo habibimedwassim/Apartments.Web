@@ -1,11 +1,29 @@
 import { TenantModel } from "@/app/models/user.models";
+import UserButton from "@/components/common/button-user";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
-// tenantColumns.ts
 export const tenantColumns: ColumnDef<TenantModel>[] = [
+  {
+    accessorKey: "tenant",
+    header: "Tenant",
+    cell: ({ row }) => {
+      const tenant = row.original;
+      const navigate = useNavigate();
+
+      return (
+        <UserButton
+          avatar={tenant?.avatar}
+          firstName={tenant.firstName}
+          lastName={tenant.lastName}
+          onClick={() =>
+            navigate("/tenants/details", { state: { tenantId: tenant.id } })
+          }
+        />
+      );
+    },
+  },
   {
     accessorKey: "firstName",
     header: ({ column }) => (
@@ -52,26 +70,6 @@ export const tenantColumns: ColumnDef<TenantModel>[] = [
     cell: ({ row }) => {
       const dateOfBirth = row.getValue("dateOfBirth");
       return dateOfBirth || "N/A";
-    },
-  },
-  {
-    accessorKey: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const tenant = row.original;
-      const navigate = useNavigate();
-
-      return (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            navigate("/tenants/details", { state: { tenantId: tenant.id } })
-          }
-        >
-          View Details
-        </Button>
-      );
     },
   },
 ];

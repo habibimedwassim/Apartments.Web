@@ -3,6 +3,7 @@ export interface ApartmentRequestModel {
   createdDate: string;
   apartmentId: number;
   tenantId: number;
+  avatar?: string;
   requestDate?: string;
   reason?: string;
   status: string;

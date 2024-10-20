@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetTenantByIdQuery } from "@/app/services/queries/user.queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { LoaderCircle } from "lucide-react";
 import { useGetTenantTransactionsQuery } from "@/app/services/queries/transaction.queries";
 import { TransactionModel } from "@/app/models/transaction.models";
@@ -37,26 +37,35 @@ export const TenantDetailsPage = () => {
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle>
-            <div className="text-lg font-bold">
-              {tenant.firstName} {tenant.lastName}
+        <CardContent className="pt-6">
+          <div className="flex">
+            <div className="w-1/3">
+              <img
+                src={tenant.avatar ?? "#"}
+                alt="Tenant Avatar"
+                className="w-full h-auto rounded"
+              />
             </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 mb-4">
-            <div>
-              <strong>Email:</strong> {tenant.email}
-            </div>
-            <div>
-              <strong>Phone Number:</strong> {tenant.phoneNumber || "N/A"}
-            </div>
-            <div>
-              <strong>Gender:</strong> {tenant.gender || "N/A"}
-            </div>
-            <div>
-              <strong>Date of Birth:</strong> {tenant.dateOfBirth || "N/A"}
+            <div className="w-2/3 pl-4">
+              <div className="grid gap-4 mb-4">
+                <h1>
+                  <strong>
+                    {tenant.firstName} {tenant.lastName}
+                  </strong>
+                </h1>
+                <div>
+                  <strong>Email:</strong> {tenant.email}
+                </div>
+                <div>
+                  <strong>Phone Number:</strong> {tenant.phoneNumber || "N/A"}
+                </div>
+                <div>
+                  <strong>Gender:</strong> {tenant.gender || "N/A"}
+                </div>
+                <div>
+                  <strong>Date of Birth:</strong> {tenant.dateOfBirth || "N/A"}
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>

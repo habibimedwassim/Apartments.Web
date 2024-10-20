@@ -3,6 +3,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatToLocalDateTime } from "@/lib/utils";
 import { RequestTableRowActions } from "./RequestsTableRowActions";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+import { useNavigate } from "react-router-dom";
+import UserButton from "@/components/common/button-user";
 
 export const createRequestColumns = (
   statuses: {
@@ -14,6 +16,24 @@ export const createRequestColumns = (
   hideReason: boolean = false
 ): ColumnDef<ApartmentRequestModel>[] => {
   const columns: ColumnDef<ApartmentRequestModel>[] = [
+    {
+      accessorKey: "tenant",
+      header: "Tenant",
+      cell: ({ row }) => {
+        const tenant = row.original;
+        const navigate = useNavigate();
+        const tenantId = tenant.tenantId as number;
+
+        return (
+          <UserButton
+            avatar={tenant?.avatar}
+            onClick={() =>
+              navigate("/tenants/details", { state: { tenantId: tenantId } })
+            }
+          />
+        );
+      },
+    },
     {
       accessorKey: "status",
       header: ({ column }) => (

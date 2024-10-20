@@ -4,6 +4,7 @@ export interface TransactionRequestModel {
   id: number;
   createdDate: string;
   apartmentId: number;
+  avatar?: string;
   tenantId: number;
   rentAmount: number;
   dateFrom: string;
@@ -33,6 +34,7 @@ export interface TransactionModel {
     owner?: OwnerModel;
   };
   tenant: number;
+  avatar?: string;
   rentAmount: number;
   dateFrom: string;
   dateTo?: string;
@@ -67,6 +69,7 @@ export const mapToTransactionModel = async (
         : undefined,
     },
     tenant: transaction.tenantId,
+    avatar: transaction.avatar,
     rentAmount: transaction.rentAmount,
     dateFrom: transaction.dateFrom,
     dateTo: transaction.dateTo,

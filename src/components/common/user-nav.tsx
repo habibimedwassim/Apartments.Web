@@ -37,7 +37,7 @@ export function UserNav() {
                 className="relative h-8 w-8 rounded-full"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="#" alt="Avatar" />
+                  <AvatarImage src={profile?.avatar ?? "#"} alt="Avatar" />
                   <AvatarFallback className="bg-transparent">
                     {profile
                       ? `${profile.firstName!.charAt(
@@ -58,7 +58,7 @@ export function UserNav() {
             <p className="text-sm font-medium leading-none">
               {profile ? `${profile.firstName}, ${profile.lastName}` : ""}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-xs leading-none">
               {profile ? `${profile.email}` : ""}
             </p>
           </div>
@@ -67,7 +67,7 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
             <Link to="/" className="flex items-center">
-              <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
+              <LayoutGrid className="w-4 h-4 mr-3" />
               Dashboard
             </Link>
           </DropdownMenuItem>
@@ -76,7 +76,7 @@ export function UserNav() {
               to={role == USER_ROLE.ADMIN ? "/admin/account" : "/account"}
               className="flex items-center"
             >
-              <User className="w-4 h-4 mr-3 text-muted-foreground" />
+              <User className="w-4 h-4 mr-3" />
               Account
             </Link>
           </DropdownMenuItem>
@@ -86,7 +86,7 @@ export function UserNav() {
           className="hover:cursor-pointer"
           onClick={handleLogout}
         >
-          <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
+          <LogOut className="w-4 h-4 mr-3" />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

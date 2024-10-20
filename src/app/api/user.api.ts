@@ -31,7 +31,34 @@ export const getTenantById = async (id: number): Promise<TenantModel> => {
 };
 
 export const updateMyProfile = async (data: UpdateUserModel) => {
-  const response = await api.patch<UserModel>(`${API_URL}/me`, data);
+  const formData = new FormData();
+
+  // Append data to FormData
+  if (data.avatar) {
+    formData.append("avatar", data.avatar);
+  }
+  if (data.firstName) {
+    formData.append("firstName", data.firstName);
+  }
+  if (data.lastName) {
+    formData.append("lastName", data.lastName);
+  }
+  if (data.phoneNumber) {
+    formData.append("phoneNumber", data.phoneNumber);
+  }
+  if (data.gender) {
+    formData.append("gender", data.gender);
+  }
+  if (data.dateOfBirth) {
+    formData.append("dateOfBirth", data.dateOfBirth);
+  }
+
+  const response = await api.patch<UserModel>(`${API_URL}/me`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return response.data;
 };
 

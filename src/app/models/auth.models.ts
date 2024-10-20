@@ -6,6 +6,7 @@ export interface LoginModel {
 }
 
 export interface LoginResponseModel {
+  avatar?: string;
   email: string;
   tempEmail?: string;
   firstName: string;
@@ -52,6 +53,7 @@ export const mapLoginResponseToUserModel = (
   loginResponse: LoginResponseModel
 ): UserModel => {
   return {
+    avatar: loginResponse.avatar,
     fullName: loginResponse.fullName,
     firstName: loginResponse.firstName,
     lastName: loginResponse.lastName,
