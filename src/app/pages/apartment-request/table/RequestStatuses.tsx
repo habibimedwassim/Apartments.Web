@@ -28,6 +28,54 @@ export const requestStatuses = [
   },
 ];
 
+export const leaveRequestStatuses = [
+  {
+    value: "Approved",
+    label: "Approved",
+    icon: CircleCheck,
+    color: COLORS.Green,
+  },
+  {
+    value: "Pending",
+    label: "Pending",
+    icon: CirclePause,
+    color: COLORS.Yellow,
+  },
+  {
+    value: "Rejected",
+    label: "Rejected",
+    icon: CircleX,
+    color: COLORS.Red,
+  },
+];
+
+export const dismissRequestStatuses = [
+  {
+    value: "Approved",
+    label: "Approved",
+    icon: CircleCheck,
+    color: COLORS.Green,
+  },
+  {
+    value: "Pending",
+    label: "Pending",
+    icon: CirclePause,
+    color: COLORS.Yellow,
+  },
+  {
+    value: "Rejected",
+    label: "Rejected",
+    icon: CircleX,
+    color: COLORS.Red,
+  },
+  {
+    value: "Terminated",
+    label: "Terminated",
+    icon: CircleX,
+    color: COLORS.Red,
+  },
+];
+
 export const requestTypes = [
   {
     value: "rent",

@@ -2,12 +2,19 @@ import { ApartmentRequestModel } from "@/app/models/apartment-request.models";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
-import { requestStatuses } from "./RequestStatuses";
 import { formatToLocalDateTime } from "@/lib/utils";
 import { RequestTableRowActions } from "./RequestsTableRowActions";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 
-export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
+// Function to create columns dynamically with statuses passed as a parameter
+export const createRequestColumns = (
+  statuses: {
+    value: string;
+    label: string;
+    icon?: React.ComponentType<any>;
+    color?: string;
+  }[]
+): ColumnDef<ApartmentRequestModel>[] => [
   {
     accessorKey: "tenantId",
     header: "Tenant",
@@ -54,11 +61,10 @@ export const requestColumns: ColumnDef<ApartmentRequestModel>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const status = requestStatuses.find(
-        (status) => status.value === row.getValue("status")
-      );
+      const statusValue = row.getValue("status") as string;
+      const status = statuses.find((s) => s.value === statusValue);
 
-      if (!status) return null;
+      if (!status) return <span>Unknown</span>;
 
       return (
         <div className="flex items-center">

@@ -182,6 +182,12 @@ function getOwnerMenuList(
               notificationCount: displayNotificationCount(leaveRequestCount),
               type: "leave",
             },
+            {
+              href: "/dismiss-requests",
+              label: "Dismiss Requests",
+              notificationCount: displayNotificationCount(0),
+              type: "dismiss",
+            },
           ],
         },
         {

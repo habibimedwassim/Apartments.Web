@@ -2,6 +2,7 @@ import { RouteObject } from "react-router-dom";
 import PageLayout from "../layouts/page.layout";
 import RentalRequestsPage from "../pages/apartment-request/RentalRequestsPage";
 import LeaveRequestsPage from "../pages/apartment-request/LeaveRequestsPage";
+import DismissRequestsPage from "../pages/apartment-request/DismissRequests";
 
 const apartmentRequestsRoutes: RouteObject[] = [
   {
@@ -19,6 +20,15 @@ const apartmentRequestsRoutes: RouteObject[] = [
     element: (
       <PageLayout title="Leave Requests">
         <LeaveRequestsPage />
+      </PageLayout>
+    ),
+  },
+  {
+    id: "dismiss",
+    path: "dismiss-requests",
+    element: (
+      <PageLayout title="Dismiss Requests">
+        <DismissRequestsPage />
       </PageLayout>
     ),
   },
