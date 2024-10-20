@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UpdateApartmentModel } from "@/app/models/apartment.models";
+import {
+  ApartmentPhotoModel,
+  UpdateApartmentModel,
+} from "@/app/models/apartment.models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,6 +47,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton } from "@/components/common/button-loading";
 import { useGetApartmentByIdQuery } from "@/app/services/queries/apartment.queries";
 import { useUpdateApartmentMutation } from "@/app/services/mutations/apartment.mutations";
+import ApartmentPhotoManager from "./components/ApartmentPhotoManager";
 
 const EditApartmentPage = () => {
   const { toast } = useToast();
@@ -53,6 +57,9 @@ const EditApartmentPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openProvincePicker, setOpenProvincePicker] = useState(false);
   const [openCityPicker, setOpenCityPicker] = useState(false);
+  const [apartmentPhotos, setApartmentPhotos] = useState<ApartmentPhotoModel[]>(
+    []
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -120,6 +127,12 @@ const EditApartmentPage = () => {
       );
     }
   }, [apartment, form]);
+
+  useEffect(() => {
+    if (apartment && apartment.apartmentPhotos) {
+      setApartmentPhotos(apartment.apartmentPhotos);
+    }
+  }, [apartment]);
 
   const mutation = useUpdateApartmentMutation();
 
@@ -195,7 +208,7 @@ const EditApartmentPage = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>
@@ -484,6 +497,7 @@ const EditApartmentPage = () => {
           </Form>
         </CardContent>
       </Card>
+      <ApartmentPhotoManager apartmentId={apartmentId} />
     </div>
   );
 };

@@ -90,13 +90,10 @@ export const useDismissTenantMutation = () => {
   return mutation;
 };
 
-export const useDeleteApartmentPhotoMutation = (
-  apartmentId: number,
-  photoId: number
-) => {
+export const useDeleteApartmentPhotoMutation = (apartmentId: number) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => deleteApartmentPhoto(apartmentId, photoId),
+    mutationFn: (photoId: number) => deleteApartmentPhoto(apartmentId, photoId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["apartmentPhotos", apartmentId],

@@ -29,7 +29,6 @@ export const useGetApartmentPhotosQuery = (apartmentId: number) => {
   return useQuery<ApartmentPhotoModel[]>({
     queryKey: ["apartmentPhotos", apartmentId],
     queryFn: () => getApartmentPhotos(apartmentId),
-    staleTime: 300000,
   });
 };
 

@@ -128,7 +128,7 @@ export const uploadApartmentPhotos = async (
     formData.append("apartmentPhotos", photo);
   });
 
-  const response = await api.post<MessageResponseModel>(
+  const response = await api.post<ApartmentPhotoModel[]>(
     `/apartments/${id}/photos`,
     formData,
     {
