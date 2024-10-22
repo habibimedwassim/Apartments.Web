@@ -5,15 +5,22 @@ import { createRequestColumns } from "./table/RequestsColumns";
 import { leaveRequestStatuses } from "./table/RequestStatuses";
 
 const LeaveRequestsPage = () => {
-  const { data: requests, isLoading } = useGetLeaveRequestsQuery();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetLeaveRequestsQuery();
+
   const columns = createRequestColumns(leaveRequestStatuses);
+  const requests = data?.pages.flatMap((page) => page.items) ?? [];
+
   return isLoading ? (
     <LoaderCircle className="animate-spin" />
   ) : (
     <DataTable
       columns={columns}
       statuses={leaveRequestStatuses}
-      data={requests || []}
+      data={requests}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
     />
   );
 };

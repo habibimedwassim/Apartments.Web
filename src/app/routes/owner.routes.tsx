@@ -8,6 +8,7 @@ import apartmentRequestsRoutes from "./apartment-request.routes";
 import tenantRoutes from "./tenant.routes";
 import TransactionsPage from "../pages/transaction/TransactionsPage";
 import { OwnerDashboard } from "../pages/dashboard/OwnerDashboardPage";
+import reportsRoutes from "./report.routes";
 
 const ownerRoutes: RouteObject = {
   id: "owner",
@@ -48,6 +49,7 @@ const ownerRoutes: RouteObject = {
     ...tenantRoutes,
     ...apartmentRoutes,
     ...apartmentRequestsRoutes,
+    ...reportsRoutes,
   ],
 };
 

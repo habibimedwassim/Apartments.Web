@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getMyApartments,
   getApartmentById,
@@ -11,10 +11,15 @@ import {
 } from "@/app/models/apartment.models";
 
 export const useGetApartmentsQuery = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["apartments"],
-    queryFn: getMyApartments,
-    staleTime: 300000,
+    queryFn: ({ pageParam = 1 }) => getMyApartments(pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 1000 * 60 * 5,
   });
 };
 

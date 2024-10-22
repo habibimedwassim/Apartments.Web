@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getApartmentRequestById,
   getApartmentRequests,
@@ -27,16 +27,24 @@ export const useGetTenantFromRequestQuery = (id: number) => {
 export const useGetApartmentRequestsQuery = (
   filter: ApartmentRequestQueryFilterModel
 ) => {
-  return useQuery<ApartmentRequestModel[]>({
+  return useInfiniteQuery({
     queryKey: [`${filter.type}-requests`],
-    queryFn: () => getApartmentRequests(filter),
-    staleTime: 5 * 60 * 1000,
+    queryFn: ({ pageParam = 1 }) =>
+      getApartmentRequests({ ...filter, pageNumber: pageParam }),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
 export const useGetRentRequestsQuery = () =>
-  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Rent });
+  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Rent, pageNumber: 1 });
+
 export const useGetLeaveRequestsQuery = () =>
-  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Leave });
+  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Leave, pageNumber: 1 });
+
 export const useGetDismissRequestsQuery = () =>
-  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Dismiss });
+  useGetApartmentRequestsQuery({ type: REQUEST_TYPES.Dismiss, pageNumber: 1 });

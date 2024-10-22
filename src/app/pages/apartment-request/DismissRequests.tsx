@@ -5,12 +5,22 @@ import { createRequestColumns } from "./table/RequestsColumns";
 import { dismissRequestStatuses } from "./table/RequestStatuses";
 
 const DismissRequestsPage = () => {
-  const { data: requests, isLoading } = useGetDismissRequestsQuery();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetDismissRequestsQuery();
+
   const columns = createRequestColumns(dismissRequestStatuses);
+  const requests = data?.pages.flatMap((page) => page.items) ?? [];
+
   return isLoading ? (
     <LoaderCircle className="animate-spin" />
   ) : (
-    <DataTable columns={columns} data={requests || []} />
+    <DataTable
+      columns={columns}
+      data={requests}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+    />
   );
 };
 

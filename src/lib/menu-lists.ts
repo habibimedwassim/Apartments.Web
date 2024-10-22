@@ -11,6 +11,7 @@ import {
   DoorOpen,
   Users,
   House,
+  NotebookText,
 } from "lucide-react";
 
 type Submenu = {
@@ -140,7 +141,7 @@ function getOwnerMenuList(
       ],
     },
     {
-      groupLabel: "Managment",
+      groupLabel: "Management",
       menus: [
         {
           href: "",
@@ -208,6 +209,25 @@ function getOwnerMenuList(
     {
       groupLabel: "Settings",
       menus: [
+        {
+          href: "",
+          label: "Reports",
+          active: pathname.includes("reports"),
+          icon: NotebookText,
+          notificationCount: displayNotificationCount(0),
+          submenus: [
+            {
+              href: "/sent-reports",
+              label: "Sent Reports",
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "/received-reports",
+              label: "Received Reports",
+              notificationCount: displayNotificationCount(0),
+            },
+          ],
+        },
         {
           href: "/account",
           label: "Account",

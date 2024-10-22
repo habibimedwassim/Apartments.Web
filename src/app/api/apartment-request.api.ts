@@ -5,7 +5,7 @@ import {
   ApartmentRequestQueryFilterModel,
 } from "@/app/models/apartment-request.models";
 import { UserModel } from "@/app/models/user.models";
-import { MessageResponseModel } from "@/app/models/api.models";
+import { MessageResponseModel, PagedResult } from "@/app/models/api.models";
 
 export const getApartmentRequestById = async (
   id: number
@@ -49,9 +49,9 @@ export const cancelApartmentRequest = async (
 
 export const getApartmentRequests = async (
   filters: ApartmentRequestQueryFilterModel
-): Promise<ApartmentRequestModel[]> => {
-  console.log("API called: " + filters.type);
-  const response = await api.get<ApartmentRequestModel[]>(
+): Promise<PagedResult<ApartmentRequestModel>> => {
+  console.log("API called: " + filters.type + " Page: " + filters.pageNumber);
+  const response = await api.get<PagedResult<ApartmentRequestModel>>(
     `/users/me/requests`,
     {
       params: filters,

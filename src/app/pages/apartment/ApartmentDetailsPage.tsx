@@ -158,7 +158,6 @@ export function ApartmentDetailsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-400 mb-4">{apartment.description}</p>
             <div className="grid gap-2 mb-4">
               <p>
                 <strong>Location:</strong> {apartment.street}, {apartment.city},{" "}
@@ -173,6 +172,12 @@ export function ApartmentDetailsPage() {
               <p>
                 <strong>Size:</strong> {apartment.size} rooms
               </p>
+              <div
+                className="mt-2 max-w-lg break-words whitespace-pre-wrap"
+                style={{ wordWrap: "break-word" }}
+              >
+                <p className="text-gray-400 mb-4">{apartment.description}</p>{" "}
+              </div>
             </div>
           </CardContent>
         </div>

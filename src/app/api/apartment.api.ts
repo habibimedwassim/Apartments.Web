@@ -10,17 +10,22 @@ import {
   ApartmentPhotoModel,
   UploadApartmentPhotosModel,
 } from "@/app/models/apartment.models";
-import { MessageResponseModel } from "@/app/models/api.models";
+import { MessageResponseModel, PagedResult } from "@/app/models/api.models";
 
-export const getMyApartments = async (): Promise<ApartmentModel[]> => {
-  const response = await api.get<ApartmentResponseModel[]>(
-    "users/me/apartments"
-  );
+export const getMyApartments = async (page: number = 1) => {
+  const url = `/users/me/apartments?pageNumber=${page}`;
+  console.log(url);
+  const response = await api.get<{
+    items: ApartmentResponseModel[];
+    totalPages: number;
+  }>(url);
 
-  console.log("API called");
-  const refinedResponse = await mapApartmentData(response.data);
+  const refinedResponse = await mapApartmentData(response.data.items);
 
-  return refinedResponse;
+  return {
+    items: refinedResponse,
+    totalPages: response.data.totalPages,
+  };
 };
 
 export const getApartmentById = async (id: number): Promise<ApartmentModel> => {

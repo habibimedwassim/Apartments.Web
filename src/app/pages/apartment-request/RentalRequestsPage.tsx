@@ -5,15 +5,22 @@ import { createRequestColumns } from "./table/RequestsColumns";
 import { requestStatuses } from "./table/RequestStatuses";
 
 const RentalRequestsPage = () => {
-  const { data: requests, isLoading } = useGetRentRequestsQuery();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetRentRequestsQuery();
+
   const columns = createRequestColumns(requestStatuses, true);
+  const requests = data?.pages.flatMap((page) => page.items) ?? [];
+
   return isLoading ? (
     <LoaderCircle className="animate-spin" />
   ) : (
     <DataTable
       columns={columns}
       statuses={requestStatuses}
-      data={requests || []}
+      data={requests}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
     />
   );
 };

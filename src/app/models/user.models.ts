@@ -37,6 +37,7 @@ export interface VerifyNewEmailModel {
 }
 
 export interface UserModel {
+  id: number;
   avatar?: string;
   firstName?: string;
   lastName?: string;
@@ -69,6 +70,7 @@ export const mapToUserModel = async (
   userResponseModel: UserResponseModel
 ): Promise<UserModel> => {
   return {
+    id: userResponseModel.id,
     avatar: userResponseModel.avatar,
     fullName: userResponseModel.fullName,
     firstName: userResponseModel.firstName,

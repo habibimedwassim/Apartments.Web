@@ -7,21 +7,40 @@ import { LoaderCircle } from "lucide-react";
 import { useGetApartmentsQuery } from "@/app/services/queries/apartment.queries";
 
 const ApartmentsPage = () => {
-  const { data: apartments, isLoading } = useGetApartmentsQuery();
+  const {
+    data: apartmentsData,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetApartmentsQuery();
+
+  const apartments = apartmentsData?.pages.flatMap((page) => page.items) ?? [];
   const navigate = useNavigate();
 
   const handleAddApartment = () => {
     navigate("/apartments/new");
   };
-  return isLoading ? (
-    <LoaderCircle className="animate-spin" />
-  ) : (
+
+  if (isLoading) {
+    return <LoaderCircle className="animate-spin" />;
+  }
+
+  if (isError) {
+    return <div>Error loading apartments</div>;
+  }
+
+  return (
     <DataTable<ApartmentModel, any>
       columns={apartmentColumns}
       statuses={apartmentStatuses}
-      data={(apartments ?? []) as ApartmentModel[]}
+      data={apartments}
       newButtonLabel="Add Apartment"
       onNewButtonClick={handleAddApartment}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
     />
   );
 };

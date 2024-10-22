@@ -41,15 +41,24 @@ export interface TransactionModel {
   status: string;
 }
 
-export const mapToTransactionsList = async (
+export interface RentTransactionQueryFilterModel {
+  pageNumber: number;
+  sortBy?: string;
+  sortDirection?: 0 | 1; // 0 = Ascending, 1 = Descending
+  userId?: number;
+  status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+export const mapToTransactionsList = (
   responseModel: TransactionRequestModel[]
-): Promise<TransactionModel[]> => {
-  return Promise.all(responseModel.map(mapToTransactionModel));
+): TransactionModel[] => {
+  return responseModel.map(mapToTransactionModel);
 };
 
-export const mapToTransactionModel = async (
+export const mapToTransactionModel = (
   transaction: TransactionRequestModel
-): Promise<TransactionModel> => {
+): TransactionModel => {
   const result: TransactionModel = {
     id: transaction.id,
     createdDate: transaction.createdDate,

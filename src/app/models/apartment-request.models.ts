@@ -18,6 +18,7 @@ export interface UpdateApartmentRequestModel {
 }
 
 export interface ApartmentRequestQueryFilterModel {
+  pageNumber: number;
   type: string;
   sortBy?: string;
   sortDirection?: 0 | 1; // 0 = Ascending, 1 = Descending

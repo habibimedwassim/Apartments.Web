@@ -25,9 +25,16 @@ export const TenantDetailsPage = () => {
     isLoading: isTenantLoading,
     error: tenantError,
   } = useGetTenantByIdQuery(tenantId);
-  const { data: transactions, isLoading: isTransactionsLoading } =
-    useGetTenantTransactionsQuery(tenantId);
 
+  const {
+    data,
+    isLoading: isTransactionsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetTenantTransactionsQuery(tenantId, { pageNumber: 1 });
+
+  const transactions = data?.pages.flatMap((page) => page.items) ?? [];
   const isLoading = isTenantLoading || isTransactionsLoading;
 
   if (isLoading) return <LoaderCircle className="animate-spin" />;
@@ -41,9 +48,16 @@ export const TenantDetailsPage = () => {
           <div className="flex">
             <div className="w-1/3">
               <img
+                id="tenant-avatar"
+                alt="#"
                 src={tenant.avatar ?? "#"}
-                alt="Tenant Avatar"
-                className="w-full h-auto rounded"
+                width={500}
+                height={700}
+                className="object-cover w-full h-[300px] rounded-lg"
+                style={{ objectFit: "cover", aspectRatio: "4/3" }}
+                onError={(e) => {
+                  e.currentTarget.src = "/no-img.svg";
+                }}
               />
             </div>
             <div className="w-2/3 pl-4">
@@ -75,7 +89,10 @@ export const TenantDetailsPage = () => {
           title="Transactions History"
           statuses={transactionStatuses}
           columns={transactionColumns(true)}
-          data={(transactions ?? []) as TransactionModel[]}
+          data={transactions}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </div>
     </div>

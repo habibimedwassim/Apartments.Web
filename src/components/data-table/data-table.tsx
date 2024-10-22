@@ -24,7 +24,16 @@ import {
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "../ui/button";
+import { LoadingButton } from "../common/button-loading";
+import { CloudDownload } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   title?: string;
@@ -37,6 +46,9 @@ interface DataTableProps<TData, TValue> {
     value: string;
     icon?: React.ComponentType<{ className?: string }>;
   }[];
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,6 +58,9 @@ export function DataTable<TData, TValue>({
   newButtonLabel,
   onNewButtonClick,
   statuses,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -149,6 +164,22 @@ export function DataTable<TData, TValue>({
             <DataTablePagination table={table} />
           </div>
         </CardContent>
+
+        {fetchNextPage && !table.getCanNextPage() && hasNextPage && (
+          <CardFooter>
+            <div className="flex justify-center w-full">
+              <LoadingButton
+                isLoading={!!isFetchingNextPage}
+                onClick={fetchNextPage}
+                icon={<CloudDownload className="h-3.5 w-3.5" />}
+                className="h-8 gap-1 ml-2"
+                loadingText="Loading..."
+              >
+                Load More
+              </LoadingButton>
+            </div>
+          </CardFooter>
+        )}
       </Card>
     </>
   );
