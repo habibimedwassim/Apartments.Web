@@ -58,6 +58,7 @@ export const AccountEmailPage = () => {
     setProfile({
       ...profile,
       tempEmail: newEmail,
+      id: profile?.id ?? 0,
     });
   };
 

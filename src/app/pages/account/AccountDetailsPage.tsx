@@ -73,7 +73,7 @@ const AccountDetailsPage = () => {
 
   const handleReset = () => {
     if (profile) {
-      form.reset(profile);
+      form.reset(profile as any);
       setSelectedDate(
         profile.dateOfBirth ? new Date(profile.dateOfBirth) : undefined
       );

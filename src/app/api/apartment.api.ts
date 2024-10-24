@@ -10,7 +10,7 @@ import {
   ApartmentPhotoModel,
   UploadApartmentPhotosModel,
 } from "@/app/models/apartment.models";
-import { MessageResponseModel, PagedResult } from "@/app/models/api.models";
+import { MessageResponseModel } from "@/app/models/api.models";
 
 export const getMyApartments = async (page: number = 1) => {
   const url = `/users/me/apartments?pageNumber=${page}`;

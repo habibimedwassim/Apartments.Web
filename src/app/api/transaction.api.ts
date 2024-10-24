@@ -18,10 +18,8 @@ export const getRentTransactionsPaged = async (
     params: filters,
   });
 
-  // Map the items using the existing mapper function
   const mappedItems = mapToTransactionsList(response.data.items);
 
-  // Return the paged result with the mapped items
   return {
     ...response.data,
     items: mappedItems,

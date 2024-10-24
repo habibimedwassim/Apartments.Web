@@ -44,7 +44,6 @@ export const getTenantById = async (id: number): Promise<TenantModel> => {
 export const updateMyProfile = async (data: UpdateUserModel) => {
   const formData = new FormData();
 
-  // Append data to FormData
   if (data.avatar) {
     formData.append("avatar", data.avatar);
   }
@@ -97,7 +96,6 @@ export const verifyNewEmail = async (data: VerifyNewEmailModel) => {
   return response.data;
 };
 
-// Function to change the user's role
 export const changeUserRole = async (
   id: number,
   roleName: string
@@ -109,7 +107,6 @@ export const changeUserRole = async (
   return response.data;
 };
 
-// Function to disable the user
 export const disableUser = async (
   id: number
 ): Promise<MessageResponseModel> => {
