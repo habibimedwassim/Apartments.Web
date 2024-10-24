@@ -28,6 +28,22 @@ export const getMyApartments = async (page: number = 1) => {
   };
 };
 
+export const getOwnerApartments = async (id: number, page: number = 1) => {
+  const url = `/users/${id}/apartments?pageNumber=${page}`;
+  console.log(url);
+  const response = await api.get<{
+    items: ApartmentResponseModel[];
+    totalPages: number;
+  }>(url);
+
+  const refinedResponse = await mapApartmentData(response.data.items);
+
+  return {
+    items: refinedResponse,
+    totalPages: response.data.totalPages,
+  };
+};
+
 export const getApartmentById = async (id: number): Promise<ApartmentModel> => {
   console.log("get by Id API called");
   const response = await api.get<ApartmentResponseModel>(`/apartments/${id}`);

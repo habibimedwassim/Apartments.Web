@@ -18,7 +18,7 @@ export const tenantColumns: ColumnDef<TenantModel>[] = [
           firstName={tenant.firstName}
           lastName={tenant.lastName}
           onClick={() =>
-            navigate("/tenants/details", { state: { tenantId: tenant.id } })
+            navigate("/tenants/details", { state: { userId: tenant.id } })
           }
         />
       );

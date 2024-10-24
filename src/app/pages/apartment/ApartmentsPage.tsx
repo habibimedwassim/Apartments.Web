@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/data-table/data-table";
-import { apartmentColumns } from "./table/ApartmentsColumns";
+import { getApartmentColumns } from "./table/ApartmentsColumns";
 import { ApartmentModel } from "@/app/models/apartment.models";
 import { useNavigate } from "react-router-dom";
 import { apartmentStatuses } from "./table/ApartmentStatuses";
@@ -18,7 +18,7 @@ const ApartmentsPage = () => {
 
   const apartments = apartmentsData?.pages.flatMap((page) => page.items) ?? [];
   const navigate = useNavigate();
-
+  const apartmentColumns = getApartmentColumns();
   const handleAddApartment = () => {
     navigate("/apartments/new");
   };

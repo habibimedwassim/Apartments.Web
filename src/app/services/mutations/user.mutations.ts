@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  changeUserRole,
+  disableUser,
   updateEmail,
   updateMyProfile,
   updatePassword,
@@ -57,4 +59,41 @@ export const useVerifyNewEmailMutation = () => {
     },
   });
   return mutation;
+};
+
+export const useChangeUserRoleMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, roleName }: { id: number; roleName: string }) =>
+      changeUserRole(id, roleName),
+    onSuccess: () => {
+      // Invalidate queries related to users to refetch the updated data
+      queryClient.invalidateQueries({ queryKey: ["All-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Owner-users"] });
+      queryClient.invalidateQueries({ queryKey: ["User-users"] });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
+};
+
+export const useDisableUserMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => disableUser(id),
+    onSuccess: () => {
+      // Invalidate queries related to users to refetch the updated data
+      queryClient.invalidateQueries({ queryKey: ["All-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Owner-users"] });
+      queryClient.invalidateQueries({ queryKey: ["User-users"] });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
 };

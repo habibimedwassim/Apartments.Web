@@ -12,7 +12,7 @@ import { transactionStatuses } from "../transaction/table/TransactionStatuses";
 export const TenantDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const tenantId = location.state?.tenantId;
+  const tenantId = location.state?.userId;
 
   useEffect(() => {
     if (!tenantId) {

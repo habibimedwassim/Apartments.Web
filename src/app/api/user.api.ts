@@ -1,4 +1,4 @@
-import { MessageResponseModel } from "@/app/models/api.models";
+import { MessageResponseModel, PagedResult } from "@/app/models/api.models";
 import { ChangePasswordModel, EmailModel } from "@/app/models/auth.models";
 import api from "@/app/api/base.api";
 import {
@@ -13,6 +13,17 @@ import {
 } from "@/app/models/user.models";
 
 const API_URL = "/users";
+
+export const getUsers = async (filters: {
+  role?: string;
+  pageNumber: number;
+}): Promise<PagedResult<UserModel>> => {
+  const response = await api.get<PagedResult<UserModel>>(`/admin/users`, {
+    params: filters,
+  });
+
+  return response.data;
+};
 
 export const getMyProfile = async (): Promise<UserModel> => {
   const response = await api.get<UserResponseModel>(`${API_URL}/me`);
@@ -83,5 +94,25 @@ export const verifyNewEmail = async (data: VerifyNewEmailModel) => {
     `${API_URL}/verify-email`,
     data
   );
+  return response.data;
+};
+
+// Function to change the user's role
+export const changeUserRole = async (
+  id: number,
+  roleName: string
+): Promise<MessageResponseModel> => {
+  const response = await api.post<MessageResponseModel>(
+    `/admin/users/${id}/assign-role`,
+    { roleName }
+  );
+  return response.data;
+};
+
+// Function to disable the user
+export const disableUser = async (
+  id: number
+): Promise<MessageResponseModel> => {
+  const response = await api.delete<MessageResponseModel>(`/admin/users/${id}`);
   return response.data;
 };

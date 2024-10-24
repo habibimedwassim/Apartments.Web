@@ -6,6 +6,7 @@ interface UserButtonProps {
   avatar?: string;
   firstName?: string;
   lastName?: string;
+  initials?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -14,6 +15,7 @@ const UserButton: React.FC<UserButtonProps> = ({
   avatar,
   firstName,
   lastName,
+  initials,
   onClick,
   className,
 }) => {
@@ -28,6 +30,8 @@ const UserButton: React.FC<UserButtonProps> = ({
         <AvatarFallback className="bg-transparent">
           {firstName && lastName
             ? `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+            : initials
+            ? initials
             : "TN"}
         </AvatarFallback>
       </Avatar>

@@ -6,8 +6,9 @@ import { reportStatuses } from "@/app/pages/report/table/ReportStatuses";
 import { ReportsTableRowActions } from "./ReportsTableRowActions";
 import { useNavigate } from "react-router-dom";
 import UserButton from "@/components/common/button-user";
+import { USER_ROLE } from "@/app/constants/user-role";
+import { useAuthStore } from "@/hooks/use-store";
 
-// Function to return the columns with dynamic configuration
 export const reportColumns = (
   isSentReportsPage = true
 ): ColumnDef<UserReportModel>[] => {
@@ -94,20 +95,41 @@ export const reportColumns = (
         const reporterId = report.reporterId as number;
 
         const navigate = useNavigate();
+        const { role } = useAuthStore();
+        const tenantsPath =
+          role === USER_ROLE.ADMIN
+            ? "/admin/tenants/details"
+            : "/tenants/details";
 
-        return (
-          <UserButton
-            avatar={report.reporterAvatar}
-            onClick={() =>
-              navigate("/tenants/details", { state: { tenantId: reporterId } })
-            }
-          />
-        );
+        if (report.reporterRole !== USER_ROLE.OWNER) {
+          return (
+            <UserButton
+              avatar={report.reporterAvatar}
+              initials={report.reporterInitials}
+              onClick={() =>
+                navigate(tenantsPath, {
+                  state: { userId: reporterId },
+                })
+              }
+            />
+          );
+        } else {
+          return (
+            <UserButton
+              avatar={report.reporterAvatar}
+              initials="OW"
+              onClick={() =>
+                navigate("/admin/owners/details", {
+                  state: { userId: reporterId },
+                })
+              }
+            />
+          );
+        }
       },
     });
   }
 
-  // Add the "Actions" column at the end for all pages
   columns.push({
     accessorKey: "actions",
     header: "Actions",

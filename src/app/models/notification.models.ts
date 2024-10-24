@@ -1,4 +1,4 @@
-export type NotificationType = "rent" | "leave" | "payment" | "dismiss";
+export type NotificationType = "rent" | "leave" | "payment" | "report";
 
 export interface NotificationModel {
   id: number;

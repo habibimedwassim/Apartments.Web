@@ -1,8 +1,9 @@
 export const REQUEST_TYPES = {
   Rent: "rent",
   Leave: "leave",
-  Dismiss: "dismiss",
+  Report: "report",
   Payment: "payment",
+  Dismiss: "dismiss",
 };
 
 export const REQUEST_ACTIONS = {

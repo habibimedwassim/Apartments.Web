@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getMyApartments,
+  getOwnerApartments,
   getApartmentById,
   getApartmentPhotos,
   getApartmentPhoto,
@@ -14,6 +15,19 @@ export const useGetApartmentsQuery = () => {
   return useInfiniteQuery({
     queryKey: ["apartments"],
     queryFn: ({ pageParam = 1 }) => getMyApartments(pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useGetOwnerApartmentsQuery = (id: number) => {
+  return useInfiniteQuery({
+    queryKey: ["apartments", id],
+    queryFn: ({ pageParam = 1 }) => getOwnerApartments(id, pageParam),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage = allPages.length + 1;
       return nextPage <= lastPage.totalPages ? nextPage : undefined;

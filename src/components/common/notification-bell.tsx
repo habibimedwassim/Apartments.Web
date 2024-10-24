@@ -3,14 +3,11 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -22,13 +19,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useGetUnreadNotificationsQuery } from "@/app/services/queries/notification.queries";
-import { useNotificationStore } from "@/hooks/use-store";
+import { useAuthStore, useNotificationStore } from "@/hooks/use-store";
 import { useMarkAsReadMutation } from "@/app/services/mutations/notification.mutations";
 import { useEffect } from "react";
 import { NotificationType } from "@/app/models/notification.models";
 import { useNavigate } from "react-router-dom";
+import { USER_ROLE } from "@/app/constants/user-role";
 
 export function NotificationBell() {
+  const { role } = useAuthStore();
   const { notifications, unreadCounts, fetchUnreadNotifications, markAsRead } =
     useNotificationStore();
   const { data: unreadNotificationsFromAPI } = useGetUnreadNotificationsQuery();
@@ -56,6 +55,13 @@ export function NotificationBell() {
         break;
       case "payment":
         navigate("/transactions");
+        break;
+      case "report":
+        if (role === USER_ROLE.ADMIN) {
+          navigate("/admin/reports");
+        } else if (role === USER_ROLE.OWNER) {
+          navigate("/received-reports");
+        }
         break;
       default:
         break;

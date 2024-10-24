@@ -28,7 +28,7 @@ export const createRequestColumns = (
           <UserButton
             avatar={tenant?.avatar}
             onClick={() =>
-              navigate("/tenants/details", { state: { tenantId: tenantId } })
+              navigate("/tenants/details", { state: { userId: tenantId } })
             }
           />
         );

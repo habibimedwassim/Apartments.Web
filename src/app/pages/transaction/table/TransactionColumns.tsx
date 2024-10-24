@@ -32,7 +32,7 @@ export const transactionColumns = (
           <UserButton
             avatar={transaction.avatar}
             onClick={() =>
-              navigate("/tenants/details", { state: { tenantId: tenantId } })
+              navigate("/tenants/details", { state: { userId: tenantId } })
             }
           />
         );

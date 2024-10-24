@@ -4,6 +4,8 @@ export interface UserReportModel {
   resolvedDate?: string;
   reporterId: number;
   reporterAvatar?: string;
+  reporterInitials?: string;
+  reporterRole?: string;
   targetId?: number;
   targetRole: string;
   message: string;

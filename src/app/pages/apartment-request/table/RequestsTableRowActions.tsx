@@ -149,7 +149,7 @@ export function RequestTableRowActions<TData>({
 
   const handleViewTenant = () => {
     const tenantId = requestRow.tenantId as number;
-    navigate("/tenants/details", { state: { tenantId: tenantId } });
+    navigate("/tenants/details", { state: { userId: tenantId } });
   };
 
   const handleViewApartment = () => {

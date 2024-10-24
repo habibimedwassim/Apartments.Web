@@ -6,7 +6,6 @@ import {
   Settings,
   LayoutGrid,
   LucideIcon,
-  HomeIcon,
   Banknote,
   DoorOpen,
   Users,
@@ -59,7 +58,8 @@ function getAdminMenuList(
   pathname: string,
   notificationCounts: Record<string, number>
 ): Group[] {
-  const usersCount = notificationCounts["Users"] || 0;
+  const reportsCount = notificationCounts[REQUEST_TYPES.Report] || 0;
+
   return [
     {
       groupLabel: "",
@@ -75,26 +75,58 @@ function getAdminMenuList(
       ],
     },
     {
-      groupLabel: "Managment",
+      groupLabel: "Management",
       menus: [
         {
           href: "",
-          label: "Users",
-          active: pathname.includes("/admin/users"),
-          icon: HomeIcon,
-          notificationCount: displayNotificationCount(usersCount),
+          label: "User Manager",
+          active:
+            pathname.includes("admins") ||
+            pathname.includes("users") ||
+            pathname.includes("tenants") ||
+            pathname.includes("owners"),
+          icon: Users,
+          notificationCount: displayNotificationCount(0),
           submenus: [
             {
               href: "/admin/users",
+              active: pathname.includes("/admin/users"),
               label: "All Users",
-              notificationCount: displayNotificationCount(usersCount),
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "/admin/admins",
+              active: pathname.includes("/admin/admins"),
+              label: "Admins",
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "/admin/owners",
+              active: pathname.includes("/admin/owners"),
+              label: "Owners",
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "/admin/tenants",
+              active: pathname.includes("/admin/tenants"),
+              label: "Tenants",
+              notificationCount: displayNotificationCount(0),
             },
             {
               href: "/admin/users/new",
+              active: pathname.includes("/admin/users/new"),
               label: "New User",
-              notificationCount: 0,
+              notificationCount: displayNotificationCount(0),
             },
           ],
+        },
+        {
+          href: "/admin/reports",
+          label: "Reports",
+          active: pathname.includes("/admin/reports"),
+          icon: NotebookText,
+          notificationCount: displayNotificationCount(reportsCount),
+          type: "report",
         },
       ],
     },
@@ -120,6 +152,7 @@ function getOwnerMenuList(
   const rentalRequestCount = notificationCounts[REQUEST_TYPES.Rent] || 0;
   const leaveRequestCount = notificationCounts[REQUEST_TYPES.Leave] || 0;
   const paymentRequestCount = notificationCounts[REQUEST_TYPES.Payment] || 0;
+  const reportsCount = notificationCounts[REQUEST_TYPES.Report] || 0;
   const totalRequestCount = safeSum(
     rentalRequestCount,
     leaveRequestCount,
@@ -185,7 +218,26 @@ function getOwnerMenuList(
               href: "/dismiss-requests",
               label: "Dismiss Requests",
               notificationCount: displayNotificationCount(0),
-              type: "dismiss",
+            },
+          ],
+        },
+        {
+          href: "",
+          label: "Reports",
+          active: pathname.includes("reports"),
+          icon: NotebookText,
+          notificationCount: displayNotificationCount(reportsCount),
+          submenus: [
+            {
+              href: "/sent-reports",
+              label: "Sent Reports",
+              notificationCount: displayNotificationCount(0),
+            },
+            {
+              href: "/received-reports",
+              label: "Received Reports",
+              notificationCount: displayNotificationCount(reportsCount),
+              type: "report",
             },
           ],
         },
@@ -209,25 +261,6 @@ function getOwnerMenuList(
     {
       groupLabel: "Settings",
       menus: [
-        {
-          href: "",
-          label: "Reports",
-          active: pathname.includes("reports"),
-          icon: NotebookText,
-          notificationCount: displayNotificationCount(0),
-          submenus: [
-            {
-              href: "/sent-reports",
-              label: "Sent Reports",
-              notificationCount: displayNotificationCount(0),
-            },
-            {
-              href: "/received-reports",
-              label: "Received Reports",
-              notificationCount: displayNotificationCount(0),
-            },
-          ],
-        },
         {
           href: "/account",
           label: "Account",

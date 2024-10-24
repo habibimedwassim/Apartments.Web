@@ -100,7 +100,7 @@ export const useNotificationStore = create<NotificationState>()(
         rent: 0,
         leave: 0,
         payment: 0,
-        dismiss: 0,
+        report: 0,
       },
       fetchUnreadNotifications: (data: NotificationModel[]) => {
         const unreadCounts = data.reduce(
@@ -110,7 +110,7 @@ export const useNotificationStore = create<NotificationState>()(
             }
             return acc;
           },
-          { rent: 0, leave: 0, payment: 0, dismiss: 0 }
+          { rent: 0, leave: 0, payment: 0, report: 0 }
         );
         set({ notifications: data, unreadCounts });
       },

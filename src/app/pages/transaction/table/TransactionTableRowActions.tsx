@@ -100,7 +100,7 @@ export function TransactionTableRowActions<TData>({
 
   const handleViewTenant = () => {
     const tenantId = transaction.tenant as number;
-    navigate("/tenants/details", { state: { tenantId: tenantId } });
+    navigate("/tenants/details", { state: { userId: tenantId } });
   };
 
   const handleViewApartment = () => {

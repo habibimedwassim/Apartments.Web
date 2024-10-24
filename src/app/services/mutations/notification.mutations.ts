@@ -9,7 +9,15 @@ export const useMarkAsReadMutation = () => {
     onSuccess: (_, type: NotificationType) => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       if (type) {
-        queryClient.invalidateQueries({ queryKey: [`${type}-requests`] });
+        if (type == "rent" || type == "leave") {
+          queryClient.invalidateQueries({ queryKey: [`${type}-requests`] });
+        }
+        if (type == "report") {
+          queryClient.invalidateQueries({ queryKey: ["received-reports"] });
+        }
+        if (type == "payment") {
+          queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        }
       }
     },
   });
