@@ -4,7 +4,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   Table,
@@ -15,14 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { useGetOwnerDashboardQuery } from "@/app/services/queries/dashboard.queries";
 import {
   CircleDollarSign,
   House,
   SquareArrowOutUpRight,
   Users,
-  TrendingUp,
 } from "lucide-react";
 import {
   ChartContainer,

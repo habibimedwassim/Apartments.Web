@@ -31,7 +31,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
 import { LoadingButton } from "../common/button-loading";
 import { CloudDownload } from "lucide-react";
 
@@ -165,7 +164,7 @@ export function DataTable<TData, TValue>({
           </div>
         </CardContent>
 
-        {fetchNextPage && !table.getCanNextPage() && hasNextPage && (
+        {fetchNextPage && hasNextPage && (
           <CardFooter>
             <div className="flex justify-center w-full">
               <LoadingButton
