@@ -10,6 +10,7 @@ import {
   TenantModel,
   mapToTenantsList,
   mapToTenantModel,
+  RegisterModel,
 } from "@/app/models/user.models";
 
 const API_URL = "/users";
@@ -111,5 +112,63 @@ export const disableUser = async (
   id: number
 ): Promise<MessageResponseModel> => {
   const response = await api.delete<MessageResponseModel>(`/admin/users/${id}`);
+  return response.data;
+};
+
+const createFormData = (data: RegisterModel): FormData => {
+  const formData = new FormData();
+  formData.append("cin", data.cin);
+  formData.append("email", data.email);
+  formData.append("password", data.password);
+  formData.append("firstName", data.firstName);
+  formData.append("lastName", data.lastName);
+
+  if (data.phoneNumber) {
+    formData.append("phoneNumber", data.phoneNumber);
+  }
+  if (data.gender) {
+    formData.append("gender", data.gender);
+  }
+  if (data.dateOfBirth) {
+    formData.append("dateOfBirth", data.dateOfBirth);
+  }
+  if (data.avatar) {
+    formData.append("avatar", data.avatar);
+  } else {
+    formData.append("avatar", "");
+  }
+
+  return formData;
+};
+
+export const registerOwner = async (
+  data: RegisterModel
+): Promise<MessageResponseModel> => {
+  const formData = createFormData(data);
+  const response = await api.post<MessageResponseModel>(
+    `${API_URL}/register-owner`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+
+export const registerAdmin = async (
+  data: RegisterModel
+): Promise<MessageResponseModel> => {
+  const formData = createFormData(data);
+  const response = await api.post<MessageResponseModel>(
+    `${API_URL}/register-admin`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 };

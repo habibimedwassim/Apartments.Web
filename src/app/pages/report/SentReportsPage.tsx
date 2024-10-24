@@ -3,7 +3,7 @@ import { reportColumns } from "@/app/pages/report/table/ReportColumns";
 import { LoaderCircle } from "lucide-react";
 import { DataTable } from "@/components/data-table/data-table";
 import { reportStatuses } from "./table/ReportStatuses";
-import { AddReportDialog } from "./components/AddReportDialog"; // Import the AddReportDialog component
+import { AddReportDialog } from "./components/AddReportDialog";
 import { useState } from "react";
 
 const SentReportsPage = () => {
@@ -29,7 +29,7 @@ const SentReportsPage = () => {
         <DataTable
           columns={reportColumns()}
           statuses={reportStatuses}
-          newButtonLabel="Add Report"
+          newButtonLabel="Send Report"
           onNewButtonClick={handleAddReport}
           data={requests}
           fetchNextPage={fetchNextPage}

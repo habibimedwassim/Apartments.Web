@@ -13,6 +13,7 @@ import TenantsListPage from "../pages/users/TenantsListPage";
 import AdminDetailsPage from "../pages/users/AdminDetails";
 import { AdminDashboardPage } from "../pages/dashboard/AdminDashboardPage";
 import ChangeLogsPage from "../pages/changeLog/ChangeLogsPage";
+import RegisterPage from "../pages/account/RegisterPage";
 
 const adminRoutes: RouteObject = {
   id: "admin",
@@ -74,6 +75,15 @@ const adminRoutes: RouteObject = {
       element: (
         <PageLayout title="Tenants">
           <TenantsListPage />
+        </PageLayout>
+      ),
+    },
+    {
+      id: "admin-users-new",
+      path: "/admin/new-user",
+      element: (
+        <PageLayout title="New User">
+          <RegisterPage />
         </PageLayout>
       ),
     },

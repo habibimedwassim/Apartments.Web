@@ -32,7 +32,11 @@ export const userColumns = (
           avatar={user?.avatar}
           firstName={user.firstName}
           lastName={user.lastName}
-          onClick={() => navigate(path, { state: { userId: user.id } })}
+          onClick={() =>
+            pageType == "all"
+              ? {}
+              : navigate(path, { state: { userId: user.id } })
+          }
         />
       );
     },
@@ -93,7 +97,6 @@ export const userColumns = (
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      // Pass the pageType to the UsersTableRowActions component
       return <UsersTableRowActions row={row} pageType={pageType} />;
     },
   },

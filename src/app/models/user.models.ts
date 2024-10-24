@@ -66,6 +66,18 @@ export interface TenantModel {
   dateOfBirth?: string;
 }
 
+export interface RegisterModel {
+  cin: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  avatar?: File | null;
+}
+
 export const mapToUserModel = async (
   userResponseModel: UserResponseModel
 ): Promise<UserModel> => {

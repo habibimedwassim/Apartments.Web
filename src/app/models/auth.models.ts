@@ -20,15 +20,15 @@ export interface LoginResponseModel {
   accessToken: string;
 }
 
-export interface RegisterModel {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
-  gender?: string;
-  dateOfBirth?: string;
-}
+// export interface RegisterModel {
+//   email: string;
+//   password: string;
+//   firstName: string;
+//   lastName: string;
+//   phoneNumber?: string;
+//   gender?: string;
+//   dateOfBirth?: string;
+// }
 
 export interface VerifyEmailModel {
   email: string;

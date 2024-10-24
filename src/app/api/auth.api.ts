@@ -3,7 +3,7 @@ import api from "./base.api";
 import {
   LoginModel,
   LoginResponseModel,
-  RegisterModel,
+  // RegisterModel,
   VerifyEmailModel,
   EmailModel,
   ResetPasswordModel,
@@ -14,21 +14,21 @@ export const login = async (data: LoginModel): Promise<LoginResponseModel> => {
   return response.data;
 };
 
-export const registerOwner = async (data: RegisterModel) => {
-  const response = await api.post<MessageResponseModel>(
-    "/auth/register-owner",
-    data
-  );
-  return response.data;
-};
+// export const registerOwner = async (data: RegisterModel) => {
+//   const response = await api.post<MessageResponseModel>(
+//     "/auth/register-owner",
+//     data
+//   );
+//   return response.data;
+// };
 
-export const registerAdmin = async (data: RegisterModel) => {
-  const response = await api.post<MessageResponseModel>(
-    "/auth/register-admin",
-    data
-  );
-  return response.data;
-};
+// export const registerAdmin = async (data: RegisterModel) => {
+//   const response = await api.post<MessageResponseModel>(
+//     "/auth/register-admin",
+//     data
+//   );
+//   return response.data;
+// };
 
 export const verifyEmail = async (data: VerifyEmailModel) => {
   const response = await api.post<MessageResponseModel>(

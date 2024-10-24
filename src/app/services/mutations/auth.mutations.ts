@@ -3,15 +3,15 @@ import { useAuthStore, useProfileStore } from "@/hooks/use-store";
 import { USER_ROLE } from "@/app/constants/user-role";
 import {
   login,
-  registerOwner,
-  registerAdmin,
+  // registerOwner,
+  // registerAdmin,
   resetPassword,
   forgotPassword,
   resendVerificationCode,
 } from "@/app/api/auth.api";
 import {
   LoginModel,
-  RegisterModel,
+  // RegisterModel,
   ResetPasswordModel,
   EmailModel,
   LoginResponseModel,
@@ -33,17 +33,17 @@ export const useLoginMutation = () => {
   });
 };
 
-export const useRegisterOwnerMutation = () => {
-  return useMutation({
-    mutationFn: (data: RegisterModel) => registerOwner(data),
-  });
-};
+// export const useRegisterOwnerMutation = () => {
+//   return useMutation({
+//     mutationFn: (data: RegisterModel) => registerOwner(data),
+//   });
+// };
 
-export const useRegisterAdminMutation = () => {
-  return useMutation({
-    mutationFn: (data: RegisterModel) => registerAdmin(data),
-  });
-};
+// export const useRegisterAdminMutation = () => {
+//   return useMutation({
+//     mutationFn: (data: RegisterModel) => registerAdmin(data),
+//   });
+// };
 
 export const useForgotPasswordMutation = () => {
   return useMutation({

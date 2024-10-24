@@ -11,6 +11,9 @@ import {
   Users,
   House,
   NotebookText,
+  UserPlus,
+  History,
+  ArrowRightLeft,
 } from "lucide-react";
 
 type Submenu = {
@@ -78,10 +81,10 @@ function getAdminMenuList(
       groupLabel: "Management",
       menus: [
         {
-          href: "/admin/change-logs",
-          label: "Change Logs",
-          active: pathname.includes("/admin/change-logs"),
-          icon: NotebookText,
+          href: "/admin/new-user",
+          label: "New User",
+          active: pathname.includes("/admin/new-user"),
+          icon: UserPlus,
           notificationCount: displayNotificationCount(0),
         },
         {
@@ -119,12 +122,6 @@ function getAdminMenuList(
               label: "Tenants",
               notificationCount: displayNotificationCount(0),
             },
-            {
-              href: "/admin/users/new",
-              active: pathname.includes("/admin/users/new"),
-              label: "New User",
-              notificationCount: displayNotificationCount(0),
-            },
           ],
         },
         {
@@ -134,6 +131,13 @@ function getAdminMenuList(
           icon: NotebookText,
           notificationCount: displayNotificationCount(reportsCount),
           type: "report",
+        },
+        {
+          href: "/admin/change-logs",
+          label: "Change Logs",
+          active: pathname.includes("/admin/change-logs"),
+          icon: History,
+          notificationCount: displayNotificationCount(0),
         },
       ],
     },
@@ -252,7 +256,7 @@ function getOwnerMenuList(
           href: "/transactions",
           label: "Transactions",
           active: pathname.includes("transactions"),
-          icon: Banknote,
+          icon: ArrowRightLeft,
           notificationCount: displayNotificationCount(paymentRequestCount),
           type: "payment",
         },

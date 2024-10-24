@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   changeUserRole,
   disableUser,
+  registerAdmin,
+  registerOwner,
   updateEmail,
   updateMyProfile,
   updatePassword,
@@ -10,6 +12,7 @@ import {
 import {
   ChangePasswordModel,
   EmailModel,
+  RegisterModel,
   UpdateUserModel,
   VerifyNewEmailModel,
 } from "@/app/models/user.models";
@@ -86,11 +89,39 @@ export const useDisableUserMutation = () => {
   return useMutation({
     mutationFn: (id: number) => disableUser(id),
     onSuccess: () => {
-      // Invalidate queries related to users to refetch the updated data
       queryClient.invalidateQueries({ queryKey: ["All-users"] });
       queryClient.invalidateQueries({ queryKey: ["Admin-users"] });
       queryClient.invalidateQueries({ queryKey: ["Owner-users"] });
       queryClient.invalidateQueries({ queryKey: ["User-users"] });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
+};
+
+export const useRegisterOwnerMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: RegisterModel) => registerOwner(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["All-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Owner-users"] });
+    },
+    onError: (error: string) => {
+      throw error;
+    },
+  });
+};
+
+export const useRegisterAdminMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: RegisterModel) => registerAdmin(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["All-users"] });
+      queryClient.invalidateQueries({ queryKey: ["Admin-users"] });
     },
     onError: (error: string) => {
       throw error;
