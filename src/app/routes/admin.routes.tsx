@@ -1,5 +1,4 @@
 import { RouteObject } from "react-router-dom";
-import AdminPage from "@/app/pages/admin/AdminPage";
 import RouteGuard from "@/components/common/route-guard";
 import DashboardLayout from "@/app/layouts/dashboard.layout";
 import PageLayout from "@/app/layouts/page.layout";
@@ -12,6 +11,8 @@ import AdminsPage from "../pages/users/AdminsPage";
 import OwnersPage from "../pages/users/OwnersPage";
 import TenantsListPage from "../pages/users/TenantsListPage";
 import AdminDetailsPage from "../pages/users/AdminDetails";
+import { AdminDashboardPage } from "../pages/dashboard/AdminDashboardPage";
+import ChangeLogsPage from "../pages/changeLog/ChangeLogsPage";
 
 const adminRoutes: RouteObject = {
   id: "admin",
@@ -27,7 +28,16 @@ const adminRoutes: RouteObject = {
       path: "/admin",
       element: (
         <PageLayout title="Home">
-          <AdminPage />
+          <AdminDashboardPage />
+        </PageLayout>
+      ),
+    },
+    {
+      id: "admin-changeLogs",
+      path: "/admin/change-logs",
+      element: (
+        <PageLayout title="Home">
+          <ChangeLogsPage />
         </PageLayout>
       ),
     },

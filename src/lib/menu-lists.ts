@@ -78,6 +78,13 @@ function getAdminMenuList(
       groupLabel: "Management",
       menus: [
         {
+          href: "/admin/change-logs",
+          label: "Change Logs",
+          active: pathname.includes("/admin/change-logs"),
+          icon: NotebookText,
+          notificationCount: displayNotificationCount(0),
+        },
+        {
           href: "",
           label: "User Manager",
           active:
