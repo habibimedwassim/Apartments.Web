@@ -6,7 +6,6 @@ import {
   Settings,
   LayoutGrid,
   LucideIcon,
-  Banknote,
   DoorOpen,
   Users,
   House,
