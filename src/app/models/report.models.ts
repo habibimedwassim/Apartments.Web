@@ -23,7 +23,7 @@ export interface UpdateUserReportModel {
 }
 
 export interface CreateUserReportModel {
-  targetId?: number | null;
+  apartmentId?: number | null;
   targetRole: string;
   message: string;
   attachment?: File | null;

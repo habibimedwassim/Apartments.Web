@@ -39,7 +39,7 @@ export const AddReportDialog = ({
     const reportData: CreateUserReportModel = {
       message,
       targetRole: "Admin",
-      targetId: null,
+      apartmentId: null,
       attachment,
     };
 
