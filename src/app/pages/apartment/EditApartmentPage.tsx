@@ -57,7 +57,7 @@ const EditApartmentPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openProvincePicker, setOpenProvincePicker] = useState(false);
   const [openCityPicker, setOpenCityPicker] = useState(false);
-  const [apartmentPhotos, setApartmentPhotos] = useState<ApartmentPhotoModel[]>(
+  const [_, setApartmentPhotos] = useState<ApartmentPhotoModel[]>(
     []
   );
   const navigate = useNavigate();

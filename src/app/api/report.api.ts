@@ -32,8 +32,8 @@ export const createUserReport = async (data: CreateUserReportModel) => {
   formData.append("targetRole", data.targetRole);
   formData.append("message", data.message);
 
-  if (data.targetId) {
-    formData.append("targetId", data.targetId.toString());
+  if (data.apartmentId) {
+    formData.append("targetId", data.apartmentId.toString());
   }
   if (data.attachment) {
     formData.append("attachment", data.attachment);
